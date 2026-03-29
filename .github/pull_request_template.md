@@ -22,9 +22,9 @@ Langkah untuk mengecek apakah fitur berjalan dengan benar:
 
 ## 📷 Screenshot / Demo (WAJIB jika UI berubah)
 Tambahkan screenshot sebelum & sesudah (jika ada perubahan UI)
-Sebelum:
+Sebelum:<br><br>
 
-Sesudah:
+Sesudah:<br><br>
 
 
 ## 📋 Checklist Sebelum Merge
