@@ -21,7 +21,7 @@ Langkah untuk mengecek apakah fitur berjalan dengan benar:
 5. Pastikan ...
 
 ## 📷 Screenshot / Demo (WAJIB jika UI berubah)
-Tambahkan screenshot sebelum & sesudah (jika ada perubahan UI)
+Tambahkan screenshot sebelum & sesudah (jika ada perubahan UI)<br>
 Sebelum:<br><br>
 
 Sesudah:<br><br>
