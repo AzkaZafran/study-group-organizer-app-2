@@ -1,0 +1,159 @@
+{
+    "openapi":"3.1.1",
+    "info": {
+      "title":"user-api",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"https://localhost:8000"}
+    ],
+    "paths": {
+        "/api/users": {
+            "post": {
+                "description": "Register user baru",
+                "requestBody": {
+                    "description": "Register user baru",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "azka": {
+                                    "description": "Register user azka",
+                                    "value": {
+                                        "username": "azkazafran78",
+                                        "email": "zafran734@gmail.com",
+                                        "password": "newpelajar77"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "username", "email", "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sukses register user baru",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses register user azka",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "username": "azkazafran78",
+                                                "email": "zafran734@gmail.com"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Gagal register user baru",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "errorvalidation": {
+                                        "description": "Error validation",
+                                        "value": {
+                                            "errors": {
+                                                "username": [
+                                                    "username tidak boleh kosong",
+                                                    "username minimal 6 karakter"
+                                                ],
+                                                "email": [
+                                                    "email tidak boleh kosong",
+                                                    "email harus memiliki format email yang valid"
+                                                ],
+                                                "password": [
+                                                    "password tidak boleh kosong",
+                                                    "password minimal 12 karakter"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "description": "Login user"
+            }
+        },
+        "/api/users/current": {
+            "get": {
+                "description": "Get user saat ini"
+            }
+        },
+        "/api/users/logout": {
+            "delete": {
+                "description": "Logout user"
+            }
+        }
+    }
+  }
