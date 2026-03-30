@@ -34,3 +34,7 @@ Pastikan semua sudah dicek:
 * [ ] Tidak merusak fitur lain
 * [ ] Sudah pull dari branch terbaru (`origin/main`)
 * [ ] Tidak ada conflict
+
+## 🙋 Catatan Tambahan
+
+Tambahkan catatan lain jika diperlukan
