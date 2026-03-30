@@ -221,7 +221,59 @@
         },
         "/api/users/current": {
             "get": {
-                "description": "Get user saat ini"
+                "description": "Get user saat ini",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "203": {
+                        "description": "Sukses get user saat ini",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses get": {
+                                        "description": "Sukses get user saat ini",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "username": "azkazafran78",
+                                                "email": "zafran734@gmail.com"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/users/logout": {
