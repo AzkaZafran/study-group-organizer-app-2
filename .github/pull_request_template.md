@@ -11,6 +11,7 @@ Checklist perubahan utama:
 * [ ] Menerapkan desain UI untuk sebuah halaman (implementasi desain ui untuk halaman baru)
 * [ ] Mengubah bagian UI dari suatu halaman (mengubah bagian kecil / komponen UI)
 * [ ] Membuat kerangka atau workflow backend
+* [ ] Lainnya: ...
 
 ## 🧪 Cara Testing
 Langkah untuk mengecek apakah fitur berjalan dengan benar:
@@ -36,5 +37,4 @@ Pastikan semua sudah dicek:
 * [ ] Tidak ada conflict
 
 ## 🙋 Catatan Tambahan
-
 Tambahkan catatan lain jika diperlukan
