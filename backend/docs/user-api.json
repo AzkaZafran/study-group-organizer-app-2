@@ -228,6 +228,7 @@
                     {
                         "name": "Authorization",
                         "in": "header",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -281,7 +282,37 @@
         },
         "/api/users/logout": {
             "delete": {
-                "description": "Logout user"
+                "description": "Logout user",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses logout user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
