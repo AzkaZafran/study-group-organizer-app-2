@@ -87,7 +87,7 @@
                             }
                         }
                     },
-                    "400": {
+                    "401": {
                         "description": "Gagal register user baru",
                         "content": {
                             "application/json": {
@@ -111,6 +111,60 @@
                                             }
                                         }
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "description": "Login user",
+                "requestBody": {
+                    "description": "Login user",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "azka": {
+                                    "description": "Login user azka",
+                                    "value": {
+                                        "username": "azkazafran78",
+                                        "password": "newpelajar77"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Sukses login user",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses login user azka",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "username": "azkazafran78",
+                                                "email": "zafran734@gmail.com",
+                                                "token": "user-token-auth"
+                                            }
+                                        }
+                                    }
                                 },
                                 "schema": {
                                     "type": "object",
@@ -126,6 +180,9 @@
                                                 },
                                                 "email": {
                                                     "type": "string"
+                                                },
+                                                "token": {
+                                                    "type": "string"
                                                 }
                                             }
                                         },
@@ -136,13 +193,30 @@
                                 }
                             }
                         }
+                    },
+                    "402": {
+                        "description": "Gagal login user",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "wrongusernameorpassword": {
+                                        "description": "Gagal login user azka",
+                                        "value": {
+                                            "errors": {
+                                                "username": [
+                                                    "username atau password salah"
+                                                ],
+                                                "password": [
+                                                    "username atau password salah"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        },
-        "/api/users/login": {
-            "post": {
-                "description": "Login user"
             }
         },
         "/api/users/current": {
