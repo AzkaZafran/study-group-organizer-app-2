@@ -10,7 +10,7 @@ Checklist perubahan utama:
 * [ ] Membuat fitur baru
 * [ ] Menerapkan desain UI untuk sebuah halaman (implementasi desain ui untuk halaman baru)
 * [ ] Mengubah bagian UI dari suatu halaman (mengubah bagian kecil / komponen UI)
-* [ ] Membuat kerangka atau workflow backend
+* [ ] Membuat atau mengubah kerangka atau workflow backend
 * [ ] Lainnya: ...
 
 ## 🧪 Cara Testing
