@@ -88,7 +88,7 @@
                             }
                         }
                     },
-                    "401": {
+                    "422": {
                         "description": "Gagal register user baru",
                         "content": {
                             "application/json": {
@@ -150,7 +150,7 @@
                     }
                 },
                 "responses": {
-                    "202": {
+                    "200": {
                         "description": "Sukses login user",
                         "content": {
                             "application/json": {
@@ -196,7 +196,7 @@
                             }
                         }
                     },
-                    "402": {
+                    "401": {
                         "description": "Gagal login user",
                         "content": {
                             "application/json": {
@@ -235,7 +235,7 @@
                     }
                 ],
                 "responses": {
-                    "203": {
+                    "200": {
                         "description": "Sukses get user saat ini",
                         "content": {
                             "application/json": {
