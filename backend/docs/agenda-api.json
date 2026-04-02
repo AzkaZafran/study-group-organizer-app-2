@@ -1,0 +1,202 @@
+{
+    "openapi":"3.1.1",
+    "info": {
+      "title":"agenda-api",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"https://localhost:8000"}
+    ],
+    "paths": {
+        "/api/agendas/": {
+            "post": {
+                "description": "Membuat agenda baru",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Membuat agenda baru",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "belajar bareng": {
+                                    "description": "Membuat agenda belajar bareng",
+                                    "value": {
+                                        "nama_agenda": "belajar bareng",
+                                        "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
+                                        "waktu mulai": "12:30",
+                                        "waktu_berakhir": "15:30"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "nama_agenda", "lokasi", "waktu_mulai", "waktu_berakhir"
+                                ],
+                                "properties": {
+                                    "nama_agenda": {
+                                        "type": "string"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "waktu_mulai": {
+                                        "type": "string"
+                                    },
+                                    "waktu_berakhir": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sukses membuat agenda baru",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses membuat agenda belajar bareng",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "nama_agenda": "belajar bareng",
+                                                "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
+                                                "waktu mulai": "12:30",
+                                                "waktu_berakhir": "15:30",
+                                                "status": "belum dimulai"
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "nama_agenda": {
+                                                    "type": "string"
+                                                },
+                                                "lokasi": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_mulai": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_berakhir": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required"
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Data yang diperlukan kosong",
+                            "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingFields": {
+                                        "description": "data atau nilai yang diperlukan kosong",
+                                        "value": {
+                                            "errors": {
+                                                "nama_agenda": [
+                                                    "Nama agenda kosong"
+                                                ],
+                                                "lokasi": [
+                                                    "lokasi kosong"
+                                                ],
+                                                "waktu mulai": [
+                                                    "waktu mulai kosong"
+                                                ],
+                                                "waktu_berakhir": [
+                                                    "waktu berakhir kosong"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
