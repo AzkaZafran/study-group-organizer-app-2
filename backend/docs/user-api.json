@@ -300,7 +300,7 @@
                                         "summary": "Token tidak dikirim",
                                         "value": {
                                             "errors": {
-                                                "message": "Authorization token is required"
+                                                "message": "Authorization token is required."
                                             }
                                         }
                                     },
@@ -308,7 +308,7 @@
                                         "summary": "Token tidak valid",
                                         "value": {
                                             "errors": {
-                                                "message": "Invalid token"
+                                                "message": "Invalid token."
                                             }
                                         }
                                     }
