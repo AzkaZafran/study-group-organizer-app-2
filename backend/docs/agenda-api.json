@@ -31,8 +31,8 @@
                                     "value": {
                                         "nama_agenda": "belajar bareng",
                                         "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
-                                        "waktu mulai": "12:30",
-                                        "waktu_berakhir": "15:30"
+                                        "waktu mulai": "2026-10-15 12:30:00",
+                                        "waktu_berakhir": "2026-10-15 15:30:00"
                                     }
                                 }
                             },
@@ -72,8 +72,206 @@
                                                 "id": 1,
                                                 "nama_agenda": "belajar bareng",
                                                 "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
-                                                "waktu mulai": "12:30",
-                                                "waktu_berakhir": "15:30",
+                                                "waktu mulai": "2026-10-15 12:30:00",
+                                                "waktu_berakhir": "2026-10-15 15:30:00",
+                                                "status": "belum dimulai"
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "nama_agenda": {
+                                                    "type": "string"
+                                                },
+                                                "lokasi": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_mulai": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_berakhir": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required"
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Data yang diperlukan kosong",
+                            "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingFields": {
+                                        "description": "data atau nilai yang diperlukan kosong",
+                                        "value": {
+                                            "errors": {
+                                                "nama_agenda": [
+                                                    "Nama agenda kosong"
+                                                ],
+                                                "lokasi": [
+                                                    "lokasi kosong"
+                                                ],
+                                                "waktu mulai": [
+                                                    "waktu mulai kosong"
+                                                ],
+                                                "waktu_berakhir": [
+                                                    "waktu berakhir kosong"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/agends/{id}": {
+            "put": {
+                "description": "Mengubah agenda",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Mengubah agenda",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "belajar bareng": {
+                                    "description": "Mengubah nama dan waktu agenda belajar bareng",
+                                    "value": {
+                                        "nama_agenda": "belajar bareng pagi",
+                                        "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
+                                        "waktu mulai": "2026-10-15 08:30:00",
+                                        "waktu_berakhir": "2026-10-15 11:30:00"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "nama_agenda", "lokasi", "waktu_mulai", "waktu_berakhir"
+                                ],
+                                "properties": {
+                                    "nama_agenda": {
+                                        "type": "string"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "waktu_mulai": {
+                                        "type": "string"
+                                    },
+                                    "waktu_berakhir": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sukses mengubah agenda",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses mengubah nama dan waktu agenda belajar bareng",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "nama_agenda": "belajar bareng pagi",
+                                                "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
+                                                "waktu mulai": "2026-10-15 08:30:00",
+                                                "waktu_berakhir": "2026-10-15 11:30:00",
                                                 "status": "belum dimulai"
                                             },
                                             "errors": {}
