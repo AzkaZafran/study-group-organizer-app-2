@@ -642,8 +642,8 @@
                                     }
                                 },
                                 "examples": {
-                                    "emailNotFound": {
-                                        "description": "Email tidak terdaftar",
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
                                         "value": {
                                             "errors": {
                                                 "message": "Agenda yang dicari tidak ada dalam database."
