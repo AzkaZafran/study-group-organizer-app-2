@@ -119,6 +119,88 @@
                 }
             }
         },
+        "/api/users/request-otp": {
+            "post": {
+                "description": "Mengirim kode otp melalui email user",
+                "requestBody": {
+                    "description": "Mengirim kode otp melalui email user",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "azka": {
+                                    "description": "Mengirim kode otp ke email azka",
+                                    "value": {
+                                        "email": "zafran734@gmail.com"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengirim kode otp",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Email tidak terdaftar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Email yang dikirim tidak terdaftar."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "emailNotFound": {
+                                        "description": "Email tidak terdaftar",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Email yang dikirim tidak terdaftar."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }                
+            }
+        },
         "/api/users/login": {
             "post": {
                 "description": "Login user",
