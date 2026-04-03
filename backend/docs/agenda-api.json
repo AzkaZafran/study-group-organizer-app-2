@@ -269,6 +269,45 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -500,6 +539,153 @@
                                         "value": {
                                             "errors": {
                                                 "message": "Agenda sudah terlaksana dan tidak bisa dimodifikasi."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "description": "Mengambil rincian data agenda user yang dipilih",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses mendapatkan rincian data agenda user yang dipilih",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses mendapatkan rincian agenda belajar bareng",
+                                        "value": {
+                                            "data": {
+                                                "id": 1,
+                                                "nama_agenda": "belajar bareng pagi",
+                                                "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
+                                                "waktu mulai": "2026-10-15 08:30:00",
+                                                "waktu_berakhir": "2026-10-15 11:30:00",
+                                                "status": "belum dimulai"
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number"
+                                                },
+                                                "nama_agenda": {
+                                                    "type": "string"
+                                                },
+                                                "lokasi": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_mulai": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_berakhir": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Agenda tidak dapat ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Agenda yang dicari tidak ada dalam database."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda yang dicari tidak ada dalam database."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
                                             }
                                         }
                                     }
