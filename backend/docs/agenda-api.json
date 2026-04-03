@@ -137,7 +137,7 @@
                                         "summary": "Token tidak dikirim",
                                         "value": {
                                             "errors": {
-                                                "message": "Authorization token is required"
+                                                "message": "Authorization token is required."
                                             }
                                         }
                                     },
@@ -145,7 +145,7 @@
                                         "summary": "Token tidak valid",
                                         "value": {
                                             "errors": {
-                                                "message": "Invalid token"
+                                                "message": "Invalid token."
                                             }
                                         }
                                     }
@@ -335,7 +335,7 @@
                                         "summary": "Token tidak dikirim",
                                         "value": {
                                             "errors": {
-                                                "message": "Authorization token is required"
+                                                "message": "Authorization token is required."
                                             }
                                         }
                                     },
@@ -343,7 +343,7 @@
                                         "summary": "Token tidak valid",
                                         "value": {
                                             "errors": {
-                                                "message": "Invalid token"
+                                                "message": "Invalid token."
                                             }
                                         }
                                     }
@@ -386,6 +386,45 @@
                                                 "waktu_berakhir": [
                                                     "waktu berakhir kosong"
                                                 ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Agenda dalam kondisi tidak bisa dimodifikasi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Detail agenda tidak bisa dibuah ketika sedang berjalan."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaRunning": {
+                                        "summary": "Agenda sedang berjalan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Detail agenda tidak bisa dibuah ketika sedang berjalan."
+                                            }
+                                        }
+                                    },
+                                    "agendaFinished": {
+                                        "summary": "Agenda sudah selesai",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda sudah terlaksana dan tidak bisa dimodifikasi."
                                             }
                                         }
                                     }
