@@ -119,6 +119,205 @@
                 }
             }
         },
+        "/api/users/request-otp": {
+            "post": {
+                "description": "Mengirim kode otp melalui email user",
+                "requestBody": {
+                    "description": "Mengirim kode otp melalui email user",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "azka": {
+                                    "description": "Mengirim kode otp ke email azka",
+                                    "value": {
+                                        "email": "zafran734@gmail.com"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengirim kode otp",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Email tidak terdaftar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Email yang dikirim tidak terdaftar."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "emailNotFound": {
+                                        "description": "Email tidak terdaftar",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Email yang dikirim tidak terdaftar."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }                
+            }
+        },
+        "/api/users/verify-email": {
+            "patch": {
+                "description": "Verifikasi email user menggunakan kode otp",
+                "requestBody": {
+                    "description": "Verifikasi email user menggunakan kode otp",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "azka": {
+                                    "description": "Verifikasi email azka",
+                                    "value": {
+                                        "email": "zafran734@gmail.com",
+                                        "otp_code": "123456"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email", "otp_code"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "otp_code": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses verifikasi email user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error - Invalid OTP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "kode OTP yang diberikan salah."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "invalidOtp": {
+                                        "description": "Kode OTP salah",
+                                        "value": {
+                                            "errors": {
+                                                "message": "kode OTP yang diberikan salah."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Gone - OTP has expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Kode OTP ini sudah kadaluarsa. Mohon minta kode OTP yang baru."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "expiredOtp": {
+                                        "description": "Kode OTP sudah kadaluarsa",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Kode OTP ini sudah kadaluarsa. Mohon minta kode OTP yang baru."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/login": {
             "post": {
                 "description": "Login user",
