@@ -312,7 +312,7 @@
                 }
             }
         },
-        "/api/agenda/{id}": {
+        "/api/agenda/{id_agenda}": {
             "put": {
                 "description": "Mengubah agenda",
                 "parameters": [
@@ -325,7 +325,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "id_agenda",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -560,7 +560,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "id_agenda",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -707,7 +707,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "id_agenda",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -827,6 +827,113 @@
                                                     "type": "number"
                                                 }
                                             }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/agenda/{id_agenda}/invite": {
+            "post": {
+                "description": "Mengundang teman user ikut agenda yang dibuat",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_agenda",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Mengundang teman user ikut agenda yang dibuat",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "temanAzka": {
+                                    "description": "mengundang teman user azka",
+                                    "value": {
+                                        "id_teman": [5, 7, 10]
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "properties": {
+                                    "id_teman": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Berhasil mengirimkan undangan dan membuat data undangan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
                                         },
                                         "errors": {
                                             "type": "object"
