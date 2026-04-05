@@ -591,6 +591,161 @@
                     }
                 }
             }
+        },
+        "/api/users/search": {
+            "get": {
+                "description": "Mencari data user yang sesuai dengan input username",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Proses query berhasil",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "userFound": {
+                                        "description": "Sukses menemukan user yang dicari",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": 7,
+                                                    "username": "pelajar#40"
+                                                },
+                                                {
+                                                    "id": 5,
+                                                    "username": "pelajar#39"
+                                                }
+                                            ],
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 1
+                                            }
+                                        }
+                                    },
+                                    "userNotFound": {
+                                        "description": "Tidak dapat menemukan user yang sesuai dengan kata kunci yang diberikan",
+                                        "value": {
+                                            "data": [],
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 0,
+                                                "message": "Tidak dapat menemukan user yang sesuai"
+                                            }
+                                        }
+                                    },
+                                    "blankQuery": {
+                                        "description": "Kata kunci yang diberikan kosong",
+                                        "value": {
+                                            "data": [],
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 0,
+                                                "message": "Tidak dapat menemukan user yang sesuai"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
   }
