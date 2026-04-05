@@ -71,10 +71,12 @@
                                             "data": {
                                                 "id": 1,
                                                 "nama_agenda": "belajar bareng",
+                                                "nama_penyelenggara": "azkazafran78",
                                                 "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
                                                 "waktu mulai": "2026-10-15 12:30:00",
                                                 "waktu_berakhir": "2026-10-15 15:30:00",
-                                                "status": "belum dimulai"
+                                                "status": "belum dimulai",
+                                                "is_owner": true
                                             },
                                             "errors": {}
                                         }
@@ -92,6 +94,9 @@
                                                 "nama_agenda": {
                                                     "type": "string"
                                                 },
+                                                "nama_penyelenggara": {
+                                                    "type": "string"
+                                                },
                                                 "lokasi": {
                                                     "type": "string"
                                                 },
@@ -103,6 +108,9 @@
                                                 },
                                                 "status": {
                                                     "type": "string"
+                                                },
+                                                "is_owner": {
+                                                    "type": "boolean"
                                                 }
                                             }
                                         },
@@ -241,6 +249,9 @@
                                                     "id": {
                                                         "type": "number"
                                                     },
+                                                    "nama_penyelenggara": {
+                                                        "type": "string"
+                                                    },
                                                     "nama_agenda": {
                                                         "type": "string"
                                                     },
@@ -255,6 +266,9 @@
                                                     },
                                                     "status": {
                                                         "type": "string"
+                                                    },
+                                                    "is_owner": {
+                                                        "type": "boolean"
                                                     }
                                                 }
                                             }
@@ -383,10 +397,12 @@
                                             "data": {
                                                 "id": 1,
                                                 "nama_agenda": "belajar bareng pagi",
+                                                "nama_penyelenggara": "azkazafran78",
                                                 "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
                                                 "waktu mulai": "2026-10-15 08:30:00",
                                                 "waktu_berakhir": "2026-10-15 11:30:00",
-                                                "status": "belum dimulai"
+                                                "status": "belum dimulai",
+                                                "is_owner": true
                                             },
                                             "errors": {}
                                         }
@@ -404,6 +420,9 @@
                                                 "nama_agenda": {
                                                     "type": "string"
                                                 },
+                                                "nama_penyelenggara": {
+                                                    "type": "string"
+                                                },
                                                 "lokasi": {
                                                     "type": "string"
                                                 },
@@ -415,6 +434,9 @@
                                                 },
                                                 "status": {
                                                     "type": "string"
+                                                },
+                                                "is_owner": {
+                                                    "type": "boolean"
                                                 }
                                             }
                                         },
@@ -545,6 +567,37 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden - User bukan penyelenggara dari agenda ini",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Hanya penyelenggara yang bisa mengubah agenda ini"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "member": {
+                                        "description": "Anggota mencoba mengubah rincian agenda",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Hanya penyelenggara yang bisa mengubah agenda ini"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -580,10 +633,12 @@
                                             "data": {
                                                 "id": 1,
                                                 "nama_agenda": "belajar bareng pagi",
+                                                "nama_penyelenggara": "azkazafran78",
                                                 "lokasi": "Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231",
                                                 "waktu mulai": "2026-10-15 08:30:00",
                                                 "waktu_berakhir": "2026-10-15 11:30:00",
-                                                "status": "belum dimulai"
+                                                "status": "belum dimulai",
+                                                "is_owner": true
                                             },
                                             "errors": {}
                                         }
@@ -601,6 +656,9 @@
                                                 "nama_agenda": {
                                                     "type": "string"
                                                 },
+                                                "nama_penyelenggara": {
+                                                    "type": "string"
+                                                },
                                                 "lokasi": {
                                                     "type": "string"
                                                 },
@@ -612,6 +670,9 @@
                                                 },
                                                 "status": {
                                                     "type": "string"
+                                                },
+                                                "is_owner": {
+                                                    "type": "boolean"
                                                 }
                                             }
                                         },
