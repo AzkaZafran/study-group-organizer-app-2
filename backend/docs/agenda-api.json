@@ -775,6 +775,108 @@
                     }
                 }
             }
+        },
+        "/api/agenda/statistic": {
+            "get": {
+                "description": "Mengambil data total agenda untuk masing masing status yang berbeda (semua, selesai, sedang berjalan, belum dimulai)",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses mendapatkan data total agenda masing masing status",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses mendapatkan data total agenda masing masing status",
+                                        "value": {
+                                            "data": {
+                                                "semua": 4,
+                                                "belum_dimulai": 3,
+                                                "sedang_berlangsung": 2,
+                                                "selesai": 1
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "semua": {
+                                                    "type": "number"
+                                                },
+                                                "belum_dimulai": {
+                                                    "type": "number"
+                                                },
+                                                "sedang_berlangsung": {
+                                                    "type": "number"
+                                                },
+                                                "selesai": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
