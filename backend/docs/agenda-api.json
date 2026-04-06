@@ -598,6 +598,37 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Not Found - Agenda tidak dapat ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Agenda yang dicari tidak ada dalam database."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda yang dicari tidak ada dalam database."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -827,6 +858,37 @@
                                         "value": {
                                             "errors": {
                                                 "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Agenda tidak dapat ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Agenda yang dicari tidak ada dalam database."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda yang dicari tidak ada dalam database."
                                             }
                                         }
                                     }
