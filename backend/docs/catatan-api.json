@@ -10,7 +10,7 @@
     "paths": {
         "/agenda/{id_agenda}/catatan/{id_catatan}": {
             "put": {
-                "description": "User mengubah catatan yang dibuat",
+                "description": "User mengubah catatan yang dibuat dan reset status 'sudah dibaca' pada semua user lain menjadi 'belum dibaca'",
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -74,10 +74,11 @@
                                         "value": {
                                             "data": {
                                                 "id_catatan": 1,
-                                                "id_author": 1,
                                                 "nama_author": "azkazafran78",
                                                 "catatan": "API ya API",
-                                                "terakhir_diubah": "2026-10-15 13:30:00"
+                                                "is_author": true,
+                                                "terakhir_diubah": "2026-10-15 13:30:00",
+                                                "total_read": 0
                                             },
                                             "errors": {}
                                         }
@@ -92,17 +93,20 @@
                                                 "id_catatan": {
                                                     "type": "number"
                                                 },
-                                                "id_author": {
-                                                    "type": "number"
-                                                },
                                                 "nama_author": {
                                                     "type": "string"
                                                 },
                                                 "catatan": {
                                                     "type": "string"
                                                 },
+                                                "is_author": {
+                                                    "type": "boolean"
+                                                },
                                                 "terakhir_diubah": {
                                                     "type": "string"
+                                                },
+                                                "total_read": {
+                                                    "type": "number"
                                                 }
                                             }
                                         },
@@ -475,9 +479,9 @@
                                         "value": {
                                             "data": {
                                                 "id_catatan": 1,
-                                                "id_author": 1,
                                                 "nama_author": "azkazafran78",
                                                 "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya.",
+                                                "is_author": true,
                                                 "waktu_dibuat": "2026-10-15 13:00:00"
                                             },
                                             "errors": {}
@@ -493,14 +497,14 @@
                                                 "id_catatan": {
                                                     "type": "number"
                                                 },
-                                                "id_author": {
-                                                    "type": "number"
-                                                },
                                                 "nama_author": {
                                                     "type": "string"
                                                 },
                                                 "catatan": {
                                                     "type": "string"
+                                                },
+                                                "is_author": {
+                                                    "type": "boolean"
                                                 },
                                                 "waktu_dibuat": {
                                                     "type": "string"
