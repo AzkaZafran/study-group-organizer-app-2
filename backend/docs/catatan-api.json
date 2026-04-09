@@ -75,6 +75,7 @@
                                             "data": {
                                                 "id_catatan": 1,
                                                 "id_author": 1,
+                                                "nama_author": "azkazafran78",
                                                 "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya.",
                                                 "waktu_dibuat": "2026-10-15 13:00:00"
                                             },
@@ -93,6 +94,9 @@
                                                 },
                                                 "id_author": {
                                                     "type": "number"
+                                                },
+                                                "nama_author": {
+                                                    "type": "string"
                                                 },
                                                 "catatan": {
                                                     "type": "string"
@@ -224,7 +228,175 @@
         },
         "/agenda/{id_agenda}/catatan/": {
             "get": {
-                "description": "User mengambil data semua catatan untuk suatu agenda"
+                "description": "User mengambil data semua catatan untuk suatu agenda",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_agenda",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses mengambil data catatan suatu agenda",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses mengambil data catatan suatu agenda",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id_catatan": 1,
+                                                    "id_author": 1,
+                                                    "nama_author": "azkazafran78",
+                                                    "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya.",
+                                                    "waktu_dibuat": "2026-10-15 13:00:00"
+                                                }
+                                            ],
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 1,
+                                                "size": 10
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id_catatan": {
+                                                        "type": "number"
+                                                    },
+                                                    "id_author": {
+                                                        "type": "number"
+                                                    },
+                                                    "nama_author": {
+                                                        "type": "string"
+                                                    },
+                                                    "catatan": {
+                                                        "type": "string"
+                                                    },
+                                                    "waktu_dibuat": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Agenda tidak dapat ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Agenda yang dicari tidak ada dalam database."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda yang dicari tidak ada dalam database."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/agenda/{id_agenda}/catatan/{id_catatan}/view": {
