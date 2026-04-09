@@ -9,8 +9,8 @@
     ],
     "paths": {
         "/agenda/{id_agenda}/catatan/{id_catatan}": {
-            "post": {
-                "description": "User membuat catatan baru",
+            "put": {
+                "description": "User mengubah catatan yang dibuat",
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -30,6 +30,252 @@
                     },
                     {
                         "name": "id_catatan",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "description": "User mengubah catatan yang dibuat",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "updateMateriAPI": {
+                                    "description": "User mengubah catatan materi api",
+                                    "value": {
+                                        "catatan": "API ya API"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "catatan"
+                                ],
+                                "properties": {
+                                    "catatan": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User sukses mengubah catatan yang dibuat",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "suksesUpdateMateriAPI": {
+                                        "description": "User sukses mengubah catatan materi API",
+                                        "value": {
+                                            "data": {
+                                                "id_catatan": 1,
+                                                "id_author": 1,
+                                                "nama_author": "azkazafran78",
+                                                "catatan": "API ya API",
+                                                "terakhir_diubah": "2026-10-15 13:30:00"
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id_catatan": {
+                                                    "type": "number"
+                                                },
+                                                "id_author": {
+                                                    "type": "number"
+                                                },
+                                                "nama_author": {
+                                                    "type": "string"
+                                                },
+                                                "catatan": {
+                                                    "type": "string"
+                                                },
+                                                "terakhir_diubah": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Catatan yang dikirim kosong",
+                            "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingFields": {
+                                        "description": "data atau nilai yang diperlukan kosong",
+                                        "value": {
+                                            "errors": {
+                                                "catatan": [
+                                                    "catatan kosong"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User bukan author dari catatan ini",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Hanya author yang bisa mengubah catatan ini"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "notAuthor": {
+                                        "description": "User mencoba mengubah isi catatan yang bukan miliknya",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Hanya author yang bisa mengubah catatan ini"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - Agenda atau catatan tidak dapat ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Agenda yang dicari tidak ada dalam database."
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "agendaNotFound": {
+                                        "description": "Agenda tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Agenda yang dicari tidak ada dalam database."
+                                            }
+                                        }
+                                    },
+                                    "catatanNotFound": {
+                                        "description": "Catatan tidak dapat ditemukan",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Catatan yang dicari tidak ada dalam database."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "User menghapus catatan yang dibuat"
+            }
+        },
+        "/agenda/{id_agenda}/catatan/": {
+            "post": {
+                "description": "User membuat catatan baru",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_agenda",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -219,14 +465,6 @@
                     }
                 }
             },
-            "put": {
-                "description": "User mengubah catatan yang dibuat"
-            },
-            "delete": {
-                "description": "User menghapus catatan yang dibuat"
-            }
-        },
-        "/agenda/{id_agenda}/catatan/": {
             "get": {
                 "description": "User mengambil data semua catatan untuk suatu agenda",
                 "parameters": [
@@ -278,7 +516,7 @@
                                                     "id_author": 1,
                                                     "nama_author": "azkazafran78",
                                                     "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya.",
-                                                    "waktu_dibuat": "2026-10-15 13:00:00"
+                                                    "terakhir_diubah": "2026-10-15 13:00:00"
                                                 }
                                             ],
                                             "errors": {},
@@ -309,7 +547,7 @@
                                                     "catatan": {
                                                         "type": "string"
                                                     },
-                                                    "waktu_dibuat": {
+                                                    "terakhir_diubah": {
                                                         "type": "string"
                                                     }
                                                 }
