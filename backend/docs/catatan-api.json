@@ -8,7 +8,7 @@
       {"url":"https://localhost:8000"}
     ],
     "paths": {
-        "/agenda/{id_agenda}/catatan/{id_catatan}": {
+        "/api/agenda/{id_agenda}/catatan/{id_catatan}": {
             "put": {
                 "description": "User mengubah catatan yang dibuat dan reset status 'sudah dibaca' pada semua user lain menjadi 'belum dibaca'",
                 "parameters": [
@@ -421,7 +421,7 @@
                 }
             }
         },
-        "/agenda/{id_agenda}/catatan/": {
+        "/api/agenda/{id_agenda}/catatan/": {
             "post": {
                 "description": "User membuat catatan baru",
                 "parameters": [
