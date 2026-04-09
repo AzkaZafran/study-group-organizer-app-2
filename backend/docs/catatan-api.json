@@ -1,0 +1,117 @@
+{
+    "openapi":"3.1.1",
+    "info": {
+      "title":"catatan-api",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"https://localhost:8000"}
+    ],
+    "paths": {
+        "/agenda/{id_agenda}/catatan/{id_catatan}": {
+            "post": {
+                "description": "User membuat catatan baru",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_agenda",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "id_catatan",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody":{
+                    "description": "User membuat catatan baru",
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "belajar bareng": {
+                                    "description": "User membuat catatan mengenai API",
+                                    "value": {
+                                        "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya."
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "catatan"
+                                ],
+                                "properties": {
+                                    "catatan": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sukses membuat catatan baru",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "sukses": {
+                                        "description": "Sukses membuat catatan baru",
+                                        "value": {
+                                            "data": {
+                                                "id_catatan": 1,
+                                                "id_author": 1,
+                                                "catatan": "API (Application Programming Interface) adalah sekumpulan aturan, protokol, dan definisi yang memungkinkan dua aplikasi atau sistem perangkat lunak berbeda untuk berkomunikasi dan bertukar data. API bertindak sebagai perantara atau 'jembatan', memungkinkan developer menggunakan fungsi aplikasi lain tanpa harus mengetahui cara kerja internalnya.",
+                                                "waktu_dibuat": "2026-10-15 13:00:00"
+                                            },
+                                            "errors": {}
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id_catatan": {
+                                                    "type": "number"
+                                                },
+                                                "id_author": {
+                                                    "type": "number"
+                                                },
+                                                "catatan": {
+                                                    "type": "string"
+                                                },
+                                                "waktu_dibuat": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  }
