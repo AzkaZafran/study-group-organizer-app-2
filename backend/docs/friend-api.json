@@ -19,6 +19,22 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
                 ],
                 "responses": {
@@ -42,7 +58,10 @@
                                                     "email": "pelajar39@gmail.com"
                                                 }
                                             ],
-                                            "errors": {}
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 1
+                                            }
                                         }
                                     }
                                 },
@@ -67,6 +86,9 @@
                                             }
                                         },
                                         "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
                                             "type": "object"
                                         }
                                     }
@@ -248,6 +270,22 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
                 ],
                 "responses": {
@@ -269,7 +307,10 @@
                                                     "username": "pelajar#39"
                                                 }
                                             ],
-                                            "errors": {}
+                                            "errors": {},
+                                            "meta": {
+                                                "pages": 1
+                                            }
                                         }
                                     }
                                 },
@@ -291,6 +332,9 @@
                                             }
                                         },
                                         "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
                                             "type": "object"
                                         }
                                     }
