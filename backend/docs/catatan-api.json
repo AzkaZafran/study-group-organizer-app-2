@@ -688,7 +688,7 @@
                                             ],
                                             "errors": {},
                                             "meta": {
-                                                "pages": 1,
+                                                "page": 1,
                                                 "size": 10
                                             }
                                         }
