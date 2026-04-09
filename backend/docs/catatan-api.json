@@ -214,6 +214,22 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "User mengubah catatan yang dibuat"
+            },
+            "delete": {
+                "description": "User menghapus catatan yang dibuat"
+            }
+        },
+        "/agenda/{id_agenda}/catatan/": {
+            "get": {
+                "description": "User mengambil data semua catatan untuk suatu agenda"
+            }
+        },
+        "/agenda/{id_agenda}/catatan/{id_catatan}/view": {
+            "get": {
+                "description": "User mengambil data status baca catatan untuk semua partisipan agenda"
             }
         }
     }
