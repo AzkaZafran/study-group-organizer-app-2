@@ -27,6 +27,22 @@
                         "schema": {
                             "type": "number"
                         }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
                 ],
                 "responses": {
@@ -52,7 +68,10 @@
                                                     "role": "anggota"
                                                 }
                                             ],
-                                            "errors": {}
+                                            "errors": {},
+                                            "meta": {
+                                                "page": 1
+                                            }
                                         }
                                     }
                                 },
@@ -80,6 +99,9 @@
                                             }
                                         },
                                         "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
                                             "type": "object"
                                         }
                                     }
