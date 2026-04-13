@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use UserService;
 
 class UserController extends Controller
 {
@@ -18,9 +20,16 @@ class UserController extends Controller
 
         try {
             $user = $this->userService->register($data);
-            return view('test', ['$data' => $data]);
+            $data = collect([
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email
+            ]);
+            return view('test', ['data' => $data]);
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return back()->withErrors([
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }

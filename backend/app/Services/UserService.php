@@ -1,6 +1,9 @@
 <?php
 
+namespace App\Services;
+
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -14,6 +17,8 @@ class UserService
     public function register(array $data): User {
         if(User::where('username', $data['username'])->count() == 1){
             throw new Exception("username sudah dipakai", 400);
+        } elseif (User::where('email', $data['email'])->count() == 1) {
+            throw new Exception("email sudah dipakai", 400);
         }
 
         $user = new User($data);
