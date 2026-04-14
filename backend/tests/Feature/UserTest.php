@@ -20,7 +20,14 @@ class UserTest extends TestCase {
     }
 
     public function testRegisterFailed() {
-
+        $response = $this->from('/test')
+                        ->post('register', [
+                            'username' => '',
+                            'email' => '',
+                            'password' => ''
+                        ]);
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['username', 'email', 'password']);
     }
 
     public function testRegisterUsernameAlreadyExist() {
