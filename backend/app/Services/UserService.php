@@ -11,18 +11,25 @@ class UserService
     /**
      * Membuat user baru ke dalam database
      *
-     * @param array $data Data user yang sudah divalidasi
+     * @param $username username yang sudah divalidasi
+     * @param $email email yang sudah divalidasi
+     * @param $password password yang sudah divalidasi
      * @return \App\Models\User
      */
-    public function register(array $data): User {
-        if(User::where('username', $data['username'])->count() == 1){
+    public function register($username, $email, $password): User {
+        if(User::where('username', $username)->count() == 1){
             throw new Exception("username sudah dipakai", 400);
-        } elseif (User::where('email', $data['email'])->count() == 1) {
+        } elseif (User::where('email', $email)->count() == 1) {
             throw new Exception("email sudah dipakai", 400);
         }
 
+        $data = [
+            'username' => $username,
+            'email' => $email,
+            'password' => Hash::make($password)
+        ];
+
         $user = new User($data);
-        $user->password = Hash::make($data['password']);
         $user->save();
 
         return $user;

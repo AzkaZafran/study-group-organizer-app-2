@@ -19,7 +19,7 @@ class UserController extends Controller
         $data = $request->validated();
 
         try {
-            $user = $this->userService->register($data);
+            $user = $this->userService->register($data['username'], $data['email'], $data['password']);
             $data = collect([
                 'id' => $user->id,
                 'username' => $user->username,
