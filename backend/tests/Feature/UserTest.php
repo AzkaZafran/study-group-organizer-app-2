@@ -31,7 +31,17 @@ class UserTest extends TestCase {
     }
 
     public function testRegisterUsernameAlreadyExist() {
+        $this->testRegisterSuccess();
 
+        $response = $this->from('/test')
+                        ->post('/register', [
+                            'username' => 'azkazafran78',
+                            'email' => "azkazafran79@gmail.com",
+                            "password" => "test"
+                        ]);
+        
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['message']);
     }
 
     public function testRegisterEmailAlreadyExist() {
