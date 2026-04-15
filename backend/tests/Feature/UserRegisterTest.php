@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Tests\TestCase;
 
 class UserRegisterTest extends TestCase {
@@ -44,17 +46,48 @@ class UserRegisterTest extends TestCase {
                 ->assertSessionHasErrors(['message']);
     }
 
-    public function testRegisterEmailAlreadyExist() {
-        $this->testRegisterSuccess();
+    public function testRegisterEmailAlreadyExistButVerified() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => "azkazafran78@gmail.com",
+            "password" => "test"
+        ];
+
+        $user = User::create($data);
+        $user->is_verified = true;
+        $user->save();
 
         $response = $this->from('/test')
                         ->post('/register', [
-                            'username' => 'azkazafran79',
+                            'username' => 'newazka',
                             'email' => "azkazafran78@gmail.com",
                             "password" => "test"
                         ]);
 
         $response->assertRedirect('/test')
                 ->assertSessionHasErrors(['message']);
+    }
+
+    public function testRegisterEmailAlreadyExistButNotVerified() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => "azkazafran78@gmail.com",
+            "password" => "test"
+        ];
+
+        $user = User::create($data);
+
+        $response = $this->from('/test')
+                        ->post('/register', [
+                            'username' => 'newazka',
+                            'email' => "azkazafran78@gmail.com",
+                            "password" => "test"
+                        ]);
+        
+        $response->assertStatus(200)->assertViewIs('test')
+                ->assertViewHas('data', function ($data) {
+                    return $data['username'] === 'newazka' &&
+                            $data['email'] === 'azkazafran78@gmail.com';
+                });
     }
 }
