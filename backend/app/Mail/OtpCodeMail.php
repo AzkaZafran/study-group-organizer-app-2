@@ -40,10 +40,11 @@ class OtpCodeMail extends Mailable
     public function content(): Content
     {
         return (new Content(
-            view: 'view.name',
-        ))->with([
-            'otp' => $this->otp_code
-        ]);
+            view: 'otpCodeMail',
+            with: [
+                'otp' => $this->otp_code
+            ],
+        ));
     }
 
     /**

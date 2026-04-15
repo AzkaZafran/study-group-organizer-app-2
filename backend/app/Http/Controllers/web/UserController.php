@@ -20,6 +20,7 @@ class UserController extends Controller
 
         try {
             $user = $this->userService->register($data['username'], $data['email'], $data['password']);
+            $this->userService->requestOtp($data['email']);
             $data = collect([
                 'id' => $user->id,
                 'username' => $user->username,

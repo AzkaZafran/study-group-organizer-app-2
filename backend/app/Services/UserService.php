@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Mail\OtpCodeMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserService
 {
@@ -32,5 +34,13 @@ class UserService
         $user = User::updateOrCreate(['email' => $email], $data);
 
         return $user;
+    }
+
+    public function requestOtp($email) {
+        $otp_codes = (string) random_int(000000, 999999);
+
+        Mail::to($email)->send(new OtpCodeMail($otp_codes));
+
+        return true;
     }
 }
