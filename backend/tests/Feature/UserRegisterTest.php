@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class UserTest extends TestCase {
+class UserRegisterTest extends TestCase {
     public function testRegisterSuccess() {
         $response = $this->post('/register', [
             'username' => 'azkazafran78',
