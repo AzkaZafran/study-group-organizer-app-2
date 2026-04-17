@@ -93,4 +93,28 @@ class UserVerifyEmailTest extends TestCase {
                     'email' => 'azkazafran79@gmail.com'
                 ]);
     }
+
+    public function testVerifyEmailWithExpiredOtpCode() {
+        $this->post('/register', [
+            'username' => 'azkazafran79',
+            'email' => "azkazafran82@gmail.com",
+            "password" => "test"
+        ]);
+
+        $otp_code_data = OtpCodes::where('email', 'azkazafran82@gmail.com')->first();
+        $otp_code = $otp_code_data->otp_codes;
+        $otp_code_data->expired_at = now()->subMinutes(10);
+        $otp_code_data->save();
+
+        $response = $this->from('/test')->post('/verify-email', [
+            'email' => 'azkazafran82@gmail.com',
+            'otp_code' => $otp_code
+        ]);
+
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['message'])
+                ->assertSessionHasInput([
+                    'email' => 'azkazafran82@gmail.com'
+                ]);
+    }
 }

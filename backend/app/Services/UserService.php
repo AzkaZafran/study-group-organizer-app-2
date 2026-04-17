@@ -44,7 +44,7 @@ class UserService
             $otp_found->save();
         }
 
-        $otp_codes = (string) random_int(000000, 999999);
+        $otp_codes = (string) random_int(100000, 999999);
 
         $data = [
             'email' => $email,
