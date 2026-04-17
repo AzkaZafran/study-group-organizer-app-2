@@ -34,4 +34,23 @@ class UserVerifyEmailTest extends TestCase {
 
         $response->assertRedirect('/login');
     }
+
+    public function testVerifyEmailWithWrongOtpCode() {
+        $this->post('/register', [
+            'username' => 'azkazafran78',
+            'email' => "azkazafran78@gmail.com",
+            "password" => "test"
+        ]);
+
+        $response = $this->from('/test')->post('/verify-email', [
+            'email' => 'azkazafran78@gmail.com',
+            'otp_code' => 'salah1'
+        ]);
+
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['message'])
+                ->assertSessionHasInput([
+                    'email' => 'azkazafran78@gmail.com'
+                ]);
+    }
 }

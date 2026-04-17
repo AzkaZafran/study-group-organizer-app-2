@@ -45,10 +45,14 @@ class UserController extends Controller
             return match ($e->getMessage()) {
                 'INVALID_OTP' => back()->withErrors([
                     'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
-                ]),
+                ])->withInput(
+                    $request->only('email')
+                ),
                 'EXPIRED_OTP' => back()->withErrors([
                     'message' => 'Kode OTP sudah tidak berlaku. Silakan kirim ulang kode untuk mendapatkan OTP baru.'
-                ]),
+                ])->withInput(
+                    $request->only('email')
+                ),
             };
         }
     }
