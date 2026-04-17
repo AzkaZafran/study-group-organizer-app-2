@@ -58,4 +58,30 @@ class UserService
 
         return true;
     }
+
+    public function verifyEmail($email, $otp_code) {
+        $valid_otp = OtpCodes::where('email', $email)
+                                ->where('otp_codes', $otp_code)
+                                ->where('is_used', 0)
+                                ->get();
+        
+        if ($valid_otp->isEmpty()) {
+            throw new Exception('INVALID_OTP');
+        }
+
+        $otp_not_expired = $valid_otp->firstWhere('expired_at', '>', now());
+
+        if ($otp_not_expired === null) {
+            throw new Exception('EXPIRED_OTP');
+        }
+
+        $otp_not_expired->is_used = true;
+        $otp_not_expired->save();
+
+        $user = User::where('email', $email)->first(); 
+        $user->is_verified = true;
+        $user->save();
+        
+        return true;
+    }
 }
