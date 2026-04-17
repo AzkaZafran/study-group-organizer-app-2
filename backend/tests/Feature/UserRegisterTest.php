@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\OtpCodes;
 use App\Models\User;
 use Database\Seeders\UserSeeder;
 use Tests\TestCase;
@@ -12,6 +13,10 @@ class UserRegisterTest extends TestCase {
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
             "password" => "test"
+        ]);
+
+        $this->assertDatabaseHas('otp_codes', [
+            'email' => 'azkazafran78@gmail.com'
         ]);
 
         $response->assertStatus(200)->assertViewIs('test')
@@ -84,6 +89,10 @@ class UserRegisterTest extends TestCase {
                             "password" => "test"
                         ]);
         
+        $this->assertDatabaseHas('otp_codes', [
+            'email' => 'azkazafran78@gmail.com'
+        ]);
+
         $response->assertStatus(200)->assertViewIs('test')
                 ->assertViewHas('data', function ($data) {
                     return $data['username'] === 'newazka' &&

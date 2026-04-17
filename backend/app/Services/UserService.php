@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\OtpCodeMail;
+use App\Models\OtpCodes;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,21 @@ class UserService
     }
 
     public function requestOtp($email) {
+
+        if ($otp_found = OtpCodes::where('email', $email)->where('expired_at', '>', now())->first()) {
+            $otp_found->is_used = true;
+            $otp_found->save();
+        }
+
         $otp_codes = (string) random_int(000000, 999999);
+
+        $data = [
+            'email' => $email,
+            'otp_codes' => $otp_codes,
+            'expired_at' => now()->addMinutes(5)
+        ];
+
+        $new_otp = OtpCodes::create($data);
 
         Mail::to($email)->send(new OtpCodeMail($otp_codes));
 

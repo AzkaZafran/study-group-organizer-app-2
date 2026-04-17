@@ -13,7 +13,9 @@ class OtpCodes extends Model
     public $incrementing = true;
     
     protected $fillable = [
+        'email',
         'otp_codes',
+        'expired_at',
         'is_used'
     ];
 }
