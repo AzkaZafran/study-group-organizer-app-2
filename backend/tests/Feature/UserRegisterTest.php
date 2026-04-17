@@ -34,7 +34,11 @@ class UserRegisterTest extends TestCase {
                             'password' => ''
                         ]);
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['username', 'email', 'password']);
+                ->assertSessionHasErrors([
+                    'username' => 'The username field is required.',
+                    'email' => 'The email field is required.',
+                    'password' => 'The password field is required.'
+                ]);
     }
 
     public function testRegisterUsernameAlreadyExist() {
@@ -48,7 +52,9 @@ class UserRegisterTest extends TestCase {
                         ]);
         
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['message']);
+                ->assertSessionHasErrors([
+                    'message' => 'username sudah dipakai'
+                ]);
     }
 
     public function testRegisterEmailAlreadyExistButVerified() {
@@ -70,7 +76,9 @@ class UserRegisterTest extends TestCase {
                         ]);
 
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['message']);
+                ->assertSessionHasErrors([
+                    'message' => 'email sudah dipakai'
+                ]);
     }
 
     public function testRegisterEmailAlreadyExistButNotVerified() {

@@ -48,7 +48,9 @@ class UserVerifyEmailTest extends TestCase {
         ]);
 
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['message'])
+                ->assertSessionHasErrors([
+                    'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
+                ])
                 ->assertSessionHasInput([
                     'email' => 'azkazafran80@gmail.com'
                 ]);
@@ -67,7 +69,9 @@ class UserVerifyEmailTest extends TestCase {
         ]);
 
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['otp_code']);
+                ->assertSessionHasErrors([
+                    'otp_code' => 'The otp code field is required.'
+                ]);
     }
 
     public function testVerifyEmailWithUsedOtpCode() {
@@ -88,7 +92,9 @@ class UserVerifyEmailTest extends TestCase {
         ]);
 
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['message'])
+                ->assertSessionHasErrors([
+                    'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
+                ])
                 ->assertSessionHasInput([
                     'email' => 'azkazafran79@gmail.com'
                 ]);
@@ -112,8 +118,9 @@ class UserVerifyEmailTest extends TestCase {
         ]);
 
         $response->assertRedirect('/test')
-                ->assertSessionHasErrors(['message'])
-                ->assertSessionHasInput([
+                ->assertSessionHasErrors([
+                    'message' => 'Kode OTP sudah tidak berlaku. Silakan kirim ulang kode untuk mendapatkan OTP baru.'
+                ])->assertSessionHasInput([
                     'email' => 'azkazafran82@gmail.com'
                 ]);
     }
