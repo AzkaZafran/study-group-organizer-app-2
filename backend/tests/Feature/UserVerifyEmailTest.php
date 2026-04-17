@@ -69,4 +69,28 @@ class UserVerifyEmailTest extends TestCase {
         $response->assertRedirect('/test')
                 ->assertSessionHasErrors(['otp_code']);
     }
+
+    public function testVerifyEmailWithUsedOtpCode() {
+        $this->post('/register', [
+            'username' => 'azkazafran78',
+            'email' => "azkazafran78@gmail.com",
+            "password" => "test"
+        ]);
+
+        $otp_code_data = OtpCodes::where('email', 'azkazafran78@gmail.com')->first();
+        $otp_code = $otp_code_data->otp_codes;
+        $otp_code_data->is_used = true;
+        $otp_code_data->save();
+
+        $response = $this->from('/test')->post('/verify-email', [
+            'email' => 'azkazafran78@gmail.com',
+            'otp_code' => $otp_code
+        ]);
+
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['message'])
+                ->assertSessionHasInput([
+                    'email' => 'azkazafran78@gmail.com'
+                ]);
+    }
 }
