@@ -37,32 +37,32 @@ class UserVerifyEmailTest extends TestCase {
 
     public function testVerifyEmailWithWrongOtpCode() {
         $this->post('/register', [
-            'username' => 'azkazafran78',
-            'email' => "azkazafran78@gmail.com",
+            'username' => 'azkazafran80',
+            'email' => "azkazafran80@gmail.com",
             "password" => "test"
         ]);
 
         $response = $this->from('/test')->post('/verify-email', [
-            'email' => 'azkazafran78@gmail.com',
+            'email' => 'azkazafran80@gmail.com',
             'otp_code' => 'salah1'
         ]);
 
         $response->assertRedirect('/test')
                 ->assertSessionHasErrors(['message'])
                 ->assertSessionHasInput([
-                    'email' => 'azkazafran78@gmail.com'
+                    'email' => 'azkazafran80@gmail.com'
                 ]);
     }
 
     public function testVerifyEmailFailed() {
         $this->post('/register', [
             'username' => 'azkazafran78',
-            'email' => "azkazafran78@gmail.com",
+            'email' => "azkazafran81@gmail.com",
             "password" => "test"
         ]);
 
         $response = $this->from('/test')->post('/verify-email', [
-            'email' => 'azkazafran78@gmail.com',
+            'email' => 'azkazafran81@gmail.com',
             'otp_code' => ''
         ]);
 
@@ -72,25 +72,25 @@ class UserVerifyEmailTest extends TestCase {
 
     public function testVerifyEmailWithUsedOtpCode() {
         $this->post('/register', [
-            'username' => 'azkazafran78',
-            'email' => "azkazafran78@gmail.com",
+            'username' => 'azkazafran79',
+            'email' => "azkazafran79@gmail.com",
             "password" => "test"
         ]);
 
-        $otp_code_data = OtpCodes::where('email', 'azkazafran78@gmail.com')->first();
+        $otp_code_data = OtpCodes::where('email', 'azkazafran79@gmail.com')->first();
         $otp_code = $otp_code_data->otp_codes;
         $otp_code_data->is_used = true;
         $otp_code_data->save();
 
         $response = $this->from('/test')->post('/verify-email', [
-            'email' => 'azkazafran78@gmail.com',
+            'email' => 'azkazafran79@gmail.com',
             'otp_code' => $otp_code
         ]);
 
         $response->assertRedirect('/test')
                 ->assertSessionHasErrors(['message'])
                 ->assertSessionHasInput([
-                    'email' => 'azkazafran78@gmail.com'
+                    'email' => 'azkazafran79@gmail.com'
                 ]);
     }
 }
