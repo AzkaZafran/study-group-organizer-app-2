@@ -29,9 +29,17 @@ class UserController extends Controller
             ]);
             return view('test', ['data' => $data]);
         } catch (\Exception $e) {
-            return back()->withErrors([
-                'message' => $e->getMessage()
-            ]);
+            return match ($e->getMessage()) {
+                'USERNAME_ALREADY_EXIST' => back()->withErrors([
+                    'message' => 'username sudah dipakai'
+                ]),
+                'EMAIL_ALREADY_EXIST' => back()->withErrors([
+                    'message' => 'email sudah dipakai'
+                ]),
+                default => back()->withErrors([
+                    'message' => 'something went wrong'
+                ])
+            };
         }
     }
 
@@ -53,6 +61,9 @@ class UserController extends Controller
                 ])->withInput(
                     $request->only('email')
                 ),
+                default => back()->withErrors([
+                    'message' => 'something went wrong'
+                ])
             };
         }
     }
