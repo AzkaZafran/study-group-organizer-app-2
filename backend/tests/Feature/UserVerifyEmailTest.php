@@ -53,4 +53,20 @@ class UserVerifyEmailTest extends TestCase {
                     'email' => 'azkazafran78@gmail.com'
                 ]);
     }
+
+    public function testVerifyEmailFailed() {
+        $this->post('/register', [
+            'username' => 'azkazafran78',
+            'email' => "azkazafran78@gmail.com",
+            "password" => "test"
+        ]);
+
+        $response = $this->from('/test')->post('/verify-email', [
+            'email' => 'azkazafran78@gmail.com',
+            'otp_code' => ''
+        ]);
+
+        $response->assertRedirect('/test')
+                ->assertSessionHasErrors(['otp_code']);
+    }
 }
