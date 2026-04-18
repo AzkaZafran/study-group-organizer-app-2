@@ -13,7 +13,7 @@ class UserRegisterTest extends TestCase {
         $response = $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $this->assertDatabaseHas('otp_codes', [
@@ -49,7 +49,7 @@ class UserRegisterTest extends TestCase {
                         ->post('/register-account', [
                             'username' => 'azkazafran78',
                             'email' => "azkazafran79@gmail.com",
-                            "password" => "test"
+                            "password" => "testestestest"
                         ]);
         
         $response->assertRedirect('/register')
@@ -62,7 +62,7 @@ class UserRegisterTest extends TestCase {
         $data = [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => Hash::make('test')
+            "password" => Hash::make('testestestest')
         ];
 
         $user = User::create($data);
@@ -73,7 +73,7 @@ class UserRegisterTest extends TestCase {
                         ->post('/register-account', [
                             'username' => 'newazka',
                             'email' => "azkazafran78@gmail.com",
-                            "password" => "test"
+                            "password" => "testestestest"
                         ]);
 
         $response->assertRedirect('/register')
@@ -86,7 +86,7 @@ class UserRegisterTest extends TestCase {
         $data = [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => Hash::make('test')
+            "password" => Hash::make('testestestest')
         ];
 
         $user = User::create($data);
@@ -95,7 +95,7 @@ class UserRegisterTest extends TestCase {
                         ->post('/register-account', [
                             'username' => 'newazka',
                             'email' => "azkazafran78@gmail.com",
-                            "password" => "test"
+                            "password" => "testestestest"
                         ]);
         
         $this->assertDatabaseHas('otp_codes', [

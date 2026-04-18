@@ -12,7 +12,7 @@ class UserVerifyEmailTest extends TestCase {
         $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $otp_code = OtpCodes::where('email', 'azkazafran78@gmail.com')->first()->otp_codes;
@@ -39,7 +39,7 @@ class UserVerifyEmailTest extends TestCase {
         $this->post('/register-account', [
             'username' => 'azkazafran80',
             'email' => "azkazafran80@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $response = $this->from('/register/input-otp')->post('/verify-email', [
@@ -60,7 +60,7 @@ class UserVerifyEmailTest extends TestCase {
         $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran81@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $response = $this->from('/register/input-otp')->post('/verify-email', [
@@ -78,7 +78,7 @@ class UserVerifyEmailTest extends TestCase {
         $this->post('/register-account', [
             'username' => 'azkazafran79',
             'email' => "azkazafran79@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $otp_code_data = OtpCodes::where('email', 'azkazafran79@gmail.com')->first();
@@ -104,7 +104,7 @@ class UserVerifyEmailTest extends TestCase {
         $this->post('/register-account', [
             'username' => 'azkazafran79',
             'email' => "azkazafran82@gmail.com",
-            "password" => "test"
+            "password" => "testestestest"
         ]);
 
         $otp_code_data = OtpCodes::where('email', 'azkazafran82@gmail.com')->first();
