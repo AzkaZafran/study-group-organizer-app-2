@@ -389,11 +389,28 @@
                                         "description": "Gagal login user azka",
                                         "value": {
                                             "errors": {
+                                                "message": "Username atau password salah."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Gagal login user",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "errorvalidation": {
+                                        "description": "Error validation",
+                                        "value": {
+                                            "errors": {
                                                 "username": [
-                                                    "username atau password salah"
+                                                    "Username tidak boleh kosong."
                                                 ],
                                                 "password": [
-                                                    "username atau password salah"
+                                                    "Password tidak boleh kosong."
                                                 ]
                                             }
                                         }
