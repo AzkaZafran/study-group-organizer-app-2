@@ -5,11 +5,12 @@ namespace Tests\Feature;
 use App\Models\OtpCodes;
 use App\Models\User;
 use Database\Seeders\UserSeeder;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserRegisterTest extends TestCase {
     public function testRegisterSuccess() {
-        $response = $this->post('/register', [
+        $response = $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
             "password" => "test"
@@ -27,13 +28,13 @@ class UserRegisterTest extends TestCase {
     }
 
     public function testRegisterFailed() {
-        $response = $this->from('/test')
-                        ->post('register', [
+        $response = $this->from('/register')
+                        ->post('/register-account', [
                             'username' => '',
                             'email' => '',
                             'password' => ''
                         ]);
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register')
                 ->assertSessionHasErrors([
                     'username' => 'The username field is required.',
                     'email' => 'The email field is required.',
@@ -44,14 +45,14 @@ class UserRegisterTest extends TestCase {
     public function testRegisterUsernameAlreadyExist() {
         $this->testRegisterSuccess();
 
-        $response = $this->from('/test')
-                        ->post('/register', [
+        $response = $this->from('/register')
+                        ->post('/register-account', [
                             'username' => 'azkazafran78',
                             'email' => "azkazafran79@gmail.com",
                             "password" => "test"
                         ]);
         
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register')
                 ->assertSessionHasErrors([
                     'message' => 'username sudah dipakai'
                 ]);
@@ -61,21 +62,21 @@ class UserRegisterTest extends TestCase {
         $data = [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => "test"
+            "password" => Hash::make('test')
         ];
 
         $user = User::create($data);
         $user->is_verified = true;
         $user->save();
 
-        $response = $this->from('/test')
-                        ->post('/register', [
+        $response = $this->from('/register')
+                        ->post('/register-account', [
                             'username' => 'newazka',
                             'email' => "azkazafran78@gmail.com",
                             "password" => "test"
                         ]);
 
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register')
                 ->assertSessionHasErrors([
                     'message' => 'email sudah dipakai'
                 ]);
@@ -85,13 +86,13 @@ class UserRegisterTest extends TestCase {
         $data = [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
-            "password" => "test"
+            "password" => Hash::make('test')
         ];
 
         $user = User::create($data);
 
-        $response = $this->from('/test')
-                        ->post('/register', [
+        $response = $this->from('/register')
+                        ->post('/register-account', [
                             'username' => 'newazka',
                             'email' => "azkazafran78@gmail.com",
                             "password" => "test"

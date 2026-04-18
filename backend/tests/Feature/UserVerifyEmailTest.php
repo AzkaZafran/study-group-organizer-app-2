@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class UserVerifyEmailTest extends TestCase {
     public function testVerifyEmailSuccess() {
-        $this->post('/register', [
+        $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran78@gmail.com",
             "password" => "test"
@@ -36,18 +36,18 @@ class UserVerifyEmailTest extends TestCase {
     }
 
     public function testVerifyEmailWithWrongOtpCode() {
-        $this->post('/register', [
+        $this->post('/register-account', [
             'username' => 'azkazafran80',
             'email' => "azkazafran80@gmail.com",
             "password" => "test"
         ]);
 
-        $response = $this->from('/test')->post('/verify-email', [
+        $response = $this->from('/register/input-otp')->post('/verify-email', [
             'email' => 'azkazafran80@gmail.com',
             'otp_code' => 'salah1'
         ]);
 
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
                     'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
                 ])
@@ -57,25 +57,25 @@ class UserVerifyEmailTest extends TestCase {
     }
 
     public function testVerifyEmailFailed() {
-        $this->post('/register', [
+        $this->post('/register-account', [
             'username' => 'azkazafran78',
             'email' => "azkazafran81@gmail.com",
             "password" => "test"
         ]);
 
-        $response = $this->from('/test')->post('/verify-email', [
+        $response = $this->from('/register/input-otp')->post('/verify-email', [
             'email' => 'azkazafran81@gmail.com',
             'otp_code' => ''
         ]);
 
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
                     'otp_code' => 'The otp code field is required.'
                 ]);
     }
 
     public function testVerifyEmailWithUsedOtpCode() {
-        $this->post('/register', [
+        $this->post('/register-account', [
             'username' => 'azkazafran79',
             'email' => "azkazafran79@gmail.com",
             "password" => "test"
@@ -86,12 +86,12 @@ class UserVerifyEmailTest extends TestCase {
         $otp_code_data->is_used = true;
         $otp_code_data->save();
 
-        $response = $this->from('/test')->post('/verify-email', [
+        $response = $this->from('/register/input-otp')->post('/verify-email', [
             'email' => 'azkazafran79@gmail.com',
             'otp_code' => $otp_code
         ]);
 
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
                     'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
                 ])
@@ -101,7 +101,7 @@ class UserVerifyEmailTest extends TestCase {
     }
 
     public function testVerifyEmailWithExpiredOtpCode() {
-        $this->post('/register', [
+        $this->post('/register-account', [
             'username' => 'azkazafran79',
             'email' => "azkazafran82@gmail.com",
             "password" => "test"
@@ -112,12 +112,12 @@ class UserVerifyEmailTest extends TestCase {
         $otp_code_data->expired_at = now()->subMinutes(10);
         $otp_code_data->save();
 
-        $response = $this->from('/test')->post('/verify-email', [
+        $response = $this->from('/register/input-otp')->post('/verify-email', [
             'email' => 'azkazafran82@gmail.com',
             'otp_code' => $otp_code
         ]);
 
-        $response->assertRedirect('/test')
+        $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
                     'message' => 'Kode OTP sudah tidak berlaku. Silakan kirim ulang kode untuk mendapatkan OTP baru.'
                 ])->assertSessionHasInput([
