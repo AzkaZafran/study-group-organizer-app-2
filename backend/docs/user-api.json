@@ -182,37 +182,6 @@
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Not Found - Email tidak terdaftar",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "errors": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "example": "Email yang dikirim tidak terdaftar."
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "examples": {
-                                    "emailNotFound": {
-                                        "description": "Email tidak terdaftar",
-                                        "value": {
-                                            "errors": {
-                                                "message": "Email yang dikirim tidak terdaftar."
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
                 }                
             }
