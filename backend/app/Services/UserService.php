@@ -6,6 +6,7 @@ use App\Mail\OtpCodeMail;
 use App\Models\OtpCodes;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -83,5 +84,17 @@ class UserService
         $user->save();
         
         return true;
+    }
+
+    public function login($username, $password): User {
+        $user = User::where('username', $username)->first();
+        
+        if (!$user || !Hash::check($password, $user->password) || !$user->is_verified) {
+            throw new Exception('USERNAME_OR_PASSWORD_WRONG');
+        }
+
+        Auth::login($user);
+
+        return $user;
     }
 }
