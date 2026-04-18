@@ -111,6 +111,22 @@
                                                 ]
                                             }
                                         }
+                                    },
+                                    "usernameAlreadyExist": {
+                                        "description": "Username already exist",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Username sudah dipakai."
+                                            }
+                                        }
+                                    },
+                                    "emailAlreadyExist": {
+                                        "description": "Email already exist",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Email sudah dipakai."
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -161,37 +177,6 @@
                                         },
                                         "errors": {
                                             "type": "object"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found - Email tidak terdaftar",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "errors": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "example": "Email yang dikirim tidak terdaftar."
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "examples": {
-                                    "emailNotFound": {
-                                        "description": "Email tidak terdaftar",
-                                        "value": {
-                                            "errors": {
-                                                "message": "Email yang dikirim tidak terdaftar."
-                                            }
                                         }
                                     }
                                 }
@@ -404,11 +389,28 @@
                                         "description": "Gagal login user azka",
                                         "value": {
                                             "errors": {
+                                                "message": "Username atau password salah."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Gagal login user",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "errorvalidation": {
+                                        "description": "Error validation",
+                                        "value": {
+                                            "errors": {
                                                 "username": [
-                                                    "username atau password salah"
+                                                    "Username tidak boleh kosong."
                                                 ],
                                                 "password": [
-                                                    "username atau password salah"
+                                                    "Password tidak boleh kosong."
                                                 ]
                                             }
                                         }
