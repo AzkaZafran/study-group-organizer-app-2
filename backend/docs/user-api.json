@@ -111,6 +111,22 @@
                                                 ]
                                             }
                                         }
+                                    },
+                                    "usernameAlreadyExist": {
+                                        "description": "Username already exist",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Username sudah dipakai."
+                                            }
+                                        }
+                                    },
+                                    "emailAlreadyExist": {
+                                        "description": "Email already exist",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Email sudah dipakai."
+                                            }
+                                        }
                                     }
                                 }
                             }
