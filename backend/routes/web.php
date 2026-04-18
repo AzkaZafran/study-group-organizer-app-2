@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\LoginController;
 use App\Http\Controllers\Web\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,12 @@ Route::get('/login', function () {
     return view('test');
 })->name('login');
 
+Route::post('/login-account', [LoginController::class, 'login']);
+
 Route::get('/register/input-otp', function () {
+    return view('test');
+});
+
+Route::get('/dashboard', function () {
     return view('test');
 });
