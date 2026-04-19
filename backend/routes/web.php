@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\LoginController;
 use App\Http\Controllers\Web\RegisterController;
+use App\Http\Controllers\Web\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,3 +32,5 @@ Route::post('/resend-otp', [RegisterController::class, 'resendOtp']);
 Route::get('/dashboard', function () {
     return view('test');
 });
+
+Route::delete('/logout', [UserController::class, 'logout']);

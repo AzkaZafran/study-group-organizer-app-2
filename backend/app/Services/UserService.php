@@ -97,4 +97,14 @@ class UserService
 
         return $user;
     }
+
+    public function logout() {
+        if(!Auth::user()) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        Auth::logout();
+
+        return true;
+    }
 }
