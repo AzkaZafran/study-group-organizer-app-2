@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\UserResendOtpRequest;
 use App\Http\Requests\UserVerifyEmailRequest;
 use App\Services\UserService;
 
@@ -63,6 +64,17 @@ class RegisterController extends Controller
                     'message' => 'something went wrong'
                 ])
             };
+        }
+    }
+
+    public function resendOtp(UserResendOtpRequest $request) {
+        $data = $request->validated();
+
+        try {
+            $this->userService->requestOtp($data['email']);
+            return redirect('/register/input-otp')->withInput();
+        } catch (\Exception $e) {
+            return redirect('/register/input-otp');
         }
     }
 }

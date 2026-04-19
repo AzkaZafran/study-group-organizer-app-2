@@ -26,6 +26,8 @@ Route::get('/register/input-otp', function () {
     return view('test');
 });
 
+Route::post('/resend-otp', [RegisterController::class, 'resendOtp']);
+
 Route::get('/dashboard', function () {
     return view('test');
 });
