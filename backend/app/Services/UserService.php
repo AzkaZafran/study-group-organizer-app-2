@@ -107,4 +107,14 @@ class UserService
 
         return true;
     }
+
+    public function getCurrentUser(): User {
+        $user = Auth::user();
+
+        if(!$user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        return $user;
+    }
 }
