@@ -117,4 +117,20 @@ class UserService
 
         return $user;
     }
+
+    public function search($username, $page, $size) {
+        $user = Auth::user();
+
+        if(!$user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $users = User::whereNot('username', 'like', $user->username)
+                    ->where('username', 'like', '%' . $username . '%')
+                    ->where('is_verified', true)
+                    ->paginate(perPage: $size, page:$page)
+                    ->getCollection();
+
+        return $users;
+    }
 }
