@@ -10,10 +10,10 @@ Route::get('/', function () {
 });
 
 Route::get('/register', function () {
-    return view('test');
+    return view('register');
 })->name('register');
 
-Route::post('/register-account', [RegisterController::class, 'register'])->name('register-account');
+Route::post('/register-account', [RegisterController::class, 'register'])->name('register account');
 
 Route::post('/verify-email', [RegisterController::class, 'verifyEmail'])->name('verify email');
 
@@ -25,7 +25,7 @@ Route::post('/login-account', [LoginController::class, 'login']);
 
 Route::get('/register/input-otp', function () {
     return view('test');
-});
+})->name('input otp');
 
 Route::post('/resend-otp', [RegisterController::class, 'resendOtp']);
 
