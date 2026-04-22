@@ -18,10 +18,10 @@ Route::post('/register-account', [RegisterController::class, 'register'])->name(
 Route::post('/verify-email', [RegisterController::class, 'verifyEmail'])->name('verify email');
 
 Route::get('/login', function () {
-    return view('test');
+    return view('login');
 })->name('login');
 
-Route::post('/login-account', [LoginController::class, 'login']);
+Route::post('/login-account', [LoginController::class, 'login'])->name('login account');
 
 Route::get('/register/input-otp', function () {
     return view('inputOtp');
