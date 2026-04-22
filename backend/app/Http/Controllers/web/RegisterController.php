@@ -21,12 +21,8 @@ class RegisterController extends Controller
         try {
             $user = $this->userService->register($data['username'], $data['email'], $data['password']);
             $this->userService->requestOtp($data['email']);
-            $data = collect([
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email
-            ]);
-            return view('test', ['data' => $data]);
+            
+            return redirect()->route('input otp')->with('email', $user->email);
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
                 'USERNAME_ALREADY_EXIST' => back()->withErrors([

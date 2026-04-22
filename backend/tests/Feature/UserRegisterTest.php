@@ -20,11 +20,14 @@ class UserRegisterTest extends TestCase {
             'email' => 'azkazafran78@gmail.com'
         ]);
 
-        $response->assertStatus(200)->assertViewIs('test')
-                ->assertViewHas('data', function ($data) {
-                    return $data['username'] === 'azkazafran78' &&
-                            $data['email'] === 'azkazafran78@gmail.com';
-                });
+        $response->assertRedirect('/register/input-otp')
+                ->assertSessionHas([
+                    'email' => 'azkazafran78@gmail.com'
+                ]);
+
+        $response = $this->get('/register/input-otp');
+
+        $response->assertViewIs('inputOtp');
     }
 
     public function testRegisterFailed() {
@@ -102,10 +105,13 @@ class UserRegisterTest extends TestCase {
             'email' => 'azkazafran78@gmail.com'
         ]);
 
-        $response->assertStatus(200)->assertViewIs('test')
-                ->assertViewHas('data', function ($data) {
-                    return $data['username'] === 'newazka' &&
-                            $data['email'] === 'azkazafran78@gmail.com';
-                });
+        $response->assertRedirect('/register/input-otp')
+                ->assertSessionHas([
+                    'email' => 'azkazafran78@gmail.com'
+                ]);
+
+        $response = $this->get('/register/input-otp');
+
+        $response->assertViewIs('inputOtp');
     }
 }

@@ -24,10 +24,10 @@ Route::get('/login', function () {
 Route::post('/login-account', [LoginController::class, 'login']);
 
 Route::get('/register/input-otp', function () {
-    return view('test');
+    return view('inputOtp');
 })->name('input otp');
 
-Route::post('/resend-otp', [RegisterController::class, 'resendOtp']);
+Route::post('/resend-otp', [RegisterController::class, 'resendOtp'])->name('resend otp');
 
 Route::get('/dashboard', function () {
     return view('test');

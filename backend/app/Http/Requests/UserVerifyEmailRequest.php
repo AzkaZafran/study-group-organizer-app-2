@@ -24,7 +24,7 @@ class UserVerifyEmailRequest extends FormRequest
     {
         return [
             'email' => ['required', 'max:100'],
-            'otp_code' => ['required', 'max:6', 'min:6']
+            'otp_code' => ['required', 'digits:6']
         ];
     }
 }
