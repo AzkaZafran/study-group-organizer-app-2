@@ -42,9 +42,19 @@ class UserVerifyEmailTest extends TestCase {
             "password" => "testestestest"
         ]);
 
+        $otp_code = (int) OtpCodes::where('email', 'azkazafran80@gmail.com')->first()->otp_codes;
+
+        $wrong_otp_code = 0;
+
+        if($otp_code > 999999) {
+            $wrong_otp_code = $otp_code - 1;
+        } else {
+            $wrong_otp_code = $otp_code + 1;
+        }
+
         $response = $this->from('/register/input-otp')->post('/verify-email', [
             'email' => 'azkazafran80@gmail.com',
-            'otp_code' => 'salah1'
+            'otp_code' => (string) $wrong_otp_code
         ]);
 
         $response->assertRedirect('/register/input-otp')
