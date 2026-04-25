@@ -6,6 +6,7 @@ use App\Mail\OtpCodeMail;
 use App\Models\OtpCodes;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -125,6 +126,7 @@ class UserService
             throw new Exception('USER_NOT_AUTHENTICATED');
         }
 
+        /** @var \Illuminate\Support\Collection<int, User> */
         $users = User::whereNot('username', 'like', $user->username)
                     ->where('username', 'like', '%' . $username . '%')
                     ->where('is_verified', true)
