@@ -39,4 +39,101 @@ class FriendUserSearchTest extends TestCase {
             })
         );
     }
+
+    public function testSearchUserFriendStatusWithCurrentUser() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        User::factory()->count(15)->create();
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser($auth_user->username, 1, 10);
+
+        $this->assertCount(0, $users_status_page_1);
+    }
+
+    public function testSearchUserFriendStatusFailed() {
+        $friendRequestService = new FriendRequestService();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('USER_NOT_AUTHENTICATED');
+
+        $users_status_page_1 = $friendRequestService->searchUser('test', 1, 10);
+    }
+
+    public function testSearchUserFriendStatusWithUsername() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $user = User::create($data);
+
+        User::factory()->count(15)->create();
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser('budi', 1, 10);
+
+        $this->assertTrue(
+            $users_status_page_1->isNotEmpty()
+        );
+
+        $this->assertTrue(
+            $users_status_page_1->contains('username', 'budipratama')
+        );
+    }
+
+    public function testSearchUserFriendStatusWithUnverifiedUser() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest')
+        ];
+
+        $user = User::create($data);
+
+        User::factory()->count(15)->create();
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser('budi', 1, 10);
+
+        $this->assertFalse(
+            $users_status_page_1->contains('username', 'budipratama')
+        );
+    }
 }
