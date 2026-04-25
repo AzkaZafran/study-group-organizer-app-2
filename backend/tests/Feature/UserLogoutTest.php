@@ -28,9 +28,6 @@ class UserLogoutTest extends TestCase {
 
         $response = $this->delete('/logout');
 
-        $response->assertRedirect('/login')
-                ->assertSessionHasErrors([
-                    'message' => 'Pengguna harus terautentikasi.'
-                ]);
+        $response->assertRedirect('/login');
     }
 }

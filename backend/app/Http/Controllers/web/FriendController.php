@@ -21,8 +21,8 @@ class FriendController extends Controller
 
         $data = [
             'username' => $request->input('username', ''),
-            'page' => $request->input('page', 1),
-            'size' => $request->input('size', 10)
+            'page' => (int) $request->input('page', 1),
+            'size' => (int) $request->input('size', 10)
         ];
 
         try {

@@ -34,6 +34,8 @@ Route::get('/dashboard', function () {
     return view('test');
 });
 
-Route::delete('/logout', [UserController::class, 'logout']);
+Route::middleware('auth:web')->group(function () {
+    Route::delete('/logout', [UserController::class, 'logout']);
 
-Route::get('/friend/search', [FriendController::class, 'search']);
+    Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
+});
