@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\FriendController;
 use App\Http\Controllers\Web\LoginController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Controllers\Web\UserController;
@@ -33,4 +34,8 @@ Route::get('/dashboard', function () {
     return view('test');
 });
 
-Route::delete('/logout', [UserController::class, 'logout']);
+Route::middleware('auth:web')->group(function () {
+    Route::delete('/logout', [UserController::class, 'logout']);
+
+    Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
+});

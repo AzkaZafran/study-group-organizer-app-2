@@ -23,6 +23,14 @@ class User extends Model implements Authenticatable
         'is_verified'
     ];
 
+        public function sentRequests() {
+            return $this->hasMany(FriendRequests::class, 'id_pengirim');
+        }
+
+        public function receivedRequests() {
+            return $this->hasMany(FriendRequests::class, 'id_penerima');
+        }
+
     public function getAuthIdentifier() {
         return $this->id;
     }
