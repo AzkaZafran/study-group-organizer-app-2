@@ -136,4 +136,126 @@ class FriendUserSearchTest extends TestCase {
             $users_status_page_1->contains('username', 'budipratama')
         );
     }
+
+    public function testSearchUserWithOpenInviteStatus() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $target_user = User::create($data);
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser('budi', 1, 10);
+
+        $this->assertTrue(
+            $users_status_page_1->contains(function ($user) {
+                return $user->username == 'budipratama' &&
+                        $user->friend_status == 'open invite';
+            })
+        );
+    }
+
+    public function testSearchUserWithPendingStatus() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $target_user = User::create($data);
+
+        $friend_status_data = [
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $target_user->id
+        ];
+
+        FriendRequests::create($friend_status_data);
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser('budi', 1, 10);
+
+        $this->assertTrue(
+            $users_status_page_1->contains(function ($user) {
+                return $user->username == 'budipratama' &&
+                        $user->friend_status == 'pending';
+            })
+        );
+    }
+
+    public function testSearchUserWithMutualStatus() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $target_user = User::create($data);
+
+        $friend_status_data = [
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $target_user->id,
+            'status' => 'mutual'
+        ];
+
+        FriendRequests::create($friend_status_data);
+
+        $friend_status_data = [
+            'id_pengirim' => $target_user->id,
+            'id_penerima' => $auth_user->id,
+            'status' => 'mutual'
+        ];
+
+        FriendRequests::create($friend_status_data);
+
+        $this->actingAs($auth_user);
+
+        $friendRequestService = new FriendRequestService();
+
+        $users_status_page_1 = $friendRequestService->searchUser('budi', 1, 10);
+
+        $this->assertTrue(
+            $users_status_page_1->contains(function ($user) {
+                return $user->username == 'budipratama' &&
+                        $user->friend_status == 'mutual';
+            })
+        );
+    }
 }
