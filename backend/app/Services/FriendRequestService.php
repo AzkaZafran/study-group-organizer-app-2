@@ -63,4 +63,38 @@ class FriendRequestService {
         $status = $friend_request_data->delete();
         return $status;
     }
+
+    public function acceptFriendRequest($id_pengirim): bool {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $friend_request_data = FriendRequests::where('id_pengirim', $id_pengirim)
+                                            ->where('id_penerima', $auth_user->id)
+                                            ->where('status', 'pending')
+                                            ->first();
+        
+        if (!$friend_request_data) {
+            throw new Exception('FRIEND_REQUEST_NOT_FOUND');
+        }
+
+        $friend_request_data->status = 'mutual';
+        if (!$friend_request_data->save()) {
+            return false;
+        }
+
+        $receiver_mutual_data = [
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $id_pengirim,
+            'status' => 'mutual'
+        ];
+
+        if (!FriendRequests::create($receiver_mutual_data)) {
+            return false;
+        }
+
+        return true;
+    }
 }
