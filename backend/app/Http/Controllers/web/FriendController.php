@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\FriendRequestService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -56,5 +57,24 @@ class FriendController extends Controller
             };
         }
         
+    }
+
+    public function rejectFriendRequest($id_pengirim) {
+        try {
+            $this->friendRequestService->rejectFriendRequest($id_pengirim);
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'FRIEND_REQUEST_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Friend Request Tidak Dapat Ditemukan.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
     }
 }

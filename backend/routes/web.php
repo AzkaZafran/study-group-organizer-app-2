@@ -32,10 +32,17 @@ Route::post('/resend-otp', [RegisterController::class, 'resendOtp'])->name('rese
 
 Route::get('/dashboard', function () {
     return view('test');
-});
+})->name('dashboard');
 
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
+
+    Route::delete('/friend/requests/reject/{id_pengirim}', [FriendController::class, 'rejectFriendRequest'])
+            ->name('reject friend request');
+
+    Route::get('/friend/requests', function () {
+        return view('test');
+    })->name('friend requests');
 });
