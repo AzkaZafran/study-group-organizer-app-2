@@ -34,11 +34,11 @@ class AcceptFriendRequestTest extends TestCase {
             'id_penerima' => $auth_user->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $response = $this->actingAs($auth_user)
                         ->from('/friend/requests')
-                        ->post("/friend/requests/accept/{$user->id}");
+                        ->post("/friend/requests/accept/{$new_friend_request->id_request}");
 
         $response->assertRedirect('/friend/requests');
 
@@ -79,9 +79,9 @@ class AcceptFriendRequestTest extends TestCase {
             'id_penerima' => $user1->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
-        $response = $this->post("/friend/requests/accept/{$user2->id}");
+        $response = $this->post("/friend/requests/accept/{$new_friend_request->id_request}");
 
         $response->assertRedirect('/login');
     }
@@ -96,10 +96,8 @@ class AcceptFriendRequestTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        $nonexistent_user_id = (int) $auth_user->id + 1;
-
         $response = $this->actingAs($auth_user)
-                        ->post("/friend/requests/accept/{$nonexistent_user_id}");
+                        ->post("/friend/requests/accept/9999");
         
         $response->assertViewIs('errors.error')
                 ->assertSee('404 Not Found')

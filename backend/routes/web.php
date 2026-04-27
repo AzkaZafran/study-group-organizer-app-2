@@ -42,7 +42,7 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/friend/requests/reject/{id_request}', [FriendController::class, 'rejectFriendRequest'])
             ->name('reject friend request');
 
-    Route::post('/friend/requests/accept/{id_pengirim}', [FriendController::class, 'acceptFriendRequest'])
+    Route::post('/friend/requests/accept/{id_request}', [FriendController::class, 'acceptFriendRequest'])
             ->name('accept friend request');
 
     Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
