@@ -123,4 +123,23 @@ class FriendController extends Controller
             };
         }
     }
+
+    public function sendFriendRequest($id_target) {
+        try {
+            $this->friendRequestService->sendFriendRequest($id_target);
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'USER_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'User Tidak Dapat Ditemukan.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }
