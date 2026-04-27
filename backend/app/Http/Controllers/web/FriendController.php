@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\FriendRequestService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -56,5 +57,109 @@ class FriendController extends Controller
             };
         }
         
+    }
+
+    public function rejectFriendRequest($id_request) {
+        try {
+            $this->friendRequestService->rejectFriendRequest($id_request);
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'FRIEND_REQUEST_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Friend Request Tidak Dapat Ditemukan.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function acceptFriendRequest($id_request) {
+        try {
+            $this->friendRequestService->acceptFriendRequest($id_request);
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'FRIEND_REQUEST_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Friend Request Tidak Dapat Ditemukan.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function friendRequest() {
+        try {
+            $friend_requests_with_user = $this->friendRequestService->friendRequest();
+            $friend_requests_data = collect();
+            foreach ($friend_requests_with_user as $friend_request) {
+                $friend_requests_data->push([
+                    'id_request' => $friend_request->id_request,
+                    'username' => $friend_request->username,
+                    'email' => $friend_request->email
+                ]);
+            }
+            $data = [
+                'friend_requests' => $friend_requests_data
+            ];
+
+            return view('test', ['data' => $data]);
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function sendFriendRequest($id_target) {
+        try {
+            $this->friendRequestService->sendFriendRequest($id_target);
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'USER_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'User Tidak Dapat Ditemukan.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function friends() {
+        try {
+            $friends = $this->friendRequestService->friends();
+
+            $data = [
+                'friends' => $friends
+            ];
+
+            return view('test', ['data' => $data]);
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
     }
 }

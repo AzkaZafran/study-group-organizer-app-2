@@ -32,10 +32,23 @@ Route::post('/resend-otp', [RegisterController::class, 'resendOtp'])->name('rese
 
 Route::get('/dashboard', function () {
     return view('test');
-});
+})->name('dashboard');
 
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
+
+    Route::delete('/friend/requests/reject/{id_request}', [FriendController::class, 'rejectFriendRequest'])
+            ->name('reject friend request');
+
+    Route::post('/friend/requests/accept/{id_request}', [FriendController::class, 'acceptFriendRequest'])
+            ->name('accept friend request');
+
+    Route::post('/friend/requests/send/{id_target}', [FriendController::class, 'sendFriendRequest'])
+            ->name('send friend request');
+
+    Route::get('/friend/list', [FriendController::class, 'friends'])->name('friend list');
+
+    Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
 });
