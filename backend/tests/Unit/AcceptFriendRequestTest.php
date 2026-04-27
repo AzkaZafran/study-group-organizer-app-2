@@ -34,13 +34,13 @@ class AcceptFriendRequestTest extends TestCase {
             'id_penerima' => $auth_user->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $friendRequestService = new FriendRequestService();
 
         $this->actingAs($auth_user);
 
-        $friendRequestService->acceptFriendRequest($user->id);
+        $friendRequestService->acceptFriendRequest($new_friend_request->id_request);
 
         $this->assertDatabaseHas(FriendRequests::class, [
             'id_pengirim' => $user->id,
@@ -79,14 +79,20 @@ class AcceptFriendRequestTest extends TestCase {
             'id_penerima' => $user1->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $friendRequestService = new FriendRequestService();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('USER_NOT_AUTHENTICATED');
 
-        $friendRequestService->acceptFriendRequest($user2->id);
+        $friendRequestService->acceptFriendRequest($new_friend_request->id_request);
+
+        $this->assertDatabaseMissing(FriendRequests::class, [
+            'id_pengirim' => $user2->id,
+            'id_penerima' => $user1->id,
+            'status' => 'mutual'
+        ]);
     }
 
     public function testAcceptFriendRequestNotFound() {
@@ -106,6 +112,6 @@ class AcceptFriendRequestTest extends TestCase {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('FRIEND_REQUEST_NOT_FOUND');
 
-        $friendRequestService->acceptFriendRequest((int) $auth_user->id + 1);
+        $friendRequestService->acceptFriendRequest(9999);
     }
 }

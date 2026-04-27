@@ -61,17 +61,14 @@ class FriendRequestService {
         return $status;
     }
 
-    public function acceptFriendRequest($id_pengirim): bool {
+    public function acceptFriendRequest($id_request): bool {
         $auth_user = Auth::user();
 
         if(!$auth_user) {
             throw new Exception('USER_NOT_AUTHENTICATED');
         }
 
-        $friend_request_data = FriendRequests::where('id_pengirim', $id_pengirim)
-                                            ->where('id_penerima', $auth_user->id)
-                                            ->where('status', 'pending')
-                                            ->first();
+        $friend_request_data = FriendRequests::find($id_request);
         
         if (!$friend_request_data) {
             throw new Exception('FRIEND_REQUEST_NOT_FOUND');
@@ -84,7 +81,7 @@ class FriendRequestService {
 
         $receiver_mutual_data = [
             'id_pengirim' => $auth_user->id,
-            'id_penerima' => $id_pengirim,
+            'id_penerima' => $friend_request_data->id_pengirim,
             'status' => 'mutual'
         ];
 
