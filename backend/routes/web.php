@@ -39,7 +39,7 @@ Route::middleware('auth:web')->group(function () {
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 
-    Route::delete('/friend/requests/reject/{id_pengirim}', [FriendController::class, 'rejectFriendRequest'])
+    Route::delete('/friend/requests/reject/{id_request}', [FriendController::class, 'rejectFriendRequest'])
             ->name('reject friend request');
 
     Route::post('/friend/requests/accept/{id_pengirim}', [FriendController::class, 'acceptFriendRequest'])

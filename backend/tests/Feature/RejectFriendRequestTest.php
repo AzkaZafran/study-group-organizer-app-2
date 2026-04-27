@@ -32,11 +32,11 @@ class RejectFriendRequestTest extends TestCase {
             'id_penerima' => $auth_user->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $response = $this->actingAs($auth_user)
                         ->from('/friend/requests')
-                        ->delete("/friend/requests/reject/{$user->id}");
+                        ->delete("/friend/requests/reject/{$new_friend_request->id_request}");
 
         $response->assertRedirect('/friend/requests');
 
@@ -67,7 +67,9 @@ class RejectFriendRequestTest extends TestCase {
             'id_penerima' => $user1->id
         ];
 
-        $response = $this->delete("/friend/requests/reject/{$user2->id}");
+        $new_friend_request = FriendRequests::create($friend_request_data);
+
+        $response = $this->delete("/friend/requests/reject/{$new_friend_request->id_request}");
 
         $response->assertRedirect('/login');
     }
@@ -82,10 +84,8 @@ class RejectFriendRequestTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        $nonexistent_user_id = (int) $auth_user->id + 1;
-
         $response = $this->actingAs($auth_user)
-                        ->delete("/friend/requests/reject/{$nonexistent_user_id}");
+                        ->delete("/friend/requests/reject/9999");
         
         $response->assertViewIs('errors.error')
                 ->assertSee('404 Not Found')

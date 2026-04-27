@@ -59,9 +59,9 @@ class FriendController extends Controller
         
     }
 
-    public function rejectFriendRequest($id_pengirim) {
+    public function rejectFriendRequest($id_request) {
         try {
-            $this->friendRequestService->rejectFriendRequest($id_pengirim);
+            $this->friendRequestService->rejectFriendRequest($id_request);
             return back();
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
