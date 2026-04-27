@@ -96,4 +96,31 @@ class FriendController extends Controller
             };
         }
     }
+
+    public function friendRequest() {
+        try {
+            $friend_requests_with_user = $this->friendRequestService->friendRequest();
+            $friend_requests_data = collect();
+            foreach ($friend_requests_with_user as $friend_request) {
+                $friend_requests_data->push([
+                    'id_request' => $friend_request->id_request,
+                    'username' => $friend_request->username,
+                    'email' => $friend_request->email
+                ]);
+            }
+            $data = [
+                'friend_requests' => $friend_requests_data
+            ];
+
+            return view('test', ['data' => $data]);
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }

@@ -45,7 +45,5 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/friend/requests/accept/{id_pengirim}', [FriendController::class, 'acceptFriendRequest'])
             ->name('accept friend request');
 
-    Route::get('/friend/requests', function () {
-        return view('test');
-    })->name('friend requests');
+    Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
 });
