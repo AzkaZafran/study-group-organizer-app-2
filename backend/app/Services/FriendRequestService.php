@@ -113,4 +113,29 @@ class FriendRequestService {
 
         return $friend_requests_with_user;
     }
+
+    public function sendFriendRequest($id_target): bool {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $target_user = User::find($id_target);
+
+        if(!$target_user) {
+            throw new Exception('USER_NOT_FOUND');
+        }
+
+        $friend_request_data = [
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $target_user->id
+        ];
+
+        if (!FriendRequests::create($friend_request_data)) {
+            return false;
+        }
+
+        return true;
+    }
 }
