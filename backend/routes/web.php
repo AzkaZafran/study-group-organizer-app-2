@@ -48,5 +48,7 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/friend/requests/send/{id_target}', [FriendController::class, 'sendFriendRequest'])
             ->name('send friend request');
 
+    Route::get('/friend/list', [FriendController::class, 'friends'])->name('friend list');
+
     Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
 });

@@ -142,4 +142,24 @@ class FriendController extends Controller
             };
         }
     }
+
+    public function friends() {
+        try {
+            $friends = $this->friendRequestService->friends();
+
+            $data = [
+                'friends' => $friends
+            ];
+
+            return view('test', ['data' => $data]);
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }
