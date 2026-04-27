@@ -23,7 +23,7 @@ class FriendRequestsFactory extends Factory
 
         return [
             'id_pengirim' => $sender->id,
-            'id_penerima' => Auth::user()->id,
+            'id_penerima' => User::factory()->create()->id,
             'status' => 'pending',
         ];
     }

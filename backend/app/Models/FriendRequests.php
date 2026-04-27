@@ -24,4 +24,8 @@ class FriendRequests extends Model
     public function userPengirim() {
         return $this->belongsTo(User::class, 'id_pengirim', 'id');
     }
+
+    public function userPenerima() {
+        return $this->belongsTo(User::class, 'id_penerima', 'id');
+    }
 }

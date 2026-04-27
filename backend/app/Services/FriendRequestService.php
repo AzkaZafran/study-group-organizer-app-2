@@ -138,4 +138,25 @@ class FriendRequestService {
 
         return true;
     }
+
+    public function friends() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $auth_user_friends = $auth_user->sentRequests()
+            ->where('status', 'mutual')
+            ->with('userPenerima:id,username,email') // select specific columns
+            ->get()
+            ->map(function ($friend_request) {
+                return [
+                    'username' => $friend_request->userPenerima->username,
+                    'email' => $friend_request->userPenerima->email,
+                ];
+            });
+
+        return $auth_user_friends;
+    }
 }

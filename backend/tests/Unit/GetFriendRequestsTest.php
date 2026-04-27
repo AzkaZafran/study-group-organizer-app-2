@@ -22,7 +22,9 @@ class GetFriendRequestsTest extends TestCase {
 
         $this->actingAs($auth_user);
 
-        FriendRequests::factory()->count(10)->create();
+        FriendRequests::factory()->count(10)->create([
+            'id_penerima' => $auth_user->id
+        ]);
 
         $friendRequestService = new FriendRequestService();
 
@@ -59,7 +61,9 @@ class GetFriendRequestsTest extends TestCase {
 
         $this->actingAs($auth_user);
 
-        FriendRequests::factory()->count(8)->create();
+        FriendRequests::factory()->count(8)->create([
+            'id_penerima' => $auth_user->id
+        ]);
 
         $data = [
             'username' => 'pelajar40',
