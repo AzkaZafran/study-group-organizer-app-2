@@ -34,13 +34,13 @@ class RejectFriendRequestTest extends TestCase {
             'id_penerima' => $auth_user->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $friendRequestService = new FriendRequestService();
 
         $this->actingAs($auth_user);
 
-        $friendRequestService->rejectFriendRequest($user->id);
+        $friendRequestService->rejectFriendRequest($new_friend_request->id_request);
 
         $this->assertDatabaseEmpty(FriendRequests::class);
     }
@@ -69,14 +69,14 @@ class RejectFriendRequestTest extends TestCase {
             'id_penerima' => $user1->id
         ];
 
-        FriendRequests::create($friend_request_data);
+        $new_friend_request = FriendRequests::create($friend_request_data);
 
         $friendRequestService = new FriendRequestService();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('USER_NOT_AUTHENTICATED');
 
-        $friendRequestService->rejectFriendRequest($user2->id);
+        $friendRequestService->rejectFriendRequest($new_friend_request->id_request);
     }
 
     public function testRejectFriendRequestNotFound() {
@@ -96,6 +96,6 @@ class RejectFriendRequestTest extends TestCase {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('FRIEND_REQUEST_NOT_FOUND');
 
-        $friendRequestService->rejectFriendRequest((int) $auth_user->id + 1);
+        $friendRequestService->rejectFriendRequest(9999);
     }
 }

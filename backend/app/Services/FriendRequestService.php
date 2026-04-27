@@ -44,17 +44,14 @@ class FriendRequestService {
         return $users;
     }
 
-    public function rejectFriendRequest($id_pengirim): bool {
+    public function rejectFriendRequest($id_request): bool {
         $auth_user = Auth::user();
 
         if(!$auth_user) {
             throw new Exception('USER_NOT_AUTHENTICATED');
         }
 
-        $friend_request_data = FriendRequests::where('id_pengirim', $id_pengirim)
-                                            ->where('id_penerima', $auth_user->id)
-                                            ->where('status', 'pending')
-                                            ->first();
+        $friend_request_data = FriendRequests::find($id_request);
         
         if (!$friend_request_data) {
             throw new Exception('FRIEND_REQUEST_NOT_FOUND');
