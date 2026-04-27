@@ -97,4 +97,26 @@ class FriendRequestService {
 
         return true;
     }
+
+    public function friendRequest() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $friend_requests_with_user = $auth_user->hasMany(FriendRequests::class, 'id_penerima')
+                                                ->where('status', 'pending')
+                                                ->with('userPengirim')
+                                                ->get();
+        
+        $friend_requests_with_user->map(function ($friend_request) {
+            $friend_request->username = $friend_request->userPengirim->username;
+            $friend_request->email = $friend_request->userPengirim->email;
+
+            return $friend_request;
+        });
+
+        return $friend_requests_with_user;
+    }
 }
