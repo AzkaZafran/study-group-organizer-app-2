@@ -1,10 +1,22 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test</title>
-</head>
-<body>
-    
-</body>
-</html>
+@extends('layouts.app')
+
+@section('content')
+    <form action="/friend/requests/reject/999" method="POST">
+        @csrf
+        @method('DELETE')
+
+        <button type="submit">Test Reject Friend Request</button>
+    </form>
+
+    <form action="/friend/requests/accept/999" method="POST">
+        @csrf
+
+        <button type="submit">Test Accept Friend Request</button>
+    </form>
+
+    <form action="/friend/requests/send/999" method="POST">
+        @csrf
+
+        <button type="submit">Test Send Friend Request</button>
+    </form>
+@endsection
