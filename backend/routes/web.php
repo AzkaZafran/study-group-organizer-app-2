@@ -51,4 +51,8 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/friend/list', [FriendController::class, 'friends'])->name('friend list');
 
     Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
+
+    Route::get('/test', function () {
+        return view('layouts.appWithNavbar');
+    });
 });
