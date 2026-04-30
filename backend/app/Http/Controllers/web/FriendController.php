@@ -17,7 +17,7 @@ class FriendController extends Controller
 
     public function search(Request $request) {
         if ($request->all() === []) {
-            return view('test');
+            return view('addFriend');
         }
 
         $data = [
@@ -45,7 +45,7 @@ class FriendController extends Controller
                 'size' => $data['size']
             ];
 
-            return view('test', ['data' => $data]);
+            return view('addFriend', ['data' => $data]);
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED' => redirect('/login')->withErrors([
@@ -112,7 +112,7 @@ class FriendController extends Controller
                 'friend_requests' => $friend_requests_data
             ];
 
-            return view('test', ['data' => $data]);
+            return view('friendRequest', ['data' => $data]);
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED' => redirect('/login'),
@@ -151,7 +151,7 @@ class FriendController extends Controller
                 'friends' => $friends
             ];
 
-            return view('test', ['data' => $data]);
+            return view('friendList', ['data' => $data]);
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED' => redirect('/login'),
