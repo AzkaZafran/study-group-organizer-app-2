@@ -27,10 +27,10 @@ class FriendController extends Controller
         ];
 
         try {
-            $users = $this->friendRequestService->searchUser($data['username'], $data['page'], $data['size']);
+            $results = $this->friendRequestService->searchUser($data['username'], $data['page'], $data['size']);
 
             $users_data = collect();
-            foreach ($users as $user) {
+            foreach ($results['users'] as $user) {
                 $users_data->push([
                     'id' => $user->id,
                     'username' => $user->username,
@@ -41,6 +41,9 @@ class FriendController extends Controller
 
             $data = [
                 'users' => $users_data,
+                'has_more_pages' => $results['has_more_pages'],
+                'last_page' => $results['last_page'],
+                'on_first_page' => $results['on_first_page'],
                 'page' => $data['page'],
                 'size' => $data['size']
             ];

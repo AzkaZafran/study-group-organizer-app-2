@@ -26,12 +26,12 @@ class GetUserFriendsTest extends TestCase {
         $response = $this->actingAs($auth_user)
                         ->get('/friend/list');
             
-        $response->assertViewIs('test')
+        $response->assertViewIs('friendList')
                 ->assertViewHas('data', function ($data) {
                     return $data['friends']->count(10) &&
                             $data['friends']->contains(function ($friend) {
                                 return $friend['username'] !== null &&
-                                        $friend['email'];
+                                        $friend['email'] !== null;
                             });
                 });
     }

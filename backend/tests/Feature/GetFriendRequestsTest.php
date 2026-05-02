@@ -28,7 +28,7 @@ class GetFriendRequestsTest extends TestCase {
 
         $response = $this->get('/friend/requests');
 
-        $response->assertViewIs('test')
+        $response->assertViewIs('friendRequest')
                 ->assertViewHas('data', function ($data) {
                     return $data['friend_requests']->count() === 10 &&
                             $data['friend_requests']->contains(function ($friend_request) {
@@ -85,7 +85,7 @@ class GetFriendRequestsTest extends TestCase {
 
         $response = $this->get('/friend/requests');
 
-        $response->assertViewIs('test')
+        $response->assertViewIs('friendRequest')
                 ->assertViewHas('data', function ($data) {
                     return $data['friend_requests']->count() === 8;
                 });

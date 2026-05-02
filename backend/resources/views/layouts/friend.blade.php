@@ -4,7 +4,7 @@
     <div class="container h-75">
         <div class="row gx-3 gy-3">
             <div class="col d-flex">
-                <div class="card w-100 shadow p-3 mb-5" style="height: 80vh;">
+                <div class="card d-flex flex-column w-100 shadow p-3" style="height: 80vh;">
                     @yield('friend-content')
                 </div>
             </div>

@@ -21,7 +21,7 @@ class UserSearchTest extends TestCase {
 
         $response = $this->get('/friend/search');
 
-        $response->assertViewIs('test');
+        $response->assertViewIs('addFriend');
     }
 
     public function testViewSearchPageFailed() {
@@ -46,11 +46,14 @@ class UserSearchTest extends TestCase {
 
         $response = $this->get(route('search new friend', ['username' => '']));
 
-        $response->assertViewIs('test')
+        $response->assertViewIs('addFriend')
                 ->assertViewHas('data', function ($data) {
                     return $data['page'] === 1 &&
                             $data['size'] === 10 &&
-                            $data['users']->count() === 10;
+                            $data['users']->count() === 10 &&
+                            $data['has_more_pages'] === true &&
+                            $data['last_page'] === 2 &&
+                            $data['on_first_page'] === true;
                 });
     }
 
@@ -73,11 +76,14 @@ class UserSearchTest extends TestCase {
             'page' => 2
         ]));
 
-        $response->assertViewIs('test')
+        $response->assertViewIs('addFriend')
                 ->assertViewHas('data', function ($data) {
                     return $data['page'] === 2 &&
                             $data['size'] === 10 &&
-                            $data['users']->count() === 5;
+                            $data['users']->count() === 5 &&
+                            $data['has_more_pages'] === false &&
+                            $data['last_page'] === 2 &&
+                            $data['on_first_page'] === false;
                 });
     }
 
@@ -108,10 +114,11 @@ class UserSearchTest extends TestCase {
             'username' => 'budi'
         ]));
 
-        $response->assertViewIs('test')
+        $response->assertViewIs('addFriend')
                 ->assertViewHas('data', function ($data) {
                     return $data['page'] === 1 &&
                             $data['size'] === 10 &&
+                            $data['on_first_page'] === true &&
                             $data['users']->contains('username', 'budipratama');
                 });
     }
