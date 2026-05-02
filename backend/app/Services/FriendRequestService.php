@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\FriendRequests;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class FriendRequestService {
@@ -17,8 +18,7 @@ class FriendRequestService {
 
         $auth_id = $user->id;
 
-        /** @var \Illuminate\Support\Collection<int, User> */
-        $users = User::query()
+        $users_pagination = User::query()
                     ->where('id', '!=', $auth_id)
                     ->where('username', 'like', "%{$username}%") // filter search
                     ->where('is_verified', true)
@@ -26,8 +26,13 @@ class FriendRequestService {
                         'sentRequests' => fn ($q) => $q->where('id_penerima', $auth_id),
                         'receivedRequests' => fn ($q) => $q->where('id_pengirim', $auth_id),
                     ])
-                    ->paginate(perPage: $size, page:$page)
-                    ->getCollection();
+                    ->paginate(perPage: $size, page:$page);
+
+        $on_first_page = $users_pagination->onFirstPage();
+        $last_page = $users_pagination->lastPage();
+        $has_more_pages = $users_pagination->hasMorePages();
+        /** @var \Illuminate\Support\Collection<int, User> */
+        $users = $users_pagination->getCollection();
 
         $users->map(function ($user) {
             if ($user->sentRequests->isNotEmpty()) {
@@ -41,7 +46,15 @@ class FriendRequestService {
             return $user;
         });
 
-        return $users;
+        /** @var array{users: Collection<int, User>, on_first_page: bool, last_page: int, has_more_pages: bool} */
+        $data = [
+            'users' => $users,
+            'on_first_page' => $on_first_page,
+            'last_page' => $last_page,
+            'has_more_pages' => $has_more_pages
+        ];
+
+        return $data;
     }
 
     public function rejectFriendRequest($id_request): bool {

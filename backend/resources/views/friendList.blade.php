@@ -12,48 +12,17 @@
             <a class="nav-link cnav-text" href="{{ route('search new friend') }}">Tambah Teman</a>
         </li>
     </ul>
-    <div class="d-flex flex-column gap-2 px-5 overflow-auto">
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend1' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend1@gmail.com' }}</p>
+    @isset($data)
+        <div class="d-flex flex-column gap-2 px-5 overflow-auto">
+            @foreach ($data['friends'] as $friend)
+                <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
+                    <p class="fs-5 m-0">{{ $friend['username'] }}</p>
+                    <p class="fs-6 m-0">{{ $friend['email'] }}</p>
+                </div>
+            @endforeach
         </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend2' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend2@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend1' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend1@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend2' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend2@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend1' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend1@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend2' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend2@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend1' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend1@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend2' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend2@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend1' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend1@gmail.com' }}</p>
-        </div>
-        <div class="d-flex flex-row justify-content-between p-2" style="background-color: #D6D7DA; border-radius: 10px;">
-            <p class="fs-5 m-0">{{ 'Friend2' }}</p>
-            <p class="fs-6 m-0">{{ 'Friend2@gmail.com' }}</p>
-        </div>
-    </div>
+    @endisset
+
     @push('styles')
         <style>
             .friend-navbar > .nav-item > .nav-link.active {
