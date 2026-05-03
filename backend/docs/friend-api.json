@@ -372,6 +372,37 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Idempotent Action",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "alreadyMutual": {
+                                        "description": "User menerima permintaan teman suatu user ketika mereka sudah saling mutual",
+                                        "value": {
+                                            "message": "Permintaan teman dihapus. User sudah saling berteman.",
+                                            "data": true,
+                                            "errors": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "201": {
                         "description": "Berhasil menerima permintaan teman",
                         "content": {
@@ -495,6 +526,37 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Idempotent Action",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "alreadyMutual": {
+                                        "description": "User menolak permintaan teman suatu user ketika mereka sudah saling mutual",
+                                        "value": {
+                                            "message": "Permintaan teman dihapus. User sudah saling berteman.",
+                                            "data": true,
+                                            "errors": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "201": {
                         "description": "Berhasil menolak dan menghapus data permintaan teman",
                         "content": {
