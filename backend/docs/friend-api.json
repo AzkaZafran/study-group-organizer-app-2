@@ -270,22 +270,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "size",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
                     }
                 ],
                 "responses": {
@@ -299,18 +283,17 @@
                                         "value": {
                                             "data": [
                                                 {
-                                                    "id_request": 7,
-                                                    "username": "pelajar#40"
+                                                    "id_request": 4,
+                                                    "username": "pelajar#40",
+                                                    "email": "pelajar40@gmail.com"
                                                 },
                                                 {
                                                     "id_request": 5,
-                                                    "username": "pelajar#39"
+                                                    "username": "pelajar#39",
+                                                    "email": "pelajar39@gmail.com"
                                                 }
                                             ],
-                                            "errors": {},
-                                            "meta": {
-                                                "page": 1
-                                            }
+                                            "errors": {}
                                         }
                                     }
                                 },
@@ -327,14 +310,14 @@
                                                     },
                                                     "username": {
                                                         "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "type": "string"
                                                     }
                                                 }
                                             }
                                         },
                                         "errors": {
-                                            "type": "object"
-                                        },
-                                        "meta": {
                                             "type": "object"
                                         }
                                     }
