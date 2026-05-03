@@ -19,22 +19,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "size",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
                     }
                 ],
                 "responses": {
@@ -58,10 +42,7 @@
                                                     "email": "pelajar39@gmail.com"
                                                 }
                                             ],
-                                            "errors": {},
-                                            "meta": {
-                                                "page": 1
-                                            }
+                                            "errors": {}
                                         }
                                     }
                                 },
@@ -86,9 +67,6 @@
                                             }
                                         },
                                         "errors": {
-                                            "type": "object"
-                                        },
-                                        "meta": {
                                             "type": "object"
                                         }
                                     }
@@ -270,22 +248,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "size",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
                     }
                 ],
                 "responses": {
@@ -299,7 +261,7 @@
                                         "value": {
                                             "data": [
                                                 {
-                                                    "id_request": 7,
+                                                    "id_request": 4,
                                                     "username": "pelajar#40"
                                                 },
                                                 {
@@ -307,10 +269,7 @@
                                                     "username": "pelajar#39"
                                                 }
                                             ],
-                                            "errors": {},
-                                            "meta": {
-                                                "page": 1
-                                            }
+                                            "errors": {}
                                         }
                                     }
                                 },
@@ -332,9 +291,6 @@
                                             }
                                         },
                                         "errors": {
-                                            "type": "object"
-                                        },
-                                        "meta": {
                                             "type": "object"
                                         }
                                     }
@@ -416,6 +372,37 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Idempotent Action",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "alreadyMutual": {
+                                        "description": "User menerima permintaan teman suatu user ketika mereka sudah saling mutual",
+                                        "value": {
+                                            "message": "Permintaan teman dihapus. User sudah saling berteman.",
+                                            "data": true,
+                                            "errors": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "201": {
                         "description": "Berhasil menerima permintaan teman",
                         "content": {
@@ -539,6 +526,37 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Idempotent Action",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "boolean"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "alreadyMutual": {
+                                        "description": "User menolak permintaan teman suatu user ketika mereka sudah saling mutual",
+                                        "value": {
+                                            "message": "Permintaan teman dihapus. User sudah saling berteman.",
+                                            "data": true,
+                                            "errors": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "201": {
                         "description": "Berhasil menolak dan menghapus data permintaan teman",
                         "content": {
@@ -628,6 +646,219 @@
                         }
                     }
                 }                
+            }
+        },
+        "/api/users/friends/add/search": {
+            "get": {
+                "description": "User mencari user lain untuk menambah teman",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Proses query berhasil",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "userFound": {
+                                        "description": "Sukses menemukan user dengan kata kunci 'pelajar'",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": 3,
+                                                    "username": "pelajar#40",
+                                                    "status": "open invite"
+                                                },
+                                                {
+                                                    "id": 4,
+                                                    "username": "pelajar#39",
+                                                    "status": "pending"
+                                                }
+                                            ],
+                                            "errors": {},
+                                            "meta": {
+                                                "has_more_pages": false,
+                                                "last_page": 1,
+                                                "on_first_page": true,
+                                                "page": 1,
+                                                "size": 5
+                                            }
+                                        }
+                                    },
+                                    "userNotFound": {
+                                        "description": "Tidak dapat menemukan user yang sesuai dengan kata kunci yang diberikan",
+                                        "value": {
+                                            "data": [],
+                                            "errors": {},
+                                            "meta": {
+                                                "has_more_pages": false,
+                                                "last_page": 1,
+                                                "on_first_page": true,
+                                                "page": 1,
+                                                "size": 5
+                                            }
+                                        }
+                                    },
+                                    "blankQuery": {
+                                        "description": "Sukses menemukan semua user pada database dengan kata kunci kosong",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": 3,
+                                                    "username": "pelajar#40",
+                                                    "status": "open invite"
+                                                },
+                                                {
+                                                    "id": 4,
+                                                    "username": "pelajar#39",
+                                                    "status": "pending"
+                                                },
+                                                {
+                                                    "id": 5,
+                                                    "username": "budi",
+                                                    "status": "mutual"
+                                                },
+                                                {
+                                                    "id": 6,
+                                                    "username": "andi",
+                                                    "status": "pending"
+                                                },
+                                                {
+                                                    "id": 7,
+                                                    "username": "bambang",
+                                                    "status": "open invite"
+                                                }
+                                            ],
+                                            "errors": {},
+                                            "meta": {
+                                                "has_more_pages": true,
+                                                "last_page": 3,
+                                                "on_first_page": true,
+                                                "page": 1,
+                                                "size": 5
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "number"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "has_more_pages": {
+                                                    "type": "boolean"
+                                                },
+                                                "last_page": {
+                                                    "type": "number"
+                                                },
+                                                "on_first_page": {
+                                                    "type": "boolean"
+                                                },
+                                                "page": {
+                                                    "type": "number"
+                                                },
+                                                "size": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Token tidak dikirim",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Authorization token is required."
+                                            }
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Token tidak valid",
+                                        "value": {
+                                            "errors": {
+                                                "message": "Invalid token."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
