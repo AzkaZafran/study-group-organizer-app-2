@@ -284,13 +284,11 @@
                                             "data": [
                                                 {
                                                     "id_request": 4,
-                                                    "username": "pelajar#40",
-                                                    "email": "pelajar40@gmail.com"
+                                                    "username": "pelajar#40"
                                                 },
                                                 {
                                                     "id_request": 5,
-                                                    "username": "pelajar#39",
-                                                    "email": "pelajar39@gmail.com"
+                                                    "username": "pelajar#39"
                                                 }
                                             ],
                                             "errors": {}
@@ -309,9 +307,6 @@
                                                         "type": "number"
                                                     },
                                                     "username": {
-                                                        "type": "string"
-                                                    },
-                                                    "email": {
                                                         "type": "string"
                                                     }
                                                 }
