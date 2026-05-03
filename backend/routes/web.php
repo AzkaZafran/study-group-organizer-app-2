@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\FriendController;
 use App\Http\Controllers\Web\LoginController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Controllers\Web\UserController;
+use App\Models\FriendRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,7 +35,7 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
     Route::get('/dashboard', function () {
-        return view('test');
+        return redirect('/test');
     })->name('dashboard');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
@@ -53,6 +54,10 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
 
     Route::get('/test', function () {
-        return view('layouts.appWithNavbar');
+        $mutual_friend_request = FriendRequests::where('id_pengirim', auth()->id())->where('status', 'mutual')->first();
+        $data = [
+            'id_mutual_request' => $mutual_friend_request->id_request
+        ];
+        return view('test', ['data' => $data]);
     });
 });

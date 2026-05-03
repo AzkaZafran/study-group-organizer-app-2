@@ -70,6 +70,16 @@ class FriendRequestService {
             throw new Exception('FRIEND_REQUEST_NOT_FOUND');
         }
 
+        $id_pengirim = $friend_request_data->id_pengirim;
+        $id_penerima = $friend_request_data->id_penerima;
+
+        if ($friend_request_data->status === "mutual") {
+            throw new Exception('USER_ALREADY_MUTUAL');
+        } else if (FriendRequests::where('id_pengirim', $id_pengirim)->where('id_penerima', $id_penerima)->where('status', 'mutual')->first()) {
+            $friend_request_data->delete();
+            throw new Exception('USER_ALREADY_MUTUAL');
+        }
+
         $status = $friend_request_data->delete();
         return $status;
     }

@@ -19,4 +19,11 @@
 
         <button type="submit">Test Send Friend Request</button>
     </form>
+
+    <form action="{{ "/friend/requests/reject/{$data['id_mutual_request']}" }}" method="POST">
+        @csrf
+        @method('DELETE')
+
+        <button type="submit">Test Reject Mutual Request</button>
+    </form>
 @endsection
