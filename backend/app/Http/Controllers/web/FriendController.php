@@ -73,7 +73,8 @@ class FriendController extends Controller
                     'title' => '404 Not Found',
                     'description' => 'Friend Request Tidak Dapat Ditemukan.'
                 ]),
-                'USER_ALREADY_MUTUAL' => redirect('/friend/requests')->with('success', 'Kamu sudah saling berteman.'),
+                'USER_ALREADY_MUTUAL' => redirect('/friend/requests')
+                                        ->with('success', 'Kamu sudah saling berteman.'),
                 default => view('errors.error', [
                     'title' => '500 Internal Server Error',
                     'description' => 'Something went wrong.'
@@ -93,6 +94,8 @@ class FriendController extends Controller
                     'title' => '404 Not Found',
                     'description' => 'Friend Request Tidak Dapat Ditemukan.'
                 ]),
+                'USER_ALREADY_MUTUAL' => redirect('/friend/requests')
+                                        ->with('success', 'Kamu sudah saling berteman.'),
                 default => view('errors.error', [
                     'title' => '500 Internal Server Error',
                     'description' => 'Something went wrong.'
