@@ -19,22 +19,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "size",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "number"
-                        }
                     }
                 ],
                 "responses": {
@@ -58,10 +42,7 @@
                                                     "email": "pelajar39@gmail.com"
                                                 }
                                             ],
-                                            "errors": {},
-                                            "meta": {
-                                                "page": 1
-                                            }
+                                            "errors": {}
                                         }
                                     }
                                 },
@@ -86,9 +67,6 @@
                                             }
                                         },
                                         "errors": {
-                                            "type": "object"
-                                        },
-                                        "meta": {
                                             "type": "object"
                                         }
                                     }
