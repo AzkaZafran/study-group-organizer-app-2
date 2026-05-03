@@ -7,7 +7,7 @@ use App\Http\Controllers\Web\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('test');
+    return redirect('/dashboard');
 });
 
 Route::get('/register', function () {
@@ -30,12 +30,12 @@ Route::get('/register/input-otp', function () {
 
 Route::post('/resend-otp', [RegisterController::class, 'resendOtp'])->name('resend otp');
 
-Route::get('/dashboard', function () {
-    return view('test');
-})->name('dashboard');
-
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
+
+    Route::get('/dashboard', function () {
+        return view('test');
+    })->name('dashboard');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 
