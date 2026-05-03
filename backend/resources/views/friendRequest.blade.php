@@ -1,6 +1,14 @@
 @extends('layouts.friend')
 
 @section('friend-content')
+    @if(session('success'))
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+            <div class="alert alert-success alert-dismissible fade show shadow" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
     <ul class="friend-navbar nav nav-pills nav-fill mb-3">
         <li class="nav-item">
             <a class="nav-link cnav-text" href="{{ route('friend list') }}">Daftar Teman</a>
