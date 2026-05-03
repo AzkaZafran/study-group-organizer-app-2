@@ -17,9 +17,18 @@ class UserLogoutTest extends TestCase {
 
         $user = User::create($data);
 
-        $response = $this->actingAs($user)->delete('/logout');
+        $this->actingAs($user)
+            ->withSession(['foo' => 'bar']);
+
+        $old_token = session()->token();
+
+        $response = $this->delete('/logout');
 
         $this->assertGuest();
+
+        $response->assertSessionMissing('foo');
+
+        $this->assertNotEquals($old_token, session()->token());
 
         $response->assertRedirect('/login');
     }

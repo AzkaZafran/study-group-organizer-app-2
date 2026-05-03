@@ -7,6 +7,12 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <form action="/logout" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn fw-medium" style="background-color: #4c0099;">Logout</button>
+        </form>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav nav-underline ms-auto"> <!-- ms-auto pushes to right -->
                 <li class="nav-item">
