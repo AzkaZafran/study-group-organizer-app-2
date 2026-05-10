@@ -20,6 +20,10 @@ Route::post('/register-account', [RegisterController::class, 'register'])->name(
 Route::post('/verify-email', [RegisterController::class, 'verifyEmail'])->name('verify email');
 
 Route::get('/login', function () {
+    if (auth()->user()) {
+        return redirect('/dashboard');
+    }
+
     return view('login');
 })->name('login');
 
@@ -35,7 +39,7 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
     Route::get('/dashboard', function () {
-        return redirect('/test');
+        return view('dashboard');
     })->name('dashboard');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');

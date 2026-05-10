@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg mb-3" style="background-color: #1E3A8A;"
+<nav class="navbar navbar-expand-lg sticky-top mb-3" style="background-color: #1E3A8A;"
     data-bs-theme="dark">
     <div class="container-fluid">
         <a class="navbar-brand">{{ auth()->user()->username }}</a>
