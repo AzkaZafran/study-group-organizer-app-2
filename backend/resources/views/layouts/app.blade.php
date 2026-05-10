@@ -9,7 +9,7 @@
         @stack('styles')
         @vite('resources/js/app.js')
     </head>
-    <body class="body">
+    <body class="body" style="background-color: #F8FAFC;">
         @yield('content')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/bdc95ccc7e.js" crossorigin="anonymous"></script>
