@@ -252,9 +252,15 @@
                                 <label for="waktuAgenda" class="form-label secondary text2">Waktu</label>
                                 <input type="date" class="form-control" id="waktuAgenda" placeholder="dd/mm/yyyy" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label for="jamAgenda" class="form-label secondary text2">Jam</label>
-                                <input type="time" class="form-control" id="jamAgenda" placeholder="-- : --" />
+                                <div class="input-group">
+                                    <input type="time" class="form-control" id="jamAgenda" placeholder="-- : --">
+
+                                    <span class="input-group-text">–</span>
+
+                                    <input type="time" class="form-control" placeholder="-- : --">
+                                </div>
                             </div>
                         </div>
 
