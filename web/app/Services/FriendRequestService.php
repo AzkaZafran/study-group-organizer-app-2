@@ -209,6 +209,7 @@ class FriendRequestService {
             ->get()
             ->map(function ($friend_request) {
                 return [
+                    'id' => $friend_request->userPenerima->id,
                     'username' => $friend_request->userPenerima->username,
                     'email' => $friend_request->userPenerima->email
                 ];
