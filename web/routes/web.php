@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\FriendController;
 use App\Http\Controllers\Web\LoginController;
 use App\Http\Controllers\Web\RegisterController;
@@ -41,6 +42,8 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::post('/agenda/add', [DashboardController::class, 'createAgenda'])->name('create agenda');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 

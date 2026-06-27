@@ -58,7 +58,7 @@ new class extends Component
 ?>
 
 <div class="modal-content">
-    <form action="#" method="POST" class="d-flex flex-column h-100">
+    <form action="{{ route('create agenda') }}" method="POST" class="d-flex flex-column h-100">
         @csrf
         <div class="modal-header">
             <h5 class="modal-title" id="modalTambahAgendaLabel"
