@@ -57,6 +57,16 @@ class DashboardController extends Controller
             $new_invite_code = $this->undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
 
             return back()->with('invite_code', $new_invite_code->invite_code);
+        } catch (ParticipantsNotFoundException $e) {
+            return match ($e->getMessage()) {
+                'SOME_PARTICIPANTS_NOT_FOUND' => back()->withErrors([
+                    'message' => 'Id user berikut tidak dapat ditemukan: ' . implode(", ", $e->getMissingIds())
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
         } catch (\Exception $e) {
             return match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED' => redirect('/login'),
@@ -69,16 +79,6 @@ class DashboardController extends Controller
                     'description' => 'Something went wrong.'
                 ])
             };
-        } catch (ParticipantsNotFoundException $e) {
-            return match ($e->getMessage()) {
-                'SOME_PARTICIPANTS_NOT_FOUND' => back()->withErrors([
-                    'message' => 'Id user berikut tidak dapat ditemukan: ' . implode(", ", $e->getMissingIds())
-                ]),
-                default => view('errors.error', [
-                    'title' => '500 Internal Server Error',
-                    'description' => 'Something went wrong.'
-                ])
-            };
-        }
+        } 
     }
 }
