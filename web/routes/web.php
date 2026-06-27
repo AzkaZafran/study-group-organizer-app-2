@@ -36,6 +36,10 @@ Route::get('/register/input-otp', function () {
 
 Route::post('/resend-otp', [RegisterController::class, 'resendOtp'])->name('resend otp');
 
+Route::get('/test/invite-code-modal', function () {
+    return view('drafts/inviteCodeModal');
+});
+
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 

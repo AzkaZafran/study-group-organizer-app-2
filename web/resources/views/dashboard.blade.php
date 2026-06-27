@@ -226,6 +226,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" style="color: #1E3A8A;">Link Undangan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <p class="text2">Berikut tautan undangan agenda yang dapat dibagikan:</p>
