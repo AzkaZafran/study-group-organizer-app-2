@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Agenda;
+use App\Models\Partisipan;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +24,14 @@ class AgendaService {
         ];
 
         $agenda = Agenda::create($agenda_data);
+
+        $partisipan_data = [
+            'id_agenda' => $agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ];
+
+        Partisipan::create($partisipan_data);
 
         return $agenda;
     }

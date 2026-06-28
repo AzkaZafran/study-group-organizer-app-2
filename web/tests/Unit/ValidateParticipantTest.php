@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\FriendRequests;
 use App\Models\Partisipan;
 use App\Models\User;
 use App\Services\AgendaService;
@@ -21,10 +22,27 @@ class ValidateParticipantTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $target_user = User::create($data);
+
         $agendaService = new AgendaService();
         $partisipanService = new PartisipanService();
 
         $this->actingAs($auth_user);
+
+        $friend_request_data = [
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $target_user->id,
+            'status' => 'mutual'
+        ];
+
+        FriendRequests::create($friend_request_data);
 
         $new_agenda = $agendaService->createAgenda(
                             'test agenda',
@@ -32,13 +50,10 @@ class ValidateParticipantTest extends TestCase {
                             '2026-12-20 09:00:00',
                             '2026-12-20 12:00:00'
                         );
-        
-        $partisipan_data = [
-            'id_agenda' => $new_agenda->id_agenda,
-            'id_user' => $auth_user->id
-        ];
 
-        Partisipan::create($partisipan_data);
+        $partisipanService->addParticipants($new_agenda->id_agenda, [$target_user->id]);
+
+        $this->actingAs($target_user);
 
         $result = $partisipanService->validateParticipant($new_agenda->id_agenda);
 
@@ -64,6 +79,15 @@ class ValidateParticipantTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $data = [
+            'username' => 'budipratama',
+            'email' => 'budipratama@gmail.com',
+            'password' => Hash::make('testestestest'),
+            'is_verified' => true
+        ];
+
+        $target_user = User::create($data);
+
         $agendaService = new AgendaService();
         $partisipanService = new PartisipanService();
 
@@ -76,6 +100,8 @@ class ValidateParticipantTest extends TestCase {
                             '2026-12-20 12:00:00'
                         );
         
+        $this->actingAs($target_user);
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('USER_IS_NOT_PARTICIPANT');
 
@@ -103,14 +129,6 @@ class ValidateParticipantTest extends TestCase {
                             '2026-12-20 09:00:00',
                             '2026-12-20 12:00:00'
                         );
-        
-        $partisipan_data = [
-            'id_agenda' => $new_agenda->id_agenda,
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ];
-
-        Partisipan::create($partisipan_data);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('USER_ALREADY_JOIN_AGENDA');
