@@ -36,7 +36,7 @@ class AgendaInviteController extends Controller
             return match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED' => redirect('/login'),
                 'INVALID_INVITE_CODE' => redirect('/dashboard')->withErrors([
-                    'message' => 'Tautan undangan sudah kadaluarsa.'
+                    'message' => 'Tautan undangan yang digunakan tidak valid.'
                 ]),
                 'USER_IS_NOT_PARTICIPANT' => redirect('/dashboard')->withErrors([
                     'message' => 'Pengguna tidak termasuk partisipan dari agenda ini.'
