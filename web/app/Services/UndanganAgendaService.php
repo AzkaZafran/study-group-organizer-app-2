@@ -42,4 +42,22 @@ class UndanganAgendaService {
 
         return $new_invite;
     }
+
+    public function searchAgendaByInviteCode($invite_code) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $invite_data = UndanganAgenda::where('expired_at', '>', now())->where('invite_code', $invite_code)->first();
+
+        if (empty($invite_data)) {
+            throw new Exception('INVALID_INVITE_CODE');
+        }
+
+        $agenda_data = $invite_data->agenda;
+
+        return $agenda_data;
+    }
 }

@@ -20,4 +20,8 @@ class Agenda extends Model
         'waktu_berakhir',
         'status'
     ];
+
+    public function penyelenggara() {
+        return $this->belongsTo(User::class, 'id_penyelenggara', 'id');
+    }
 }

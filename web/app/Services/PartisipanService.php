@@ -45,4 +45,22 @@ class PartisipanService {
 
         return $new_participants;
     }
+
+    public function validateParticipant($id_agenda) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $partisipan_data = Partisipan::where('id_agenda', $id_agenda)->where('id_user', $auth_user->id)->first();
+
+        if (empty($partisipan_data)) {
+            throw new Exception('USER_IS_NOT_PARTICIPANT');
+        } else if ($partisipan_data->status == 'ikut') {
+            throw new Exception('USER_ALREADY_JOIN_AGENDA');
+        }
+
+        return true;
+    }
 }
