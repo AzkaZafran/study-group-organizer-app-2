@@ -41,6 +41,9 @@ class AgendaInviteController extends Controller
                 'USER_IS_NOT_PARTICIPANT' => redirect('/dashboard')->withErrors([
                     'message' => 'Pengguna tidak termasuk partisipan dari agenda ini.'
                 ]),
+                'USER_ALREADY_REJECT_INVITE' => redirect('/dashboard')->withErrors([
+                    'message' => 'Pengguna telah menolak undangan ini.'
+                ]),
                 default => view('errors.error', [
                     'title' => '500 Internal Server Error',
                     'description' => 'Something went wrong.'
