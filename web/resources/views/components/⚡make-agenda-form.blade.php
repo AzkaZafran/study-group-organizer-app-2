@@ -18,6 +18,8 @@ new class extends Component
                         "hsl(48, 97%, 80%)",
                         "hsl(356, 100%, 80%)",
                         "hsl(204, 94%, 80%)"];
+    public $colors_count = 8;
+    public $color_counter = 0;
 
     public function boot(FriendRequestService $friendRequestService)
     {
@@ -42,17 +44,23 @@ new class extends Component
             return;
         }
 
-        $random_idx = random_int(0, count($this->colors) - 1);
-
         $this->participants[] = [
             'id' => $id,
             'username' => $username,
-            'generated_color' => $this->colors[$random_idx]
+            'generated_color' => $this->colors[$this->color_counter]
         ];
+
+        $this->color_counter++;
+
+        if ($this->color_counter > $this->colors_count - 1) {
+            $this->color_counter = 0;
+        }
     }
 
     public function removeParticipants($index) {
         unset($this->participants[$index]);
+
+        $this->participants = array_values($this->participants);
     }
 };
 ?>
