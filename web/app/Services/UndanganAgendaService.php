@@ -35,7 +35,7 @@ class UndanganAgendaService {
         $invite_code_data = [
             'id_agenda' => $id_agenda,
             'invite_code' => $new_invite_code,
-            'expired_at' => now()->addDay()
+            'expired_at' => $agenda_data->waktu_mulai
         ];
 
         $new_invite = UndanganAgenda::create($invite_code_data);
