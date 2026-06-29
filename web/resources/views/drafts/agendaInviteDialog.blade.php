@@ -4,11 +4,11 @@
     <div class="bg-light d-flex justify-content-center align-items-center"
         style="width: 100%; height: 100vh;">
         <div class="card shadow p-3" style="width: 100%; max-width: 550px;">
-            <p class="text-center mb-4">Anda telah diundang oleh <span class="fw-bolder">{{ $data['inviter_name'] }}</span> untuk mengikuti agenda</p>
+            <p class="text-center mb-4">Anda telah diundang oleh <span class="fw-bolder">{{ 'username1' }}</span> untuk mengikuti agenda</p>
             <div class="d-flex justify-content-center mb-3">
                 <i class="fa-solid fa-clipboard-list fs-2"></i>
             </div>
-            <h4 class="card-title text-center mb-4" style="color: #1E3A8A">{{ $data['agenda_name'] }}</h4>
+            <h4 class="card-title text-center mb-4" style="color: #1E3A8A">{{ 'Agenda #1' }}</h4>
 
             <div class="d-flex flex-row align-items-center">
                 <div class="flex-grow-1">

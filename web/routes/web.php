@@ -41,6 +41,10 @@ Route::get('/test/invite-code-modal', function () {
     return view('drafts/inviteCodeModal');
 });
 
+Route::get('/drafts/inviteDialog', function () {
+    return view('drafts/agendaInviteDialog');
+});
+
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
