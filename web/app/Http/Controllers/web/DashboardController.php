@@ -29,8 +29,6 @@ class DashboardController extends Controller
     public function createAgenda(UserCreateAgendaRequest $request) {
         $data = $request->validated();
 
-        $data['participant_id'][] = auth()->id();
-
         $waktu_mulai = Carbon::parse(
             $data['waktu_agenda'] . ' ' . $data['jam_awal']
         );

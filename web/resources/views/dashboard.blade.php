@@ -1,6 +1,18 @@
 @extends('layouts.appWithNavbar')
 
 @section('navbar-content')
+    @if ($errors->any())
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
     <div class="container">
         <h3 class="fw-medium mb-3" style="color: black;">Statistik</h3>
 

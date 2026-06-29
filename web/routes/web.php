@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\AgendaInviteController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\FriendController;
 use App\Http\Controllers\Web\LoginController;
@@ -40,6 +41,10 @@ Route::get('/test/invite-code-modal', function () {
     return view('drafts/inviteCodeModal');
 });
 
+Route::get('/drafts/inviteDialog', function () {
+    return view('drafts/agendaInviteDialog');
+});
+
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
@@ -48,6 +53,9 @@ Route::middleware('auth:web')->group(function () {
     })->name('dashboard');
 
     Route::post('/agenda/add', [DashboardController::class, 'createAgenda'])->name('create agenda');
+
+    Route::get('/agenda/{invite_code}/join', [AgendaInviteController::class, 'agendaInviteDialog'])
+            ->name('agenda invite dialog');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 

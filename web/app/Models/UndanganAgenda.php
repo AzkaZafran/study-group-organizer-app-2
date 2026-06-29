@@ -17,4 +17,8 @@ class UndanganAgenda extends Model
         'invite_code',
         'expired_at'
     ];
+
+    public function agenda() {
+        return $this->belongsTo(Agenda::class, 'id_agenda', 'id_agenda');
+    }
 }

@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Agenda;
 use App\Models\FriendRequests;
+use App\Models\Partisipan;
+use App\Models\UndanganAgenda;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,6 +29,15 @@ class DatabaseSeeder extends Seeder
 
         $auth_user = User::create($data);
 
+        $data = [
+            'username' => 'pelajar39',
+            'email' => 'pelajar398@gmail.com',
+            'password' => Hash::make('pelajar123456789'),
+            'is_verified' => true
+        ];
+
+        $pelajar39_user = User::create($data);
+
         FriendRequests::factory()->count(10)->create([
             'id_pengirim' => $auth_user->id,
             'status' => 'mutual'
@@ -36,6 +48,45 @@ class DatabaseSeeder extends Seeder
             'status' => 'pending'
         ]);
 
+        FriendRequests::create([
+            'id_pengirim' => $auth_user->id,
+            'id_penerima' => $pelajar39_user->id,
+            'status' => 'mutual'
+        ]);
+
+        FriendRequests::create([
+            'id_pengirim' => $pelajar39_user->id,
+            'id_penerima' => $auth_user->id,
+            'status' => 'mutual'
+        ]);
+
         $strangers = User::factory()->count(10)->create();
+        
+        $agenda_data = [
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'belajar bareng siang',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-10-15 12:30:00',
+            'waktu_berakhir' => '2026-10-15 15:30:00'
+        ];
+
+        $agenda = Agenda::create($agenda_data);
+
+        Partisipan::create([
+            'id_agenda' => $agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        Partisipan::create([
+            'id_agenda' => $agenda->id_agenda,
+            'id_user' => $pelajar39_user->id
+        ]);
+
+        UndanganAgenda::create([
+            'id_agenda' => $agenda->id_agenda,
+            'invite_code' => '3a75bIc4',
+            'expired_at' => now()->addDay()
+        ]);
     }
 }
