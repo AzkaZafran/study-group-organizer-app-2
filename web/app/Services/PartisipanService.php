@@ -59,6 +59,8 @@ class PartisipanService {
             throw new Exception('USER_IS_NOT_PARTICIPANT');
         } else if ($partisipan_data->status == 'ikut') {
             throw new Exception('USER_ALREADY_JOIN_AGENDA');
+        } else if ($partisipan_data->status == 'tidak ikut') {
+            throw new Exception('USER_ALREADY_REJECT_INVITE');
         }
 
         return true;
