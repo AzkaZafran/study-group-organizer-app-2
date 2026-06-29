@@ -38,7 +38,8 @@ class CreateAgendaInviteCodeTest extends TestCase {
 
         $this->assertTrue(
             $new_invite_code->id_agenda == $new_agenda->id_agenda &&
-            Str::length($new_invite_code->invite_code) == 8
+            Str::length($new_invite_code->invite_code) == 8 &&
+            $new_agenda->waktu_mulai == $new_invite_code->expired_at
         );
     }
 
