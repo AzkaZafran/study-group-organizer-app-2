@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Partisipan extends Model
 {
+    use HasFactory;
+
     protected $table = "partisipan";
     protected $primaryKey = "id_partisipan";
     protected $keyType = "int";
@@ -17,4 +20,8 @@ class Partisipan extends Model
         'id_user',
         'status'
     ];
+
+    public function agenda() {
+        return $this->belongsTo(Agenda::class, 'id_agenda', 'id_agenda');
+    }
 }
