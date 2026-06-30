@@ -12,14 +12,14 @@
 
             <div class="d-flex flex-row align-items-center">
                 <div class="flex-grow-1">
-                    <form action="{{ route('accept agenda invite', ['id_agenda' => $data['id_agenda']]) }}" method="POST" class="d-flex justify-content-center">
+                    <form action="{{ route('reject agenda invite', ['id_agenda' => $data['id_agenda']]) }}" method="POST" class="d-flex justify-content-center">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-reject" style="width: 230px;">Tolak Ajakan</button>
                     </form>
                 </div>
                 <div class="flex-grow-1">
-                    <form action="#" method="POST" class="d-flex justify-content-center">
+                    <form action="{{ route('accept agenda invite', ['id_agenda' => $data['id_agenda']]) }}" method="POST" class="d-flex justify-content-center">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-join" style="width: 230px;">Ikut Agenda</button>

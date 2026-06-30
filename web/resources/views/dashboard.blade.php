@@ -81,7 +81,7 @@
                                 type="text"
                                 class="form-control"
                                 id="inviteLink"
-                                value="https://example.com/invite/ABC123"
+                                value="{{ route('agenda invite dialog', ['invite_code' => session('invite_code')]) }}"
                                 readonly
                             >
 
