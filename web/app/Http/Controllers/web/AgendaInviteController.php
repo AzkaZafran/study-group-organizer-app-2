@@ -27,7 +27,8 @@ class AgendaInviteController extends Controller
 
             $data = [
                 'agenda_name' => $agenda->nama_agenda,
-                'inviter_name' => $agenda_owner->username
+                'inviter_name' => $agenda_owner->username,
+                'id_agenda' => $agenda->id_agenda
             ];
 
             return view('agendaInviteDialog', ['data' => $data]);
