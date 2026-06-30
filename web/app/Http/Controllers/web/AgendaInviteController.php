@@ -83,4 +83,31 @@ class AgendaInviteController extends Controller
             };
         }
     }
+
+    public function rejectAgendaInvite($id_agenda) {
+        try {
+            $this->partisipanService->validateParticipant($id_agenda);
+
+            $this->partisipanService->rejectAgendaInvite($id_agenda);
+
+            return redirect('/dashboard');
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'USER_IS_NOT_PARTICIPANT' => redirect('/dashboard')->withErrors([
+                    'message' => 'Pengguna tidak termasuk partisipan dari agenda ini.'
+                ]),
+                'USER_ALREADY_JOIN_AGENDA' => redirect('/dashboard')->withErrors([
+                    'message' => 'Pengguna sudah mengikuti agenda ini.'
+                ]),
+                'USER_ALREADY_REJECT_INVITE' => redirect('/dashboard')->withErrors([
+                    'message' => 'Pengguna telah menolak undangan ini.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }

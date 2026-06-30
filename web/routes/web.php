@@ -59,6 +59,9 @@ Route::middleware('auth:web')->group(function () {
     
     Route::patch('/agenda/{id_agenda}/accept-invite', [AgendaInviteController::class, 'acceptAgendaInvite'])
             ->name('accept agenda invite');
+    
+    Route::patch('/agenda/{id_agenda}/reject-invite', [AgendaInviteController::class, 'rejectAgendaInvite'])
+            ->name('reject agenda invite');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 
