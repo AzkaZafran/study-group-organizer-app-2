@@ -63,7 +63,8 @@ class AgendaInviteDialogTest extends TestCase {
         $response->assertViewIs('agendaInviteDialog')
                 ->assertViewHas('data', function ($data) use ($new_agenda, $auth_user) {
                     return $data['agenda_name'] == $new_agenda->nama_agenda &&
-                            $data['inviter_name'] == $auth_user->username;
+                            $data['inviter_name'] == $auth_user->username &&
+                            $data['id_agenda'] == $new_agenda->id_agenda;
                 });
     }
 
