@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Agenda;
 use App\Models\Partisipan;
 use App\Models\User;
 use App\Services\AgendaService;
@@ -33,6 +34,12 @@ class GetUserAgendaTest extends TestCase {
         $result = $agendaService->getUserAgenda();
 
         $this->assertCount(5, $result);
+
+        $this->assertTrue(
+            $result->contains(function($agenda) {
+                return $agenda instanceof Agenda;
+            })
+        );
     }
 
     public function testGetUserAgendaFailed() {
