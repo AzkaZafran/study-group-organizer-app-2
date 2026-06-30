@@ -31,6 +31,10 @@ class User extends Model implements Authenticatable
         return $this->hasMany(FriendRequests::class, 'id_penerima');
     }
 
+    public function participants() {
+        return $this->hasMany(Partisipan::class, 'id_user', 'id');
+    }
+
     public function getAuthIdentifier() {
         return $this->id;
     }

@@ -35,4 +35,18 @@ class AgendaService {
 
         return $agenda;
     }
+
+    public function getUserAgenda() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        return $auth_user->participants()
+                        ->where('status', 'ikut')
+                        ->with('agenda')
+                        ->get()
+                        ->pluck('agenda');
+    }
 }
