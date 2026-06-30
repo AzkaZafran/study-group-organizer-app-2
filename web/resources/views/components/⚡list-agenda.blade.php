@@ -18,24 +18,16 @@ new class extends Component
                         "hsl(356, 100%, 80%)",
                         "hsl(204, 94%, 80%)"];
     public $colors_count = 8;
-    public $color_counter = 0;
 
     private function getUserAgenda() {
         $result = $this->agendaService->getUserAgenda();
 
         $result->each(function (Agenda $agenda) {
-            $waktu_agenda = $agenda->waktu_mulai->toDateString();
-            $jam_awal = $agenda->waktu_mulai->format('H:i');
-            $jam_akhir = $agenda->waktu_berakhir->format('H:i');
-            
-            return [
-                'nama_agenda' => $agenda->nama_agenda,
-                'nama_penyelenggara' => $agenda->penyelenggara->username,
-                'lokasi' => $agenda->lokasi,
-                'waktu_agenda' => $waktu_agenda,
-                'jam_awal' => $jam_awal,
-                'jam_akhir' => $jam_akhir
-            ];
+            $agenda->waktu_agenda = $agenda->waktu_mulai->toDateString();
+            $agenda->jam_awal = $agenda->waktu_mulai->format('H:i');
+            $agenda->jam_akhir = $agenda->waktu_berakhir->format('H:i');
+            $agenda->nama_penyelenggara = $agenda->penyelenggara->username;
+            $agenda->is_owner = $agenda->id_penyelenggara == auth()->id();
         });
 
         return $result;
@@ -79,31 +71,31 @@ new class extends Component
                             <span class="badge rounded-pill fs-6" style="background-color: #1E3A8A;">{{ 'Owner' }}</span>
                         @endif
                     </div>
-                        <h5 class="card-title text-truncate mb-3" style="color: #1E3A8A">{{ $agenda['nama_agenda'] }}</h5>
+                        <h5 class="card-title text-truncate mb-3" style="color: #1E3A8A">{{ $agenda->nama_agenda }}</h5>
 
                         <div class="row mb-1">
                             <div class="card-text text2 col-1">
                                 <i class="fa-solid fa-user-tie"></i>
                             </div>
-                            <div class="card-text text3 col">{{ $agenda['nama_penyelenggara'] }}</div>
+                            <div class="card-text text3 col">{{ $agenda->nama_penyelenggara }}</div>
                         </div>
                         <div class="row mb-1">
                             <div class="card-text text2 col-1">
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
-                            <div class="card-text text3 col text-truncate">{{ $agenda['lokasi'] }}</div>
+                            <div class="card-text text3 col text-truncate">{{ $agenda->lokasi }}</div>
                         </div>
                         <div class="row mb-1">
                             <div class="card-text text2 col-1">
                                 <i class="fa-solid fa-calendar-day"></i>
                             </div>
-                            <div class="card-text text3 col">{{ $agenda['waktu_agenda'] }}</div>
+                            <div class="card-text text3 col">{{ $agenda->waktu_agenda }}</div>
                         </div>
                         <div class="row mb-1">
                             <div class="card-text text2 col-1">
                                 <i class="fa-solid fa-clock"></i>
                             </div>
-                            <div class="card-text text3 col">{{ $agenda['jam_awal'] . ' - ' . $agenda['jam_akhir'] . " WIB" }}</div>
+                            <div class="card-text text3 col">{{ $agenda->jam_awal . ' - ' . $agenda->jam_akhir . " WIB" }}</div>
                         </div>
                         
                         <p class="card-text text4 text-center mt-3" >Klik untuk detail</p>
@@ -118,7 +110,7 @@ new class extends Component
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title text-wrap" id="modalDetailAgendaLabel" style="color: #1E3A8A;">Agenda: {{ "Belajar Bareng" }}</h5>
+                            <h5 class="modal-title text-wrap" id="modalDetailAgendaLabel" style="color: #1E3A8A;">Agenda: {{ $agenda->nama_agenda }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -139,7 +131,7 @@ new class extends Component
                                 <div class="card-text text2 col-1">
                                     <i class="fa-solid fa-user-tie"></i>
                                 </div>
-                                <div class="card-text text3 col">{{ $agenda->is_owner }}</div>
+                                <div class="card-text text3 col">{{ $agenda->nama_penyelenggara }}</div>
                             </div>
                             <div class="row mb-1">
                                 <div class="card-text text2 col-1">
@@ -168,48 +160,43 @@ new class extends Component
                             </div>
 
                             <div class="d-flex flex-column gap-2 overflow-auto " style="height: 180px;">
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(214, 95%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(226, 100%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(269, 100%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(326, 78%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(141, 84%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(48, 97%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(356, 100%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
-                                <span class="badge rounded-pill fs-6 fw-normal" 
-                                    style="background-color: hsl(204, 94%, 80%); color: #111827; width: fit-content;">
-                                    {{ 'azkazafran78' }}
-                                </span>
+
+                                @foreach ($agenda->participants as $partisipan)
+                                    <span class="badge rounded-pill fs-6 fw-normal" 
+                                        style="background-color: {{ $colors[$loop->index % $colors_count] }}; color: #111827; width: fit-content;">
+                                        {{ $partisipan->username }}
+                                    </span>
+                                @endforeach
+                            
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <a class="btn" role="button" style="background-color: #492201; color: white;">
-                                <i class="fa-solid fa-book-open me-1"></i>
-                                Catatan
-                            </a>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        </div>
+                        @if ($agenda->status == 'belum dimulai')
+                            <div class="modal-footer justify-content-between">
+                                <div>
+                                    <a class="btn" role="button" style="background-color: #ff0000; color: white;">
+                                        <i class="fa-solid fa-trash-can me-1"></i>
+                                        Batalkan
+                                    </a>
+                                </div>
+
+                                <div>
+                                    <a class="btn" role="button" style="background-color: hsl(0, 0%, 30%); color: white;">
+                                        <i class="fa-solid fa-pen-to-square me-1"></i>
+                                        Ubah
+                                    </a>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        @else
+                            <div class="modal-footer">
+                                <a class="btn" role="button" style="background-color: #492201; color: white;">
+                                    <i class="fa-solid fa-book-open me-1"></i>
+                                    Catatan
+                                </a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
