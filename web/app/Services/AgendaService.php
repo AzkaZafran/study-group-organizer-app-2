@@ -43,10 +43,6 @@ class AgendaService {
             throw new Exception('USER_NOT_AUTHENTICATED');
         }
 
-        return $auth_user->participants()
-                        ->where('status', 'ikut')
-                        ->with('agenda')
-                        ->get()
-                        ->pluck('agenda');
+        return $auth_user->agendas()->with('participants')->withPivot('status')->wherePivot('status', 'ikut')->get();
     }
 }
