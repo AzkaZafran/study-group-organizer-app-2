@@ -56,6 +56,9 @@ Route::middleware('auth:web')->group(function () {
 
     Route::get('/agenda/{invite_code}/join', [AgendaInviteController::class, 'agendaInviteDialog'])
             ->name('agenda invite dialog');
+    
+    Route::patch('/agenda/{id_agenda}/accept-invite', [AgendaInviteController::class, 'acceptAgendaInvite'])
+            ->name('accept agenda invite');
 
     Route::get('/friend/search', [FriendController::class, 'search'])->name('search new friend');
 

@@ -65,4 +65,20 @@ class PartisipanService {
 
         return true;
     }
+
+    public function acceptAgendaInvite($id_agenda) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $partisipan_data = Partisipan::where('id_agenda', $id_agenda)->where('id_user', $auth_user->id)->first();
+
+        $partisipan_data->status = 'ikut';
+
+        $partisipan_data->save();
+
+        return true;
+    }
 }
