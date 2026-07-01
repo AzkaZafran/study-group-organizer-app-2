@@ -48,9 +48,7 @@ Route::get('/drafts/inviteDialog', function () {
 Route::middleware('auth:web')->group(function () {
     Route::delete('/logout', [UserController::class, 'logout']);
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/agenda/add', [DashboardController::class, 'createAgenda'])->name('create agenda');
 

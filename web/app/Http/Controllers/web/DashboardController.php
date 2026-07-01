@@ -23,7 +23,11 @@ class DashboardController extends Controller
     }
 
     public function index() {
-        return view('dashboard');
+        $agenda_statistic = $this->agendaService->getUserAgendaStatistik();
+
+        $data = $agenda_statistic;
+
+        return view('dashboard', ['data' => $data]);
     }
 
     public function createAgenda(UserCreateAgendaRequest $request) {
