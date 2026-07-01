@@ -24,7 +24,24 @@ class Agenda extends Model
         'status'
     ];
 
+    public function casts() {
+        return [
+            'waktu_mulai' => 'datetime',
+            'waktu_berakhir' => 'datetime'
+        ];
+    }
+
     public function penyelenggara() {
         return $this->belongsTo(User::class, 'id_penyelenggara', 'id');
+    }
+
+    public function participants() {
+        return $this->belongsToMany(User::class, 
+                                    Partisipan::class, 
+                                    'id_agenda', 
+                                    'id_user', 
+                                    'id_agenda', 
+                                    'id'
+                                    );
     }
 }

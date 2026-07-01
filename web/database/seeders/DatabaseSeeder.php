@@ -88,5 +88,57 @@ class DatabaseSeeder extends Seeder
             'invite_code' => '3a75bIc4',
             'expired_at' => now()->addDay()
         ]);
+
+        $new_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id
+        ]);
+
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+        
+        Partisipan::factory()->count(9)->create([
+            'id_agenda' => $new_agenda->id_agenda
+        ]);
+
+        $new_agenda = Agenda::factory()->create([
+            'status' => 'sedang berjalan'
+        ]);
+
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        Partisipan::factory()->count(5)->create([
+            'id_agenda' => $new_agenda->id_agenda
+        ]);
+
+        Partisipan::factory()->count(4)->create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'status' => 'tidak ikut'
+        ]);
+
+        $new_agenda = Agenda::factory()->create([
+            'status' => 'selesai'
+        ]);
+
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        Partisipan::factory()->count(9)->create([
+            'id_agenda' => $new_agenda->id_agenda
+        ]);
+
+        Partisipan::factory()->count(10)->create([
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
     }
 }
