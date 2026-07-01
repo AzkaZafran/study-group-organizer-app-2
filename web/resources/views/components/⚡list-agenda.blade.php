@@ -58,19 +58,19 @@ new class extends Component
             data-bs-toggle="modal" data-bs-target={{ '#modaldetailagenda' . $loop->index }}>
                 <div class="btn text-start w-100 h-100">
                     <div class="card-body d-flex flex-column w-100 h-100">
-                    <div class="d-flex flex-row gap-1 mb-1">
-                        @if ($agenda->status == 'selesai')
-                            <span class="badge rounded-pill fs-6" style="background-color: #00cc00;">{{ 'Selesai' }}</span>
-                        @elseif($agenda->status == 'sedang berjalan')
-                            <span class="badge rounded-pill fs-6" style="background-color: #dfc500;">{{ 'Sedang Berjalan' }}</span>
-                        @elseif($agenda->status == 'belum dimulai')
-                            <span class="badge rounded-pill text-bg-primary fs-6">{{ 'Belum Dimulai' }}</span>
-                        @endif
+                        <div class="d-flex flex-row gap-1 mb-1">
+                            @if ($agenda->status == 'selesai')
+                                <span class="badge rounded-pill fs-6" style="background-color: #00cc00;">{{ 'Selesai' }}</span>
+                            @elseif($agenda->status == 'sedang berjalan')
+                                <span class="badge rounded-pill fs-6" style="background-color: #dfc500;">{{ 'Sedang Berjalan' }}</span>
+                            @elseif($agenda->status == 'belum dimulai')
+                                <span class="badge rounded-pill text-bg-primary fs-6">{{ 'Belum Dimulai' }}</span>
+                            @endif
 
-                        @if ($agenda->is_owner)
-                            <span class="badge rounded-pill fs-6" style="background-color: #1E3A8A;">{{ 'Owner' }}</span>
-                        @endif
-                    </div>
+                            @if ($agenda->is_owner)
+                                <span class="badge rounded-pill fs-6" style="background-color: #1E3A8A;">{{ 'Owner' }}</span>
+                            @endif
+                        </div>
                         <h5 class="card-title text-truncate mb-3" style="color: #1E3A8A">{{ $agenda->nama_agenda }}</h5>
 
                         <div class="row mb-1">
@@ -162,10 +162,30 @@ new class extends Component
                             <div class="d-flex flex-column gap-2 overflow-auto " style="height: 180px;">
 
                                 @foreach ($agenda->participants as $partisipan)
-                                    <span class="badge rounded-pill fs-6 fw-normal" 
-                                        style="background-color: {{ $colors[$loop->index % $colors_count] }}; color: #111827; width: fit-content;">
-                                        {{ $partisipan->username }}
-                                    </span>
+                                    <div class="d-flex flex-row gap-1 mb-1">
+                                        <span class="badge rounded-pill fs-6 fw-normal" 
+                                            style="background-color: {{ $colors[$loop->index % $colors_count] }}; color: #111827; width: fit-content;">
+                                            {{ $partisipan->username }}
+                                        </span>
+
+                                        @if ($partisipan->pivot->status == 'ikut')
+                                            <span class="badge rounded-pill fs-6 fw-normal" 
+                                                style="background-color: #E6F4EA; color: #137333; width: fit-content;">
+                                                Ikut
+                                            </span>
+                                        @elseif($partisipan->pivot->status == 'tidak ikut')
+                                            <span class="badge rounded-pill fs-6 fw-normal" 
+                                                style="background-color: #FCE8E6; color: #C5221F; width: fit-content;">
+                                                Tidak Ikut
+                                            </span>
+                                        @else
+                                            <span class="badge rounded-pill fs-6 fw-normal" 
+                                                style="background-color: #FEF7E0; color: #B06000; width: fit-content;">
+                                                Pending
+                                            </span>
+                                        @endif
+                                    </div>
+                                    
                                 @endforeach
                             
                             </div>
