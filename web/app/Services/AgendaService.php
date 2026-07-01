@@ -45,4 +45,52 @@ class AgendaService {
 
         return $auth_user->agendas()->with('participants')->withPivot('status')->wherePivot('status', 'ikut')->get();
     }
+
+    /**
+     * Returns user's agenda statistic.
+     *
+     * @return array{
+     *     total_user_agenda: int,
+     *     total_user_agenda_selesai: int,
+     *     total_user_agenda_sedang_berjalan: int,
+     *     total_user_agenda_belum_dimulai: int
+     * }
+     */
+    public function getUserAgendaStatistik() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $total_user_agenda = $auth_user->agendas()
+                                    ->withPivot('status')
+                                    ->wherePivot('status','ikut')
+                                    ->count();
+
+        $total_user_agenda_selesai = $auth_user->agendas()
+                                    ->withPivot('status')
+                                    ->wherePivot('status','ikut')
+                                    ->where('agenda.status', 'selesai')
+                                    ->count();
+
+        $total_user_agenda_sedang_berjalan = $auth_user->agendas()
+                                    ->withPivot('status')
+                                    ->wherePivot('status','ikut')
+                                    ->where('agenda.status', 'sedang berjalan')
+                                    ->count();
+
+        $total_user_agenda_belum_dimulai = $auth_user->agendas()
+                                    ->withPivot('status')
+                                    ->wherePivot('status','ikut')
+                                    ->where('agenda.status', 'belum dimulai')
+                                    ->count();
+
+        return [
+            'total_user_agenda' => $total_user_agenda,
+            'total_user_agenda_selesai' => $total_user_agenda_selesai,
+            'total_user_agenda_sedang_berjalan' => $total_user_agenda_sedang_berjalan,
+            'total_user_agenda_belum_dimulai' => $total_user_agenda_belum_dimulai
+        ];
+    }
 }
