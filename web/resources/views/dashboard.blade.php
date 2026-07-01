@@ -20,28 +20,28 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Total Agenda</h5>
-                    <p class="fs-4 fw-medium">{{ 10 }}</p>
+                    <p class="fs-4 fw-medium">{{ $data['total_user_agenda'] }}</p>
                 </div>
             </div>
 
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Agenda Terselesaikan</h5>
-                    <p class="fs-4 fw-medium">{{ 8 }}</p>
+                    <p class="fs-4 fw-medium">{{ $data['total_user_agenda_selesai'] }}</p>
                 </div>
             </div>
 
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Agenda Sedang Berjalan</h5>
-                    <p class="fs-4 fw-medium">{{ 1 }}</p>
+                    <p class="fs-4 fw-medium">{{ $data['total_user_agenda_sedang_berjalan'] }}</p>
                 </div>
             </div>
 
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Agenda Belum Dimulai</h5>
-                    <p class="fs-4 fw-medium">{{ 1 }}</p>
+                    <p class="fs-4 fw-medium">{{ $data['total_user_agenda_belum_dimulai'] }}</p>
                 </div>
             </div>
         </div>
