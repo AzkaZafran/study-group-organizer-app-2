@@ -36,10 +36,13 @@ class GetUserAgendaTest extends TestCase {
         $this->assertCount(5, $result);
 
         $this->assertTrue(
-            $result->contains(function($agenda) use ($auth_user) {
+            $result->contains(function ($agenda) use ($auth_user) {
                 return $agenda instanceof Agenda &&
                         $agenda->pivot->status == 'ikut' &&
-                        $agenda->participants->contains('id', $auth_user->id);
+                        $agenda->participants->contains('id', $auth_user->id) &&
+                        $agenda->participants->contains(function ($participant) {
+                            return (!empty($participant->pivot->status));
+                        });
             })
         );
     }
