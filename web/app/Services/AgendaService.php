@@ -51,6 +51,39 @@ class AgendaService {
                         ->get();
     }
 
+    public function autoUpdateUserAgendaStatus() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $user_agenda = $auth_user->agendas()
+                                ->withPivot('status')
+                                ->wherePivot('status', 'ikut')
+                                ->get();
+        
+        $user_agenda->each(function (Agenda $agenda) {
+            $waktu_mulai = $agenda->waktu_mulai;
+            $waktu_berakhir = $agenda->waktu_berakhir;
+
+            $agenda_status = 'belum dimulai';
+
+            if (now()->lessThan($waktu_mulai)) {
+                $agenda_status = 'belum dimulai';
+            } else if (now()->isBetween($waktu_mulai, $waktu_berakhir)) {
+                $agenda_status = 'sedang berjalan';
+            } else {
+                $agenda_status = 'selesai';
+            }
+
+            if ($agenda->status != $agenda_status) {
+                $agenda->status = $agenda_status;
+                $agenda->save();
+            }
+        });
+    }
+
     /**
      * Returns user's agenda statistic.
      *

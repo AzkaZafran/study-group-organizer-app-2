@@ -90,7 +90,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $new_agenda = Agenda::factory()->create([
-            'id_penyelenggara' => $auth_user->id
+            'id_penyelenggara' => $auth_user->id,
+            'waktu_mulai' => now()->addDays(3),
+            'waktu_berakhir' => now()->addDays(3)
+                                    ->addHours(3)
+                                    ->min(now()->addDays(3)->endOfDay()),
+            'status' => 'belum dimulai'
         ]);
 
         Partisipan::create([
@@ -104,6 +109,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $new_agenda = Agenda::factory()->create([
+            'waktu_mulai' => now(),
+            'waktu_berakhir' => now()->addHours(2)
+                                    ->min(now()->endOfDay()),
             'status' => 'sedang berjalan'
         ]);
 
@@ -123,6 +131,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $new_agenda = Agenda::factory()->create([
+            'waktu_mulai' => now()->subDays(3),
+            'waktu_berakhir' => now()->subDays(3)
+                                    ->addHours(3)
+                                    ->min(now()->subDays(3)->endOfDay()),
             'status' => 'selesai'
         ]);
 
