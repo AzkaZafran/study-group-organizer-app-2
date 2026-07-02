@@ -26,6 +26,10 @@ class DashboardIndexTest extends TestCase {
 
         $new_agendas = Agenda::factory()->count($total_agenda_selesai)->create([
                             'id_penyelenggara' => $auth_user->id,
+                            'waktu_mulai' => now()->subDays(3),
+                            'waktu_berakhir' => now()->subDays(3)
+                                                    ->addHours(3)
+                                                    ->min(now()->subDays(3)->endOfDay()),
                             'status' => 'selesai'
                         ]);
 
@@ -39,6 +43,9 @@ class DashboardIndexTest extends TestCase {
 
         $new_agendas = Agenda::factory()->count($total_agenda_sedang_berjalan)->create([
                             'id_penyelenggara' => $auth_user->id,
+                            'waktu_mulai' => now(),
+                            'waktu_berakhir' => now()->addHours(2)
+                                                    ->min(now()->endOfDay()),
                             'status' => 'sedang berjalan'
                         ]);
 
@@ -52,6 +59,10 @@ class DashboardIndexTest extends TestCase {
 
         $new_agendas = Agenda::factory()->count($total_agenda_belum_dimulai)->create([
                             'id_penyelenggara' => $auth_user->id,
+                            'waktu_mulai' => now()->addDays(3),
+                            'waktu_berakhir' => now()->addDays(3)
+                                                    ->addHours(3)
+                                                    ->min(now()->addDays(3)->endOfDay()),
                             'status' => 'belum dimulai'
                         ]);
 
