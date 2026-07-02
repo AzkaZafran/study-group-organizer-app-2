@@ -1,59 +1,14 @@
-<?php
-
-use Livewire\Component;
-use App\Models\Agenda;
-use App\Services\AgendaService;
-
-new class extends Component
-{
-    private AgendaService $agendaService;
-
-    public $list_agenda;
-    public $colors = ["hsl(214, 95%, 80%)", 
-                        "hsl(226, 100%, 80%)", 
-                        "hsl(269, 100%, 80%)",
-                        "hsl(326, 78%, 80%)",
-                        "hsl(141, 84%, 80%)",
-                        "hsl(48, 97%, 80%)",
-                        "hsl(356, 100%, 80%)",
-                        "hsl(204, 94%, 80%)"];
-    public $colors_count = 8;
-
-    private function getUserAgenda() {
-        $result = $this->agendaService->getUserAgenda();
-
-        $result->each(function (Agenda $agenda) {
-            $agenda->waktu_agenda = $agenda->waktu_mulai->toDateString();
-            $agenda->jam_awal = $agenda->waktu_mulai->format('H:i');
-            $agenda->jam_akhir = $agenda->waktu_berakhir->format('H:i');
-            $agenda->nama_penyelenggara = $agenda->penyelenggara->username;
-            $agenda->is_owner = $agenda->id_penyelenggara == auth()->id();
-        });
-
-        return $result;
-    }
-
-    public function boot(AgendaService $agendaService) {
-        $this->agendaService = $agendaService;
-
-        $this->list_agenda = $this->getUserAgenda();
-    }
-
-};
-?>
-
 <div>
     <div class="d-flex flex-row gap-2 mb-3">
-        <button type="button" class="btn {{ 'selected' === 'selected' ? 'btn-purple' : 'btn-outline-purple' }}">Semua</button>
-        <button type="button" class="btn {{ '' === 'selected' ? 'btn-purple' : 'btn-outline-purple' }}">Selesai</button>
-        <button type="button" class="btn {{ '' === 'selected' ? 'btn-purple' : 'btn-outline-purple' }}">Sedang Berjalan</button>
-        <button type="button" class="btn {{ '' === 'selected' ? 'btn-purple' : 'btn-outline-purple' }}">Belum Dimulai</button>
-        <button type="button" class="btn {{ '' === 'selected' ? 'btn-purple' : 'btn-outline-purple' }}">Dibuat</button>
+        <button type="button" wire:click="selectStatusFilter('semua')" class="btn {{ $filterStatus === 'semua' ? 'btn-purple' : 'btn-outline-purple' }}">Semua</button>
+        <button type="button" wire:click="selectStatusFilter('selesai')" class="btn {{ $filterStatus === 'selesai' ? 'btn-purple' : 'btn-outline-purple' }}">Selesai</button>
+        <button type="button" wire:click="selectStatusFilter('sedang berjalan')" class="btn {{ $filterStatus === 'sedang berjalan' ? 'btn-purple' : 'btn-outline-purple' }}">Sedang Berjalan</button>
+        <button type="button" wire:click="selectStatusFilter('belum dimulai')" class="btn {{ $filterStatus === 'belum dimulai' ? 'btn-purple' : 'btn-outline-purple' }}">Belum Dimulai</button>
     </div>
 
     <div class="container d-flex flex-row flex-wrap gap-3 mb-4">
 
-        @foreach ($list_agenda as $agenda)
+        @foreach ($wire_data['list_agenda'] as $agenda)
             <div class="card shadow" style="width: 22rem;"
             data-bs-toggle="modal" data-bs-target={{ '#modaldetailagenda' . $loop->index }}>
                 <div class="btn text-start w-100 h-100">
@@ -104,7 +59,7 @@ new class extends Component
             </div>
         @endforeach
 
-        @foreach ($list_agenda as $agenda)
+        @foreach ($wire_data['list_agenda'] as $agenda)
             <div class="modal fade" id={{ 'modaldetailagenda' . $loop->index }} tabindex="-1" 
                 aria-labelledby="modalDetailAgendaLabel" aria-hidden="true">
                 <div class="modal-dialog">
