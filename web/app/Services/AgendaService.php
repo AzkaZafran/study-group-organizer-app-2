@@ -51,6 +51,26 @@ class AgendaService {
                         ->get();
     }
 
+    public function getUserAgendaFilterByStatus($status) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        if ($status == 'belum dimulai' || $status == 'sedang berjalan' || $status == 'selesai') {
+            return $auth_user->agendas()
+                            ->with(['participants' => function ($query) {
+                                $query->withPivot('status');
+                            }])->withPivot('status')
+                            ->wherePivot('status', 'ikut')
+                            ->where('agenda.status', $status)
+                            ->get();
+        }
+
+        return -1;
+    }
+
     public function autoUpdateUserAgendaStatus() {
         $auth_user = Auth::user();
 
