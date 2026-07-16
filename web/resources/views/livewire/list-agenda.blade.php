@@ -4,6 +4,7 @@
         <button type="button" wire:click="selectStatusFilter('selesai')" class="btn {{ $filterStatus === 'selesai' ? 'btn-purple' : 'btn-outline-purple' }}">Selesai</button>
         <button type="button" wire:click="selectStatusFilter('sedang berjalan')" class="btn {{ $filterStatus === 'sedang berjalan' ? 'btn-purple' : 'btn-outline-purple' }}">Sedang Berjalan</button>
         <button type="button" wire:click="selectStatusFilter('belum dimulai')" class="btn {{ $filterStatus === 'belum dimulai' ? 'btn-purple' : 'btn-outline-purple' }}">Belum Dimulai</button>
+        <button type="button" wire:click="selectOwnedFilter()" class="btn {{ $filterOwned ? 'btn-purple' : 'btn-outline-purple' }}">Dibuat</button>
     </div>
 
     <div class="container d-flex flex-row flex-wrap gap-3 mb-4">
