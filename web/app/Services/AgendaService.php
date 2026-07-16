@@ -71,6 +71,21 @@ class AgendaService {
         return -1;
     }
 
+    public function getUserAgendaFilterByOwned() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        return $auth_user->agendas()
+                        ->with(['participants' => function ($query) {
+                            $query->withPivot('status');
+                        }])->withPivot('status')
+                        ->where('id_penyelenggara', $auth_user->id)
+                        ->get();
+    }
+
     public function autoUpdateUserAgendaStatus() {
         $auth_user = Auth::user();
 

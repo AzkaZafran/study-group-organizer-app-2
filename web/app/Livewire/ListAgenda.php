@@ -21,11 +21,22 @@ class ListAgenda extends Component
                         "hsl(204, 94%, 80%)"];
     public $colors_count = 8;
     public $filterStatus = 'semua';
+    public $filterOwned = false;
 
     public function selectStatusFilter($status) {
+        $this->filterOwned = false;
+    
         $this->filterStatus = $status;
 
         $this->list_agenda = $this->getUserAgendaFilterByStatus($status);
+    }
+
+    public function selectOwnedFilter() {
+        $this->filterStatus = '';
+
+        $this->filterOwned = true;
+
+        $this->list_agenda = $this->getUserAgendaFilterByOwned();
     }
 
     private function getUserAgendaFilterByStatus($status) {
@@ -37,7 +48,21 @@ class ListAgenda extends Component
             $result = $this->agendaService->getUserAgendaFilterByStatus($status);
         }
 
-        $result->each(function (Agenda $agenda) {
+        $result = $this->formatted_list_agenda($result);
+
+        return $result;
+    }
+
+    public function getUserAgendaFilterByOwned() {
+        $result = $this->agendaService->getUserAgendaFilterByOwned();
+
+        $result = $this->formatted_list_agenda($result);
+
+        return $result;
+    }
+
+    private function formatted_list_agenda($list_agenda) {
+        $list_agenda->each(function (Agenda $agenda) {
             $agenda->waktu_agenda = $agenda->waktu_mulai->toDateString();
             $agenda->jam_awal = $agenda->waktu_mulai->format('H:i');
             $agenda->jam_akhir = $agenda->waktu_berakhir->format('H:i');
@@ -45,7 +70,7 @@ class ListAgenda extends Component
             $agenda->is_owner = $agenda->id_penyelenggara == auth()->id();
         });
 
-        return $result;
+        return $list_agenda;
     }
 
     public function mount() {
