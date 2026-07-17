@@ -7,7 +7,7 @@ new class extends Component
 {
     private FriendRequestService $friendRequestService;
 
-    public string $username_search;
+    public string $username_search = '';
     public $participants = [];
     public $search_friend_result = [];
     public $colors = ["hsl(214, 95%, 80%)", 
@@ -26,8 +26,8 @@ new class extends Component
         $this->friendRequestService = $friendRequestService;
     }
 
-    public function searchFriends($username) {
-        $this->search_friend_result = $this->friendRequestService->searchFriends($username);
+    public function searchFriends() {
+        $this->search_friend_result = $this->friendRequestService->searchFriends($this->username_search);
     }
 
     public function addParticipants($id, $username) {
@@ -117,7 +117,7 @@ new class extends Component
                 </div>
                 <div class="d-flex">
                     <input class="form-control me-2" wire:model.blur="username_search" id="cariPeserta" type="search" placeholder="Cari Username..." aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="button" wire:click="searchFriends('{{ $username_search }}')">Cari</button>
+                    <button class="btn btn-outline-success" type="button" wire:click="searchFriends()">Cari</button>
                 </div>
             </div>
 

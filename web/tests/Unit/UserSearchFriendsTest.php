@@ -29,13 +29,16 @@ class UserSearchFriendsTest extends TestCase {
 
         $user = User::create($data);
 
-        $friend_request_data = [
+        FriendRequests::factory()->create([
             'id_pengirim' => $auth_user->id,
             'id_penerima' => $user->id,
             'status' => 'mutual'
-        ];
+        ]);
 
-        $new_friend_request = FriendRequests::create($friend_request_data);
+        FriendRequests::factory()->count(5)->create([
+            'id_pengirim' => $auth_user->id,
+            'status' => 'mutual'
+        ]);
 
         $friendRequestService = new FriendRequestService();
 
