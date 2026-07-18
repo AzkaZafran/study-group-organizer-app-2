@@ -166,4 +166,35 @@ class AgendaService {
             'total_user_agenda_belum_dimulai' => $total_user_agenda_belum_dimulai
         ];
     }
+
+    public function updateAgenda($id_agenda, $nama_agenda, $lokasi, $waktu_mulai, $waktu_berakhir) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $agenda = Agenda::find($id_agenda);
+
+        if (empty($agenda)) {
+            throw new Exception('AGENDA_NOT_FOUND');
+        } elseif ($agenda->id_penyelenggara != $auth_user->id) {
+            throw new Exception('USER_NOT_PERMITTED');
+        } elseif (now()->greaterThanOrEqualTo($agenda->waktu_mulai)) {
+            throw new Exception('AGENDA_ALREADY_RUNNING_OR_FINISHED');
+        }
+
+        $agenda->nama_agenda = $nama_agenda;
+        $agenda->lokasi = $lokasi;
+        $agenda->waktu_mulai = $waktu_mulai;
+        $agenda->waktu_berakhir = $waktu_berakhir;
+
+        $update_success = $agenda->save();
+
+        if ($update_success) {
+            return $agenda;
+        }
+
+        return false;
+    }
 }
