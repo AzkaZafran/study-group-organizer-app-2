@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Web;
 use App\Exceptions\ParticipantsNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserCreateAgendaRequest;
+use App\Http\Requests\UserUpdateAgendaRequest;
+use App\Models\Agenda;
 use App\Services\AgendaService;
 use App\Services\PartisipanService;
 use App\Services\UndanganAgendaService;
@@ -84,5 +86,88 @@ class DashboardController extends Controller
                 ])
             };
         } 
+    }
+
+    public function updateAgendaDialog($id_agenda) {
+        try {
+            $agenda = Agenda::find($id_agenda);
+
+            if (empty($agenda)) {
+                throw new \Exception('AGENDA_NOT_FOUND');
+            } elseif ($agenda->id_penyelenggara != auth()->id()) {
+                throw new \Exception('USER_NOT_PERMITTED');
+            }
+
+            $data = [
+                'id_agenda' => $agenda->id_agenda,
+                'nama_agenda' => $agenda->nama_agenda,
+                'lokasi' => $agenda->lokasi,
+                'waktu_agenda' => $agenda->waktu_mulai->format('Y-m-d'),
+                'jam_mulai' => $agenda->waktu_mulai->format('H:i'),
+                'jam_akhir' => $agenda->waktu_berakhir->format('H:i')
+            ];
+
+            return view('updateAgendaDialog', ['data' => $data]);
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'AGENDA_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Pengguna tidak memiliki izin untuk mengubah agenda ini.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function updateAgenda(UserUpdateAgendaRequest $request) {
+        $data = $request->validated();
+
+        $waktu_mulai = Carbon::parse(
+            $data['waktu_agenda'] . ' ' . $data['jam_awal']
+        );
+        $waktu_selesai = Carbon::parse(
+            $data['waktu_agenda'] . ' ' . $data['jam_akhir']
+        );
+
+        if ($waktu_mulai->isPast()) {
+            return back()->withErrors([
+                'start_time' => 'Tanggal atau waktu mulai yang diberikan harus di masa mendatang.'
+            ]);
+        }
+
+        try {
+            $this->agendaService->updateAgenda(
+                $data['id_agenda'],
+                $data['nama_agenda'],
+                $data['lokasi_agenda'],
+                $waktu_mulai,
+                $waktu_selesai
+            );
+
+            return redirect('/dashboard');
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'AGENDA_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Pengguna tidak memiliki izin untuk mengubah agenda ini.'
+                ]),
+                'AGENDA_ALREADY_RUNNING_OR_FINISHED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Agenda dalam kondisi tidak bisa diedit.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
     }
 }

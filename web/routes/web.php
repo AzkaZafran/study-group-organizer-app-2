@@ -52,6 +52,12 @@ Route::middleware('auth:web')->group(function () {
 
     Route::post('/agenda/add', [DashboardController::class, 'createAgenda'])->name('create agenda');
 
+    Route::get('/agenda/{id_agenda}/update', [DashboardController::class, 'updateAgendaDialog'])
+            ->name('update agenda dialog');
+
+    Route::put('/agenda/update', [DashboardController::class, 'updateAgenda'])
+            ->name('update agenda');
+
     Route::get('/agenda/{invite_code}/join', [AgendaInviteController::class, 'agendaInviteDialog'])
             ->name('agenda invite dialog');
     
