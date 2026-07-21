@@ -124,4 +124,50 @@ class DashboardController extends Controller
             };
         }
     }
+
+    public function updateAgenda(UserUpdateAgendaRequest $request) {
+        $data = $request->validated();
+
+        $waktu_mulai = Carbon::parse(
+            $data['waktu_agenda'] . ' ' . $data['jam_awal']
+        );
+        $waktu_selesai = Carbon::parse(
+            $data['waktu_agenda'] . ' ' . $data['jam_akhir']
+        );
+
+        if ($waktu_mulai->isPast()) {
+            return back()->withErrors([
+                'start_time' => 'Tanggal atau waktu mulai yang diberikan harus di masa mendatang.'
+            ]);
+        }
+
+        try {
+            $this->agendaService->updateAgenda(
+                $data['id_agenda'],
+                $data['nama_agenda'],
+                $data['lokasi_agenda'],
+                $waktu_mulai,
+                $waktu_selesai
+            );
+
+            return redirect('/dashboard');
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'AGENDA_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Pengguna tidak memiliki izin untuk mengubah agenda ini.'
+                ]),
+                'AGENDA_ALREADY_RUNNING_OR_FINISHED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Agenda dalam kondisi tidak bisa diedit.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }
