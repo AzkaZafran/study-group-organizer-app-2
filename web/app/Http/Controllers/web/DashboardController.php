@@ -99,6 +99,7 @@ class DashboardController extends Controller
             }
 
             $data = [
+                'id_agenda' => $agenda->id_agenda,
                 'nama_agenda' => $agenda->nama_agenda,
                 'lokasi' => $agenda->lokasi,
                 'waktu_agenda' => $agenda->waktu_mulai->format('Y-m-d'),

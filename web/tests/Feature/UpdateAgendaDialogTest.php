@@ -31,7 +31,8 @@ class UpdateAgendaDialogTest extends TestCase {
 
         $response->assertViewIs('updateAgendaDialog')
                 ->assertViewHas('data', function ($data) use ($agenda) {
-                    return $data['nama_agenda'] == $agenda->nama_agenda &&
+                    return $data['id_agenda'] == $agenda->id_agenda &&
+                            $data['nama_agenda'] == $agenda->nama_agenda &&
                             $data['lokasi'] == $agenda->lokasi &&
                             $data['waktu_agenda'] == $agenda->waktu_mulai->format('Y-m-d') &&
                             $data['jam_mulai'] == $agenda->waktu_mulai->format('H:i') &&
