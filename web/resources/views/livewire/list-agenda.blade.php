@@ -157,7 +157,8 @@
                                 </div>
 
                                 <div>
-                                    <a class="btn" role="button" style="background-color: hsl(0, 0%, 30%); color: white;">
+                                    <a class="btn" role="button" style="background-color: hsl(0, 0%, 30%); color: white;"
+                                        href="{{ route('update agenda dialog', ['id_agenda' => $agenda->id_agenda]) }}">
                                         <i class="fa-solid fa-pen-to-square me-1"></i>
                                         Ubah
                                     </a>
