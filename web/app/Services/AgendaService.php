@@ -206,4 +206,26 @@ class AgendaService {
 
         return false;
     }
+
+    public function deleteAgenda($id_agenda) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $agenda = Agenda::find($id_agenda);
+
+        if (empty($agenda)) {
+            throw new Exception('AGENDA_NOT_FOUND');
+        } elseif ($agenda->id_penyelenggara != $auth_user->id) {
+            throw new Exception('USER_NOT_PERMITTED');
+        } elseif (now()->greaterThanOrEqualTo($agenda->waktu_mulai)) {
+            throw new Exception('AGENDA_ALREADY_RUNNING_OR_FINISHED');
+        }
+
+        $success = $agenda->delete();
+
+        return $success;
+    }
 }
