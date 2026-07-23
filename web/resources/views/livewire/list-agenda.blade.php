@@ -58,9 +58,8 @@
                     </div>
                 </div>
             </div>
-        @endforeach
 
-        @foreach ($wire_data['list_agenda'] as $agenda)
+
             <div class="modal fade" id={{ 'modaldetailagenda' . $loop->index }} tabindex="-1" 
                 aria-labelledby="modalDetailAgendaLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -150,7 +149,10 @@
                         @if ($agenda->status == 'belum dimulai')
                             <div class="modal-footer justify-content-between">
                                 <div>
-                                    <a class="btn" role="button" style="background-color: #ff0000; color: white;">
+                                    <a class="btn" role="button" style="background-color: #ff0000; color: white;"
+                                        data-bs-dismiss="modal"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={{ "#deleteAgendaModal" . $loop->index }}>
                                         <i class="fa-solid fa-trash-can me-1"></i>
                                         Batalkan
                                     </a>
@@ -177,7 +179,60 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="modal fade" id={{ "deleteAgendaModal" . $loop->index }} tabindex="-1" 
+                aria-labelledby="modalDetailAgendaLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTambahAgendaLabel"
+                                style="color: #1E3A8A;">
+                                Batalkan Agenda
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="d-flex flex-column align-items-center">
+                                <h5 class="text text-center">Apakah Anda Yakin Ingin Membatalkan Agenda "{{ $agenda->nama_agenda }}"?</h5>
+                                <h6 class="text fw-bolder" style="color: #ff0000;">*Tindakan ini akan menghapus agenda secara permanen</h6>
+                                <div class="d-flex flex-row justify-content-center gap-2 mt-3">
+                                    <button type="button" class="btn btn-back" 
+                                            data-bs-dismiss="modal" style="width: 175px;">
+                                        Tidak
+                                    </button>
+
+                                    <form action="#" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" style="width: 175px;">Yakin</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        @foreach ($wire_data['list_agenda'] as $agenda)
+
         @endforeach
 
     </div>
+
+    @push('styles')
+        <style>
+            .btn-back {
+                background-color: #bdbdbd;
+                color: #424242;
+            }
+
+            .btn-back:hover {
+                background-color: hsl(0, 0%, 64%);
+                color: #424242;
+            }
+        </style>
+    @endpush
 </div>
