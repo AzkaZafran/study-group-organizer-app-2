@@ -25,7 +25,7 @@ class DashboardController extends Controller
     }
 
     public function index() {
-        $this->agendaService->autoUpdateUserAgendaStatus();
+        $this->agendaService->autoUpdateUserAgendaAndParticipantStatus();
 
         $agenda_statistic = $this->agendaService->getUserAgendaStatistik();
 

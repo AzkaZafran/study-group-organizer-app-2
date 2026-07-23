@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Agenda;
 use App\Models\Partisipan;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,7 +87,7 @@ class AgendaService {
                         ->get();
     }
 
-    public function autoUpdateUserAgendaStatus() {
+    public function autoUpdateUserAgendaAndParticipantStatus() {
         $auth_user = Auth::user();
 
         if(!$auth_user) {
@@ -106,15 +107,23 @@ class AgendaService {
 
             if (now()->lessThan($waktu_mulai)) {
                 $agenda_status = 'belum dimulai';
-            } else if (now()->isBetween($waktu_mulai, $waktu_berakhir)) {
+            } elseif (now()->isBetween($waktu_mulai, $waktu_berakhir)) {
                 $agenda_status = 'sedang berjalan';
             } else {
                 $agenda_status = 'selesai';
             }
 
+            
+
             if ($agenda->status != $agenda_status) {
                 $agenda->status = $agenda_status;
                 $agenda->save();
+            }
+
+            if ($agenda->status == 'sedang berjalan' || $agenda->status == 'selesai') {
+                Partisipan::where('id_agenda', $agenda->id_agenda)
+                            ->whereIn('status', ['pending', 'tidak ikut'])
+                            ->delete();
             }
         });
     }
