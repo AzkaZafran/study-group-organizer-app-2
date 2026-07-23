@@ -170,4 +170,29 @@ class DashboardController extends Controller
             };
         }
     }
+
+    public function deleteAgenda($id_agenda) {
+        try {
+            $this->agendaService->deleteAgenda($id_agenda);
+
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'AGENDA_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => back()->withErrors([
+                    'message' => 'Pengguna tidak memiliki izin untuk mengubah agenda ini.'
+                ]),
+                'AGENDA_ALREADY_RUNNING_OR_FINISHED' => back()->withErrors([
+                    'message' => 'Agenda dalam kondisi tidak bisa diedit.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }

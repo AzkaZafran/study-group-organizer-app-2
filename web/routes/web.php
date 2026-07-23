@@ -58,6 +58,9 @@ Route::middleware('auth:web')->group(function () {
     Route::put('/agenda/update', [DashboardController::class, 'updateAgenda'])
             ->name('update agenda');
 
+    Route::delete('/agenda/{id_agenda}/delete', [DashboardController::class, 'deleteAgenda'])
+            ->name('delete agenda');
+
     Route::get('/agenda/{invite_code}/join', [AgendaInviteController::class, 'agendaInviteDialog'])
             ->name('agenda invite dialog');
     
