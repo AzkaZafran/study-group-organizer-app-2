@@ -203,7 +203,7 @@
                                         Tidak
                                     </button>
 
-                                    <form action="#" method="POST">
+                                    <form action="{{ route('delete agenda', ['id_agenda' => $agenda->id_agenda]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger" style="width: 175px;">Yakin</button>

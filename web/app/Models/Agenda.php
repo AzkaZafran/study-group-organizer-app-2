@@ -44,4 +44,10 @@ class Agenda extends Model
                                     'id'
                                     );
     }
+
+    public function undangan() {
+        return $this->hasMany(UndanganAgenda::class, 
+                                'id_agenda', 
+                                'id_agenda');
+    }
 }

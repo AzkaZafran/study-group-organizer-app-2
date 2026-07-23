@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Agenda;
+use App\Models\Partisipan;
+use App\Models\UndanganAgenda;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Str;
 use Tests\TestCase;
 
 class UserDeleteAgendaTest extends TestCase {
@@ -25,6 +28,40 @@ class UserDeleteAgendaTest extends TestCase {
             'status' => 'belum dimulai'
         ]);
 
+        $author_partisipan = Partisipan::create([
+            'id_agenda' => $agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $partisipan_agenda = Partisipan::factory()->count(3)->create([
+            'id_agenda' => $agenda->id_agenda
+        ]);
+
+        $partisipan_agenda->prepend($author_partisipan);
+
+        $old_code = Str::upper(Str::random(8));
+
+        $old_invite_code = UndanganAgenda::create([
+            'id_agenda' => $agenda->id_agenda,
+            'invite_code' => $old_code,
+            'expired_at' => $agenda->waktu_mulai->subMinutes(5)
+        ]);
+
+        $new_code = '';
+
+        do {
+            $new_code = Str::upper(Str::random(8));
+        } while (
+            $new_code == $old_code
+        );
+
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $agenda->id_agenda,
+            'invite_code' => $new_code,
+            'expired_at' => $agenda->waktu_mulai->addMinutes(5)
+        ]);
+
         $response = $this->actingAs($auth_user)
                         ->from("/dashboard")
                         ->delete("/agenda/{$agenda->id_agenda}/delete");
@@ -33,6 +70,20 @@ class UserDeleteAgendaTest extends TestCase {
 
         $this->assertDatabaseMissing(Agenda::class, [
             'id_agenda' => $agenda->id_agenda
+        ]);
+
+        foreach ($partisipan_agenda as $partisipan) {
+            $this->assertDatabaseMissing(Partisipan::class, [
+                'id_partisipan' => $partisipan->id_partisipan
+            ]);
+        }
+
+        $this->assertDatabaseMissing(UndanganAgenda::class, [
+            'id_invite' => $old_invite_code->id_invite
+        ]);
+        
+        $this->assertDatabaseMissing(UndanganAgenda::class, [
+            'id_invite' => $new_invite_code->id_invite
         ]);
     }
 

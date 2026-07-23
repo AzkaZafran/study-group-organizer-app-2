@@ -224,6 +224,10 @@ class AgendaService {
             throw new Exception('AGENDA_ALREADY_RUNNING_OR_FINISHED');
         }
 
+        $agenda->participants()->detach();
+
+        $agenda->undangan()->delete();
+
         $success = $agenda->delete();
 
         return $success;
