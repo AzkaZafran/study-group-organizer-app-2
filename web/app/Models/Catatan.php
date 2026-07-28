@@ -15,6 +15,7 @@ class Catatan extends Model
     protected $fillable = [
         'id_author',
         'id_agenda',
+        'judul_catatan',
         'catatan'
     ];
 }
