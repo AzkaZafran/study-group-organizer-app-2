@@ -50,4 +50,10 @@ class Agenda extends Model
                                 'id_agenda', 
                                 'id_agenda');
     }
+
+    public function catatan() {
+        return $this->hasMany(Catatan::class, 
+                                'id_agenda', 
+                                'id_agenda');
+    }
 }
