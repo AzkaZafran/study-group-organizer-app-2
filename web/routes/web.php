@@ -46,6 +46,10 @@ Route::get('/drafts/inviteDialog', function () {
 });
 
 Route::middleware('auth:web')->group(function () {
+    Route::get('/drafts/catatan', function () {
+        return view('drafts.catatan');
+    });
+
     Route::delete('/logout', [UserController::class, 'logout']);
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
