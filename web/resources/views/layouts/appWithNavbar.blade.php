@@ -2,5 +2,7 @@
 
 @section('content')
     @include('partials.navbar')
-    @yield('navbar-content')
+    <div class="flex-grow-1 d-flex flex-column overflow-auto">
+        @yield('navbar-content')
+    </div>
 @endsection
