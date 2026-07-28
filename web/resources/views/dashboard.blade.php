@@ -13,7 +13,7 @@
             </div>
         </div>
     @endif
-    <div class="container">
+    <div class="container mt-3">
         <h3 class="fw-medium mb-3" style="color: black;">Statistik</h3>
 
         <div class="d-flex flex-row gap-3 mb-4">
