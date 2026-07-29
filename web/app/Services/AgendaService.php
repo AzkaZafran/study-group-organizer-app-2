@@ -37,7 +37,7 @@ class AgendaService {
         return $agenda;
     }
 
-    public function getUserAgenda() {
+    public function getUserAgendaWithParticipant() {
         $auth_user = Auth::user();
 
         if(!$auth_user) {
@@ -48,6 +48,19 @@ class AgendaService {
                         ->with(['participants' => function ($query) {
                             $query->withPivot('status');
                         }])->withPivot('status')
+                        ->wherePivot('status', 'ikut')
+                        ->get();
+    }
+
+    public function getUserAgenda() {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        return $auth_user->agendas()
+                        ->withPivot('status')
                         ->wherePivot('status', 'ikut')
                         ->get();
     }

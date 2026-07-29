@@ -43,7 +43,7 @@ class ListAgenda extends Component
         $result = collect();
 
         if ($status == 'semua') {
-            $result = $this->agendaService->getUserAgenda();
+            $result = $this->agendaService->getUserAgendaWithParticipant();
         } else {
             $result = $this->agendaService->getUserAgendaFilterByStatus($status);
         }
