@@ -65,6 +65,32 @@ class AgendaService {
                         ->get();
     }
 
+    public function findUserAgenda($id_agenda) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $agenda = Agenda::find($id_agenda);
+
+        if (empty($agenda)) {
+            throw new Exception('AGENDA_NOT_FOUND');
+        }
+
+        $is_participant = $agenda->participants()
+                                ->withPivot('status')
+                                ->wherePivot('status', 'ikut')
+                                ->where('id', $auth_user->id)
+                                ->exists();
+
+        if (!$is_participant) {
+            throw new Exception('USER_NOT_PERMITTED');
+        }
+
+        return $agenda;
+    }
+
     public function getUserAgendaFilterByStatus($status) {
         $auth_user = Auth::user();
 
