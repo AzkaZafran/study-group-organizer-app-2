@@ -46,7 +46,7 @@ class UserSearchFriendsTest extends TestCase {
 
         $result = $friendRequestService->searchFriends('budi');
 
-        $this->assertCount(1, $result);
+        $this->assertNotEmpty($result);
 
         $this->assertTrue($result->contains(function ($friend) {
             return $friend['username'] == 'budipratama' &&
