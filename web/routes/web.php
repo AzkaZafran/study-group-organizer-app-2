@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\AgendaInviteController;
+use App\Http\Controllers\Web\CatatanController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\FriendController;
 use App\Http\Controllers\Web\LoginController;
@@ -88,6 +89,9 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/friend/list', [FriendController::class, 'friends'])->name('friend list');
 
     Route::get('/friend/requests', [FriendController::class, 'friendRequest'])->name('friend requests');
+
+    Route::get('/agenda/{id_agenda}/catatan', [CatatanController::class, 'index'])
+            ->name('agenda catatan');
 
     Route::get('/test', function () {
         $mutual_friend_request = FriendRequests::where('id_pengirim', auth()->id())->where('status', 'mutual')->first();
