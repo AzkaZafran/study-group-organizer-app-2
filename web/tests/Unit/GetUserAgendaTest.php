@@ -18,14 +18,20 @@ class GetUserAgendaTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        Partisipan::factory()->count(5)->create([
+        $auth_user_attended_agenda_count = 5;
+
+        Partisipan::factory()->count($auth_user_attended_agenda_count)->create([
             'id_user' => $auth_user->id,
             'status' => 'ikut'
         ]);
 
-        Partisipan::factory()->count(3)->create([
-            'id_user' => $auth_user->id
-        ]);
+        $auth_user_unattended_agenda_count = 3;
+
+        $auth_user_unattended_agenda = Partisipan::factory()
+                                        ->count($auth_user_unattended_agenda_count)
+                                        ->create([
+                                            'id_user' => $auth_user->id
+                                        ]);
 
         $agendaService = new AgendaService();
 
@@ -33,18 +39,34 @@ class GetUserAgendaTest extends TestCase {
 
         $result = $agendaService->getUserAgenda();
 
-        $this->assertCount(5, $result);
+        $this->assertCount($auth_user_attended_agenda_count, $result);
 
         $this->assertTrue(
-            $result->contains(function ($agenda) use ($auth_user) {
-                return $agenda instanceof Agenda &&
-                        $agenda->pivot->status == 'ikut' &&
-                        $agenda->participants->contains('id', $auth_user->id) &&
-                        $agenda->participants->contains(function ($participant) {
-                            return (!empty($participant->pivot->status));
-                        });
+            $result->every(function ($agenda) use ($auth_user) {
+
+                if (!($agenda instanceof Agenda)) {
+                    return false;
+                }
+
+                $auth_user_is_attending = $agenda->pivot->id_user == $auth_user->id && 
+                                            $agenda->pivot->status == 'ikut';
+
+                if (!$auth_user_is_attending) {
+                    return false;
+                }
+
+                return true;
             })
         );
+
+        $result_only_have_attended_agenda_from_auth_user = $auth_user_unattended_agenda->every(
+            function ($partisipan) use ($result) {
+                
+                return !$result->contains('id_agenda', $partisipan->id_agenda);
+            }
+        );
+
+        $this->assertTrue($result_only_have_attended_agenda_from_auth_user);
     }
 
     public function testGetUserAgendaFailed() {
