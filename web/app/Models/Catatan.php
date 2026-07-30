@@ -32,4 +32,13 @@ class Catatan extends Model
                     ->withPivot('status')
                     ->wherePivot('status', 'sudah dibaca');
     }
+
+    public function view() {
+        return $this->belongsToMany(User::class,
+                                    CatatanTerbaca::class,
+                                    'id_catatan',
+                                    'id_user',
+                                    'id_catatan',
+                                    'id');
+    }
 }

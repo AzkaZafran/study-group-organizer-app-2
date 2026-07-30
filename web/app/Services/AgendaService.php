@@ -7,6 +7,7 @@ use App\Models\Partisipan;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AgendaService {
     public function createAgenda($nama_agenda, $lokasi, $waktu_mulai, $waktu_berakhir) {
@@ -263,11 +264,19 @@ class AgendaService {
             throw new Exception('AGENDA_ALREADY_RUNNING_OR_FINISHED');
         }
 
-        $agenda->participants()->detach();
+        $success = DB::transaction(function () use ($agenda) {
 
-        $agenda->undangan()->delete();
+            foreach ($agenda->catatan as $catatan) {
+                $catatan->view()->detach();
+                $catatan->delete();
+            }
 
-        $success = $agenda->delete();
+            $agenda->participants()->detach();
+
+            $agenda->undangan()->delete();
+
+            return $agenda->delete();
+        });
 
         return $success;
     }

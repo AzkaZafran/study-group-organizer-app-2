@@ -3,10 +3,15 @@
 namespace Tests\Unit;
 
 use App\Models\Agenda;
+use App\Models\Catatan;
+use App\Models\CatatanTerbaca;
+use App\Models\Partisipan;
+use App\Models\UndanganAgenda;
 use App\Models\User;
 use App\Services\AgendaService;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Str;
 use Tests\TestCase;
 
 class UserDeleteAgendaTest extends TestCase {
@@ -24,6 +29,57 @@ class UserDeleteAgendaTest extends TestCase {
             'id_penyelenggara' => $auth_user->id
         ]);
 
+        $owner_participant = Partisipan::create([
+            'id_agenda' => $agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $list_partisipan = Partisipan::factory()->count(3)->create([
+            'id_agenda' => $agenda->id_agenda
+        ]);
+
+        $list_partisipan->prepend($owner_participant);
+
+        $old_code = Str::upper(Str::random(8));
+
+        $old_invite_code = UndanganAgenda::create([
+            'id_agenda' => $agenda->id_agenda,
+            'invite_code' => $old_code,
+            'expired_at' => $agenda->waktu_mulai->subMinutes(5)
+        ]);
+
+        $list_catatan = collect();
+
+        for ($i=0; $i < 3; $i++) { 
+            $catatan = Catatan::factory()->create([
+                'id_agenda' => $agenda->id_agenda,
+                'id_author' => $auth_user->id
+            ]);
+
+            CatatanTerbaca::create([
+                'id_catatan' => $catatan->id_catatan,
+                'id_user' => $auth_user->id,
+                'status' => 'sudah dibaca'
+            ]);
+
+            $list_catatan->push($catatan);
+        }
+
+        $new_code = '';
+
+        do {
+            $new_code = Str::upper(Str::random(8));
+        } while (
+            $new_code == $old_code
+        );
+
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $agenda->id_agenda,
+            'invite_code' => $new_code,
+            'expired_at' => $agenda->waktu_mulai->addMinutes(5)
+        ]);
+
         $this->actingAs($auth_user);
 
         $agendaService = new AgendaService();
@@ -32,9 +88,27 @@ class UserDeleteAgendaTest extends TestCase {
 
         $this->assertTrue($result);
 
-        $this->assertDatabaseMissing(Agenda::class, [
+        $this->assertDatabaseMissing(Partisipan::class, [
             'id_agenda' => $agenda->id_agenda
         ]);
+
+        $this->assertDatabaseMissing(UndanganAgenda::class, [
+            'id_invite' => $old_invite_code->id_invite
+        ]);
+        
+        $this->assertDatabaseMissing(UndanganAgenda::class, [
+            'id_agenda' => $agenda->id_agenda
+        ]);
+
+        $this->assertDatabaseMissing(Catatan::class, [
+            'id_agenda' => $agenda->id_agenda
+        ]);
+
+        foreach ($list_catatan as $catatan) {
+            $this->assertDatabaseMissing(CatatanTerbaca::class, [
+                'id_catatan' => $catatan->id_catatan
+            ]);
+        }
     }
 
     public function testUserDeleteAgendaFailed() {
