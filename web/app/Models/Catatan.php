@@ -41,4 +41,10 @@ class Catatan extends Model
                                     'id_catatan',
                                     'id');
     }
+
+    public function author() {
+        return $this->belongsTo(User::class, 
+                                'id_author', 
+                                'id');
+    }
 }

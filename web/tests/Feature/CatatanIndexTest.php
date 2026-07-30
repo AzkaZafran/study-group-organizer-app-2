@@ -61,6 +61,7 @@ class CatatanIndexTest extends TestCase {
             );
 
             $list_catatan->last()->jmlh_catatan = $list_jumlah_catatan_terbaca[$i];
+            $list_catatan->last()->is_author = $list_partisipan[$i]->id_user == $auth_user->id;
         }
 
         foreach ($list_catatan as $catatan) { 
@@ -102,7 +103,10 @@ class CatatanIndexTest extends TestCase {
                     $data['list_catatan']->contains(
                         fn (Catatan $fetched) =>
                             $fetched->id_catatan == $catatan->id_catatan &&
-                            $fetched->viewed->count() == $catatan->jmlh_catatan
+                            $fetched->viewed_count == $catatan->jmlh_catatan &&
+                            $fetched->author_name == $catatan->author->username &&
+                            $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
+                            $fetched->is_author == $catatan->is_author
                     )
             )
         );

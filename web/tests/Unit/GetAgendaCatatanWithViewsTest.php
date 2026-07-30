@@ -102,10 +102,12 @@ class GetAgendaCatatanWithViewsTest extends TestCase {
                                     ->contains(function ($generated_catatan) use ($catatan) {
                 
                     $same_catatan = $generated_catatan->id_catatan == $catatan->id_catatan;
-                    $same_view_count = $generated_catatan->jmlh_catatan == $catatan->viewed->count();
+                    $same_view_count = $generated_catatan->jmlh_catatan == $catatan->viewed_count;
+                    $same_author = $generated_catatan->author->id == $catatan->author->id;
 
                     return $same_catatan &&
-                            $same_view_count;
+                            $same_view_count &&
+                            $same_author;
                 });
 
                 if (!$matched_with_catatan_in_generated_list_and_same_view_count) {

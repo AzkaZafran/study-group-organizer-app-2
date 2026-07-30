@@ -33,6 +33,7 @@ class CatatanService {
         }
 
         $list_catatan = $agenda->catatan()
+                                ->with('author')
                                 ->withCount('viewed')
                                 ->get();
 
