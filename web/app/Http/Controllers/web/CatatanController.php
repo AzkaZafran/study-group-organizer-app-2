@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\AgendaService;
 use App\Services\CatatanService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CatatanController extends Controller
 {
@@ -21,6 +22,8 @@ class CatatanController extends Controller
     }
 
     public function index($id_agenda) {
+        $auth_user = Auth::user();
+
         try {
             $list_agenda = $this->agendaService->getUserAgenda();
 
@@ -28,8 +31,10 @@ class CatatanController extends Controller
 
             $list_catatan_agenda = $this->catatanService->getAgendaCatatanWithViews($id_agenda);
 
-            $list_catatan_agenda->each(function (Catatan $catatan) {
-                $catatan->view_count = $catatan->viewed->count();
+            $list_catatan_agenda->each(function (Catatan $catatan) use ($auth_user) {
+                $catatan->author_name = $catatan->author->username;
+                $catatan->tanggal_dibuat = $catatan->created_at->format('d/m/Y H:i');
+                $catatan->is_author = $catatan->id_author == $auth_user->id;
             });
 
             $formatted_list_agenda = $list_agenda->map(function (Agenda $agenda) {
