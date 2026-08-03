@@ -169,7 +169,8 @@
                             </div>
                         @else
                             <div class="modal-footer">
-                                <a class="btn" role="button" style="background-color: #492201; color: white;">
+                                <a class="btn" role="button" style="background-color: #492201; color: white;"
+                                    href="{{ route('agenda catatan', ['id_agenda' => $agenda->id_agenda]) }}">
                                     <i class="fa-solid fa-book-open me-1"></i>
                                     Catatan
                                 </a>
