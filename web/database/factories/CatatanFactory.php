@@ -151,7 +151,7 @@ class CatatanFactory extends Factory
             'id_author' => $author->id,
             'id_agenda' => $agenda->id_agenda,
             'judul_catatan' => $catatan_pack[$random_catatan_idx]['judul'],
-            'catatan' => $catatan_pack[$random_catatan_idx]['judul']
+            'catatan' => $catatan_pack[$random_catatan_idx]['isi']
         ];
     }
 }

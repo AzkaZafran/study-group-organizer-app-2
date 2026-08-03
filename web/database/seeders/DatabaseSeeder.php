@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Agenda;
+use App\Models\Catatan;
+use App\Models\CatatanTerbaca;
 use App\Models\FriendRequests;
 use App\Models\Partisipan;
 use App\Models\UndanganAgenda;
@@ -15,142 +17,367 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        $data = [
+    private function generate_registered_user_dummy_data() {
+        $user_data = [
+            'username' => 'ryan456',
+            'email' => 'ryan456@gmail.com',
+            'password' => Hash::make('passpelajarryan123_'),
+            'is_verified' => true
+        ];
+
+        $user = User::updateOrCreate(
+            [
+                'username' => $user_data['username'],
+                'email' => $user_data['email']
+            ],
+            $user_data
+        );
+
+        $user_mutual_friends = User::factory()->count(10)->create();
+
+        foreach ($user_mutual_friends as $friend) {
+            FriendRequests::firstOrCreate(
+                [
+                    'id_pengirim' => $user->id,
+                    'id_penerima' => $friend->id,
+                ],
+                [
+                    'status' => 'mutual',
+                ]
+            );
+
+            FriendRequests::firstOrCreate(
+                [
+                    'id_pengirim' => $friend->id,
+                    'id_penerima' => $user->id,
+                ],
+                [
+                    'status' => 'mutual',
+                ]
+            );
+        }
+
+        $other_user_send_friend_request = User::factory()->count(3)->create();
+
+        foreach ($other_user_send_friend_request as $user_send_friend_request) {
+            FriendRequests::firstOrCreate(
+                [
+                    'id_pengirim' => $user_send_friend_request->id,
+                    'id_penerima' => $user->id,
+                ],
+                [
+                    'status' => 'pending',
+                ]
+            );
+        }
+
+        $agenda_organizer = $user_mutual_friends->first();
+
+        $agenda_data = Agenda::factory()->make([
+            'id_penyelenggara' => $agenda_organizer->id,
+            'waktu_mulai' => now()->addDays(3),
+            'waktu_berakhir' => now()->addDays(3)->addHours(3)
+                                    ->min(now()->addDays(3)->endOfDay()),
+            'status' => 'belum dimulai'
+        ]);
+
+        $agenda = Agenda::create($agenda_data->getAttributes());
+
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $agenda->id_agenda,
+                'id_user' => $agenda_organizer->id
+            ],
+            [
+                'status' => 'ikut'
+            ]
+        );
+
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $agenda->id_agenda,
+                'id_user' => $user->id
+            ],
+            [
+                'status' => 'pending'
+            ]
+        );
+
+        $agenda_invite_code_data = UndanganAgenda::firstOrCreate(
+            [
+                'id_agenda' => $agenda->id_agenda,
+                'invite_code' => 'AZX07NOL'
+            ],
+            [
+                'expired_at' => now()->addDay()
+            ]
+        );
+
+        return $user;
+    }
+
+    private function generate_agenda_participant_dummy_data() {
+        $user_data = [
+            'username' => 'pasha99',
+            'email' => 'pasha99@gmail.com',
+            'password' => Hash::make('pashapartisipan_'),
+            'is_verified' => true
+        ];
+
+        $user = User::updateOrCreate(
+            [
+                'username' => $user_data['username'],
+                'email' => $user_data['email']
+            ],
+            $user_data
+        );
+
+        return $user;
+    }
+
+    private function generate_agenda_organizer_and_participant_dummy_data() {
+        $user_data = [
             'username' => 'azkazafran78',
             'email' => 'azkazafran78@gmail.com',
             'password' => Hash::make('password123456789'),
             'is_verified' => true
         ];
 
-        $auth_user = User::create($data);
+        $user = User::updateOrCreate(
+            [
+                'username' => $user_data['username'],
+                'email' => $user_data['email']
+            ],
+            $user_data
+        );
 
-        $data = [
-            'username' => 'pelajar39',
-            'email' => 'pelajar398@gmail.com',
-            'password' => Hash::make('pelajar123456789'),
-            'is_verified' => true
-        ];
+        $user_mutual_friends = User::factory()->count(10)->create();
 
-        $pelajar39_user = User::create($data);
+        foreach ($user_mutual_friends as $friend) {
+            FriendRequests::firstOrCreate(
+                [
+                    'id_pengirim' => $user->id,
+                    'id_penerima' => $friend->id,
+                ],
+                [
+                    'status' => 'mutual',
+                ]
+            );
 
-        FriendRequests::factory()->count(10)->create([
-            'id_pengirim' => $auth_user->id,
-            'status' => 'mutual'
-        ]);
+            FriendRequests::firstOrCreate(
+                [
+                    'id_pengirim' => $friend->id,
+                    'id_penerima' => $user->id,
+                ],
+                [
+                    'status' => 'mutual',
+                ]
+            );
+        }
 
-        FriendRequests::factory()->count(10)->create([
-            'id_penerima' => $auth_user->id,
-            'status' => 'pending'
-        ]);
-
-        FriendRequests::create([
-            'id_pengirim' => $auth_user->id,
-            'id_penerima' => $pelajar39_user->id,
-            'status' => 'mutual'
-        ]);
-
-        FriendRequests::create([
-            'id_pengirim' => $pelajar39_user->id,
-            'id_penerima' => $auth_user->id,
-            'status' => 'mutual'
-        ]);
-
-        $strangers = User::factory()->count(10)->create();
-        
-        $agenda_data = [
-            'id_penyelenggara' => $auth_user->id,
-            'nama_agenda' => 'belajar bareng siang',
-            'lokasi' => 'Jl. Jaya Sukses No. 2',
-            'waktu_mulai' => '2026-10-15 12:30:00',
-            'waktu_berakhir' => '2026-10-15 15:30:00'
-        ];
-
-        $agenda = Agenda::create($agenda_data);
-
-        Partisipan::create([
-            'id_agenda' => $agenda->id_agenda,
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ]);
-
-        Partisipan::create([
-            'id_agenda' => $agenda->id_agenda,
-            'id_user' => $pelajar39_user->id
-        ]);
-
-        UndanganAgenda::create([
-            'id_agenda' => $agenda->id_agenda,
-            'invite_code' => '3a75bIc4',
-            'expired_at' => now()->addDay()
-        ]);
-
-        $new_agenda = Agenda::factory()->create([
-            'id_penyelenggara' => $auth_user->id,
+        $pending_agendas_data = Agenda::factory()->count(5)->make([
+            'id_penyelenggara' => $user->id,
             'waktu_mulai' => now()->addDays(3),
-            'waktu_berakhir' => now()->addDays(3)
-                                    ->addHours(3)
+            'waktu_berakhir' => now()->addDays(3)->addHours(3)
                                     ->min(now()->addDays(3)->endOfDay()),
             'status' => 'belum dimulai'
         ]);
 
-        Partisipan::create([
-            'id_agenda' => $new_agenda->id_agenda,
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ]);
-        
-        Partisipan::factory()->count(9)->create([
-            'id_agenda' => $new_agenda->id_agenda
-        ]);
+        $pending_agendas = collect();
 
-        $new_agenda = Agenda::factory()->create([
-            'waktu_mulai' => now(),
-            'waktu_berakhir' => now()->addHours(2)
+        foreach ($pending_agendas_data as $agenda_data) {
+            $agenda = Agenda::create($agenda_data->getAttributes());
+
+            $pending_agendas->push($agenda);
+
+            Partisipan::firstOrCreate(
+                [
+                    'id_agenda' => $agenda->id_agenda,
+                    'id_user' => $user->id,
+                ],
+                [
+                    'status' => 'ikut'
+                ]
+            );
+
+            $agenda_participants = $user_mutual_friends->random(5);
+
+            foreach ($agenda_participants as $participant) {
+                Partisipan::firstOrCreate(
+                    [
+                        'id_agenda' => $agenda->id_agenda,
+                        'id_user' => $participant->id,
+                    ],
+                    [
+                        'status' => 'ikut'
+                    ]
+                );
+            }
+        }
+
+        $running_agenda_data = Agenda::factory()->make([
+            'id_penyelenggara' => $user->id,
+            'waktu_mulai' => now()->subHour()
+                                ->max(now()->startOfDay()),
+            'waktu_berakhir' => now()->addHour()
                                     ->min(now()->endOfDay()),
             'status' => 'sedang berjalan'
         ]);
 
-        Partisipan::create([
-            'id_agenda' => $new_agenda->id_agenda,
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ]);
+        $running_agenda = Agenda::create($running_agenda_data->getAttributes());
 
-        Partisipan::factory()->count(5)->create([
-            'id_agenda' => $new_agenda->id_agenda
-        ]);
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $running_agenda->id_agenda,
+                'id_user' => $user->id,
+            ],
+            [
+                'status' => 'ikut'
+            ]
+        );
 
-        Partisipan::factory()->count(4)->create([
-            'id_agenda' => $new_agenda->id_agenda,
-            'status' => 'tidak ikut'
-        ]);
+        $agenda_participants = $user_mutual_friends->random(5);
 
-        $new_agenda = Agenda::factory()->create([
-            'waktu_mulai' => now()->subDays(3),
-            'waktu_berakhir' => now()->subDays(3)
-                                    ->addHours(3)
-                                    ->min(now()->subDays(3)->endOfDay()),
+        foreach ($agenda_participants as $participant) {
+            Partisipan::firstOrCreate(
+                [
+                    'id_agenda' => $running_agenda->id_agenda,
+                    'id_user' => $participant->id,
+                ],
+                [
+                    'status' => 'ikut'
+                ]
+            );
+
+            $catatan_data = Catatan::factory()->make([
+                'id_author' => $participant->id,
+                'id_agenda' => $running_agenda->id_agenda
+            ])->toArray();
+
+            $catatan = Catatan::create($catatan_data);
+
+            CatatanTerbaca::create([
+                'id_catatan' => $catatan->id_catatan,
+                'id_user' => $participant->id,
+                'status' => 'sudah dibaca'
+            ]);
+        }
+
+        $finished_agendas_data = Agenda::factory()->count(5)->make([
+            'id_penyelenggara' => $user->id,
+            'waktu_mulai' => now()->subDays(2),
+            'waktu_berakhir' => now()->subDays(2)->addHours(3)
+                                    ->min(now()->subDays(2)->endOfDay()),
             'status' => 'selesai'
         ]);
 
-        Partisipan::create([
-            'id_agenda' => $new_agenda->id_agenda,
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ]);
+        $finished_agendas = collect();
 
-        Partisipan::factory()->count(9)->create([
-            'id_agenda' => $new_agenda->id_agenda
-        ]);
+        foreach ($finished_agendas_data as $agenda_data) {
+            $agenda = Agenda::create($agenda_data->getAttributes());
 
-        Partisipan::factory()->count(10)->create([
-            'id_user' => $auth_user->id,
-            'status' => 'ikut'
-        ]);
+            $finished_agendas->push($agenda);
+            
+            Partisipan::firstOrCreate(
+                [
+                    'id_agenda' => $agenda->id_agenda,
+                    'id_user' => $user->id,
+                ],
+                [
+                    'status' => 'ikut'
+                ]
+            );
+
+            $agenda_participants = $user_mutual_friends->random(5);
+
+            foreach ($agenda_participants as $participant) {
+                Partisipan::firstOrCreate(
+                    [
+                        'id_agenda' => $agenda->id_agenda,
+                        'id_user' => $participant->id,
+                    ],
+                    [
+                        'status' => 'ikut'
+                    ]
+                );
+
+                $catatan_data = Catatan::factory()->make([
+                    'id_author' => $participant->id,
+                    'id_agenda' => $agenda->id_agenda
+                ])->toArray();
+
+                $catatan = Catatan::create($catatan_data);
+
+                CatatanTerbaca::create([
+                    'id_catatan' => $catatan->id_catatan,
+                    'id_user' => $participant->id,
+                    'status' => 'sudah dibaca'
+                ]);
+            }
+        }
+
+        $agenda_participant = $this->generate_agenda_participant_dummy_data();
+
+        FriendRequests::firstOrCreate(
+            [
+                'id_pengirim' => $user->id,
+                'id_penerima' => $agenda_participant->id,
+            ],
+            [
+                'status' => 'mutual',
+            ]
+        );
+
+        FriendRequests::firstOrCreate(
+            [
+                'id_pengirim' => $agenda_participant->id,
+                'id_penerima' => $user->id,
+            ],
+            [
+                'status' => 'mutual',
+            ]
+        );
+
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $pending_agendas->first()->id_agenda,
+                'id_user' => $agenda_participant->id,
+            ],
+            [
+                'status' => 'ikut'
+            ]
+        );
+
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $running_agenda->id_agenda,
+                'id_user' => $agenda_participant->id,
+            ],
+            [
+                'status' => 'ikut'
+            ]
+        );
+
+        Partisipan::firstOrCreate(
+            [
+                'id_agenda' => $finished_agendas->first()->id_agenda,
+                'id_user' => $agenda_participant->id,
+            ],
+            [
+                'status' => 'ikut'
+            ]
+        );
+    }
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $this->generate_registered_user_dummy_data();
+
+        $this->generate_agenda_organizer_and_participant_dummy_data();
+
+        $strangers = User::factory()->count(10)->create();
     }
 }
