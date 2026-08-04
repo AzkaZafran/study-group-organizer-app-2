@@ -13,7 +13,7 @@ use Livewire\Livewire;
 use Tests\TestCase;
 
 class ListCatatanWireTest extends TestCase {
-    public function testViewListCatatanSuccess() {
+    public function testViewAndRefreshListCatatanSuccess() {
         $data = [
             'username' => 'azkazafran78',
             'email' => 'azkazafran78@gmail.com',
@@ -66,7 +66,7 @@ class ListCatatanWireTest extends TestCase {
                 ])
             );
 
-            $list_catatan->last()->jmlh_catatan = $list_jumlah_catatan_terbaca[$i];
+            $list_catatan->last()->jmlh_terbaca = $list_jumlah_catatan_terbaca[$i];
             $list_catatan->last()->is_author = $list_partisipan[$i]->id_user == $auth_user->id;
         }
 
@@ -74,7 +74,7 @@ class ListCatatanWireTest extends TestCase {
             for ($i=0; $i < $list_partisipan->count(); $i++) {
                 $status = 'belum dibaca';
 
-                if ($i < $catatan->jmlh_catatan) {
+                if ($i < $catatan->jmlh_terbaca) {
                     $status = 'sudah dibaca';
                 }
 
@@ -102,7 +102,49 @@ class ListCatatanWireTest extends TestCase {
                     $data['list_catatan']->contains(
                         fn (Catatan $fetched) =>
                             $fetched->id_catatan == $catatan->id_catatan &&
-                            $fetched->viewed_count == $catatan->jmlh_catatan &&
+                            $fetched->viewed_count == $catatan->jmlh_terbaca &&
+                            $fetched->author_name == $catatan->author->username &&
+                            $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
+                            $fetched->is_author == $catatan->is_author
+                    )
+            )
+        );
+
+        $new_catatan = Catatan::factory()->create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_author' => $auth_user->id
+        ]);
+
+        $list_catatan->push($new_catatan);
+
+        $new_catatan->jmlh_terbaca = 0;
+        $new_catatan->is_author = true;
+
+        for ($i=0; $i < $list_partisipan->count(); $i++) {
+            CatatanTerbaca::create([
+                'id_user' => $list_partisipan[$i]->id_user,
+                'id_catatan' => $new_catatan->id_catatan,
+                'status' => 'belum dibaca'
+            ]);
+        }
+
+        $this->actingAs($auth_user);
+
+        $component_response = Livewire::test(ListCatatan::class, [
+                                            'id_agenda' => $running_agenda->id_agenda
+                                        ])->dispatch('catatan-created');
+
+        $component_response->assertViewIs('livewire.list-catatan');
+
+        $new_data = $component_response->viewData('wire_data');
+
+        $this->assertTrue(
+            $list_catatan->every(
+                fn (Catatan $catatan) =>
+                    $new_data['list_catatan']->contains(
+                        fn (Catatan $fetched) =>
+                            $fetched->id_catatan == $catatan->id_catatan &&
+                            $fetched->viewed_count == $catatan->jmlh_terbaca &&
                             $fetched->author_name == $catatan->author->username &&
                             $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
                             $fetched->is_author == $catatan->is_author
