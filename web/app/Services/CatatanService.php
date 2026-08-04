@@ -74,6 +74,15 @@ class CatatanService {
 
         $catatan = Catatan::create($catatan_data);
 
+        $agenda_participants = $agenda->participants;
+
+        $catatan->view()->attach(
+            $agenda_participants->pluck('id'),
+            [
+                'status' => 'belum dibaca'
+            ]
+        );
+
         return $catatan;
     }
 }

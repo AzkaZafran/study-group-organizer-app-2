@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Agenda;
 use App\Models\Catatan;
+use App\Models\CatatanTerbaca;
 use App\Models\Partisipan;
 use App\Models\User;
 use App\Services\CatatanService;
@@ -64,6 +65,18 @@ class UserCreateCatatanTest extends TestCase {
             $result->judul_catatan == 'Laravel Livewire' &&
             $result->catatan == 'Membuat komponen interaktif menggunakan Livewire'
         );
+
+        $this->assertDatabaseHas(CatatanTerbaca::class, [
+            'id_catatan' => $result->id_catatan,
+            'id_user' => $auth_user->id,
+            'status' => 'belum dibaca'
+        ]);
+
+        $this->assertDatabaseHas(CatatanTerbaca::class, [
+            'id_catatan' => $result->id_catatan,
+            'id_user' => $running_agenda->id_penyelenggara,
+            'status' => 'belum dibaca'
+        ]);
     }
 
     public function testCreateCatatanFailed() {
