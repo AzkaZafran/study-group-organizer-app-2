@@ -19,9 +19,17 @@
                 </li>
 
                 <div class="px-2 d-flex flex-column">
-                    <a role="button" class="btn btn-post my-3 {{ $data['agenda_status'] === 'belum dimulai' ? 'disabled' : '' }}">
+                    <a role="button" class="btn btn-post my-3 {{ $data['agenda_status'] === 'belum dimulai' ? 'disabled' : '' }}"
+                        data-bs-toggle="modal" data-bs-target='#modalcreatecatatan'>
                         Post Catatan
                     </a>
+                </div>
+
+                <div class="modal fade" id="modalcreatecatatan" tabindex="-1" 
+                aria-labelledby="modalCreateCatatan" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <livewire:create-catatan-form :id_agenda="request()->route('id_agenda')" />
+                    </div>
                 </div>
             </div>
 
@@ -109,6 +117,16 @@
                 </div>
             </div>
         </div>
+
+        <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('catatan-created', () => {
+                bootstrap.Modal.getInstance(
+                    document.getElementById('modalcreatecatatan')
+                ).hide();
+            });
+        });
+        </script>
 
         @push('styles')
             <style>

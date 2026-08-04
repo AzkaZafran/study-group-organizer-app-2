@@ -1,15 +1,17 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Livewire;
 
+use App\Livewire\CreateCatatanForm;
 use App\Models\Agenda;
 use App\Models\Catatan;
 use App\Models\Partisipan;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Livewire;
 use Tests\TestCase;
 
-class UserCreateCatatanTest extends TestCase {
+class UserCreateCatatanWireTest extends TestCase {
     public function testCreateCatatanSuccess() {
         $data = [
             'username' => 'azkazafran78',
@@ -46,16 +48,16 @@ class UserCreateCatatanTest extends TestCase {
                                     'status' => 'ikut'
                                 ]);
 
-        $response = $this->actingAs($auth_user)
-                        ->from("/agenda/{$running_agenda->id_agenda}/catatan")
-                        ->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => 'Laravel Livewire',
-                                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
-                                ]
-                            );
+        $this->actingAs($auth_user);
 
-        $response->assertRedirect("/agenda/{$running_agenda->id_agenda}/catatan");
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => 'Laravel Livewire',
+                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
+                ])->call('createCatatan')
+                ->assertDispatched('catatan-created')
+                ->assertHasNoErrors();
 
         $this->assertDatabaseHas(Catatan::class, [
             'id_agenda' => $running_agenda->id_agenda,
@@ -64,16 +66,16 @@ class UserCreateCatatanTest extends TestCase {
             'catatan' => 'Membuat komponen interaktif menggunakan Livewire'
         ]);
 
-        $response = $this->actingAs($auth_user)
-                        ->from("/agenda/{$running_agenda->id_agenda}/catatan")
-                        ->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => '',
-                                    'isi_catatan' => 'Untitled Catatan'
-                                ]
-                            );
+        $this->actingAs($auth_user);
 
-        $response->assertRedirect("/agenda/{$running_agenda->id_agenda}/catatan");
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => '',
+                    'isi_catatan' => 'Untitled Catatan'
+                ])->call('createCatatan')
+                ->assertDispatched('catatan-created')
+                ->assertHasNoErrors();
 
         $this->assertDatabaseHas(Catatan::class, [
             'id_agenda' => $running_agenda->id_agenda,
@@ -119,26 +121,23 @@ class UserCreateCatatanTest extends TestCase {
                                     'status' => 'ikut'
                                 ]);
 
-        $response = $this->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => '',
-                                    'isi_catatan' => ''
-                                ]
-                            );
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => 'Laravel Livewire',
+                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
+                ])->call('createCatatan')
+                ->assertHasErrors([
+                    'business_error' => 'Pengguna tidak terautentikasi.'
+                ]);
 
-        $response->assertRedirect('/login');
-
-        $response = $this->actingAs($auth_user)
-                        ->from("/agenda/{$running_agenda->id_agenda}/catatan")
-                        ->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => '',
-                                    'isi_catatan' => ''
-                                ]
-                            );
-
-        $response->assertRedirect("/agenda/{$running_agenda->id_agenda}/catatan")
-                ->assertSessionHasErrors([
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => '',
+                    'isi_catatan' => ''
+                ])->call('createCatatan')
+                ->assertHasErrors([
                     'isi_catatan' => 'The isi catatan field is required.'
                 ]);
     }
@@ -153,18 +152,16 @@ class UserCreateCatatanTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        $response = $this->actingAs($auth_user)
-                        ->post("/agenda/999/catatan/create",
-                                [
-                                    'judul_catatan' => 'Laravel Livewire',
-                                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
-                                ]
-                            );
+        $this->actingAs($auth_user);
 
-        $response->assertViewIs('errors.error')
-                ->assertViewHas([
-                    'title' => '404 Not Found',
-                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => 999
+                ])->set([
+                    'judul_catatan' => 'Laravel Livewire',
+                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
+                ])->call('createCatatan')
+                ->assertHasErrors([
+                    'business_error' => "Agenda tidak dapat ditemukan."
                 ]);
     }
 
@@ -204,18 +201,16 @@ class UserCreateCatatanTest extends TestCase {
                                     'status' => 'tidak ikut'
                                 ]);
 
-        $response = $this->actingAs($auth_user)
-                        ->from("/agenda/{$running_agenda->id_agenda}/catatan")
-                        ->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => 'Laravel Livewire',
-                                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
-                                ]
-                            );
+        $this->actingAs($auth_user);
 
-        $response->assertRedirect('/dashboard')
-                ->assertSessionHasErrors([
-                    'message' => 'Pengguna bukan partisipan agenda ini.'
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => 'Laravel Livewire',
+                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
+                ])->call('createCatatan')
+                ->assertHasErrors([
+                    'business_error' => 'Pengguna bukan partisipan agenda ini.'
                 ]);
     }
 
@@ -254,18 +249,16 @@ class UserCreateCatatanTest extends TestCase {
                                     'status' => 'ikut'
                                 ]);
 
-        $response = $this->actingAs($auth_user)
-                        ->from("/agenda/{$running_agenda->id_agenda}/catatan")
-                        ->post("/agenda/{$running_agenda->id_agenda}/catatan/create",
-                                [
-                                    'judul_catatan' => 'Laravel Livewire',
-                                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
-                                ]
-                            );
+        $this->actingAs($auth_user);
 
-        $response->assertRedirect('/dashboard')
-                ->assertSessionHasErrors([
-                    'message' => 'Catatan tidak dapat dibuat dalam agenda yang belum dimulai.'
+        Livewire::test(CreateCatatanForm::class, [
+                    'id_agenda' => $running_agenda->id_agenda
+                ])->set([
+                    'judul_catatan' => 'Laravel Livewire',
+                    'isi_catatan' => 'Membuat komponen interaktif menggunakan Livewire'
+                ])->call('createCatatan')
+                ->assertHasErrors([
+                    'business_error' => 'Catatan tidak dapat dibuat dalam agenda yang belum dimulai.'
                 ]);
     }
 }
