@@ -19,10 +19,13 @@ class UserUpdateAgendaTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $now = now();
+
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->addDay(),
-            'waktu_berakhir' => now()->addDay()->addHours(3),
+            'waktu_mulai' => $now->copy()->addDay(),
+            'waktu_berakhir' => $now->copy()->addDay()->addHours(3)
+                                    ->min($now->copy()->addDay()->endOfDay()),
             'status' => 'belum dimulai'
         ]);
 
@@ -202,7 +205,7 @@ class UserUpdateAgendaTest extends TestCase {
                 ]);
     }
 
-    public function testUpdateAgendaWithEndTimeGreaterThanStartTime() {
+    public function testUpdateAgendaWithStartTimeGreaterThanEndTime() {
         $data = [
             'username' => 'azkazafran78',
             'email' => 'azkazafran78@gmail.com',
@@ -212,10 +215,13 @@ class UserUpdateAgendaTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $now = now();
+
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->addDay(),
-            'waktu_berakhir' => now()->addDay()->addHours(3),
+            'waktu_mulai' => $now->copy()->addDays(2),
+            'waktu_berakhir' => $now->copy()->addDays(2)->addHours(3)
+                                    ->min($now->copy()->addDay()->endOfDay()),
             'status' => 'belum dimulai'
         ]);
 
@@ -226,8 +232,12 @@ class UserUpdateAgendaTest extends TestCase {
                             'nama_agenda' => 'agenda diubah',
                             'lokasi_agenda' => $agenda->lokasi,
                             'waktu_agenda' => $agenda->waktu_mulai->format('Y-m-d'),
-                            'jam_awal' => now()->addHours(3)->format('H:i'),
-                            'jam_akhir' => now()->addHour()->format('H:i')
+                            'jam_awal' => $now->copy()->addDay()->addHours(2)
+                                            ->min($now->copy()->addDay()->endOfDay())
+                                            ->format('H:i'),
+                            'jam_akhir' => $now->copy()->addDay()->subHour()
+                                            ->max($now->copy()->addDay()->startOfDay())
+                                            ->format('H:i')
                         ]);
 
         $response->assertRedirect("/agenda/{$agenda->id}/update")

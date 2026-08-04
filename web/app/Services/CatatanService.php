@@ -39,4 +39,50 @@ class CatatanService {
 
         return $list_catatan;
     }
+
+    public function createCatatan($id_agenda, $judul_catatan, $isi_catatan) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $agenda = Agenda::find($id_agenda);
+
+        if (empty($agenda)) {
+            throw new Exception('AGENDA_NOT_FOUND');
+        }
+
+        $is_participant = $agenda->participants()
+                                ->withPivot('status')
+                                ->wherePivot('status', 'ikut')
+                                ->get()
+                                ->contains('id', $auth_user->id);
+
+        if (!$is_participant) {
+            throw new Exception('USER_NOT_PERMITTED');
+        } elseif (now()->lessThan($agenda->waktu_mulai)) {
+            throw new Exception('AGENDA_NOT_STARTED_YET');
+        }
+
+        $catatan_data = [
+            'id_agenda' => $agenda->id_agenda,
+            'id_author' => $auth_user->id,
+            'judul_catatan' => $judul_catatan,
+            'catatan' => $isi_catatan
+        ];
+
+        $catatan = Catatan::create($catatan_data);
+
+        $agenda_participants = $agenda->participants;
+
+        $catatan->view()->attach(
+            $agenda_participants->pluck('id'),
+            [
+                'status' => 'belum dibaca'
+            ]
+        );
+
+        return $catatan;
+    }
 }

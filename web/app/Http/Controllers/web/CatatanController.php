@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserCreateCatatanRequest;
 use App\Models\Agenda;
 use App\Models\Catatan;
 use App\Models\User;
@@ -78,6 +79,40 @@ class CatatanController extends Controller
                 default => view('errors.error', [
                     'title' => '500 Internal Server Error',
                     'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
+
+    public function createCatatan($id_agenda, UserCreateCatatanRequest $request) {
+        $data = $request->validated();
+
+        $data['judul_catatan'] = $data['judul_catatan'] ?? 'Untitled';
+
+        try {
+            $this->catatanService->createCatatan(
+                id_agenda:      $id_agenda,
+                judul_catatan:  $data['judul_catatan'],
+                isi_catatan:    $data['isi_catatan']
+            );
+
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'AGENDA_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Agenda Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Pengguna bukan partisipan agenda ini.'
+                ]),
+                'AGENDA_NOT_STARTED_YET' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Catatan tidak dapat dibuat dalam agenda yang belum dimulai.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => $e->getMessage()
                 ])
             };
         }
