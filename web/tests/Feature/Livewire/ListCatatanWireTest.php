@@ -109,6 +109,18 @@ class ListCatatanWireTest extends TestCase {
             )
         );
 
+        expect(
+            $list_catatan->values()->every(function ($catatan, $index) use ($list_catatan) {
+
+                if ($index === 0) {
+                    return true;
+                }
+
+                return $list_catatan[$index - 1]->updated_at
+                    ->greaterThanOrEqualTo($catatan->updated_at);
+            })
+        )->toBeTrue();
+
         $new_catatan = Catatan::factory()->create([
             'id_agenda' => $running_agenda->id_agenda,
             'id_author' => $auth_user->id
@@ -147,6 +159,18 @@ class ListCatatanWireTest extends TestCase {
                     )
             )
         );
+
+        expect(
+            $list_catatan->values()->every(function ($catatan, $index) use ($list_catatan) {
+
+                if ($index === 0) {
+                    return true;
+                }
+
+                return $list_catatan[$index - 1]->updated_at
+                    ->greaterThanOrEqualTo($catatan->updated_at);
+            })
+        )->toBeTrue();
     }
 
     public function testViewListCatatanFailed() {

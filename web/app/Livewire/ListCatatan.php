@@ -23,7 +23,7 @@ class ListCatatan extends Component
         $this->id_agenda = $id_agenda;
 
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews();
+            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortByDesc('updated_at');
 
             $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
 
@@ -65,7 +65,7 @@ class ListCatatan extends Component
     #[On('catatan-created')]
     public function refresh_list_catatan() {
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews();
+            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortBy('updated_at');
 
             $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
 
