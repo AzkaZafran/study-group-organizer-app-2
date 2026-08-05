@@ -23,7 +23,7 @@ class ListCatatan extends Component
         $this->id_agenda = $id_agenda;
 
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews();
+            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortByDesc('updated_at');
 
             $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
 
@@ -65,7 +65,7 @@ class ListCatatan extends Component
     #[On('catatan-created')]
     public function refresh_list_catatan() {
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews();
+            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortByDesc('updated_at');
 
             $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
 
@@ -103,8 +103,9 @@ class ListCatatan extends Component
 
         $list_catatan->each(function (Catatan $catatan) use ($auth_user) {
             $catatan->author_name = $catatan->author->username;
-            $catatan->tanggal_dibuat = $catatan->created_at->format('d/m/Y H:i');
+            $catatan->tanggal_diubah = $catatan->updated_at->format('d/m/Y H:i');
             $catatan->is_author = $catatan->id_author == $auth_user->id;
+            $catatan->is_updated = $catatan->updated_at->greaterThan($catatan->created_at);
         });
 
         return $list_catatan;

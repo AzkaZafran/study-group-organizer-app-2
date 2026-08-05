@@ -66,11 +66,27 @@ class ListCatatanWireTest extends TestCase {
 
         $list_catatan = collect();
 
-        foreach ($list_partisipan as $partisipan) {
-            $new_catatan = Catatan::factory()->create([
-                                    'id_author' => $partisipan->id,
-                                    'id_agenda' => $running_agenda->id_agenda
-                                ]);
+        foreach ($list_partisipan as $key => $partisipan) {
+            $catatan_data = [
+                'is_updated' => [
+                    'id_author' => $partisipan->id,
+                    'id_agenda' => $running_agenda->id_agenda,
+                    'created_at' => $now->copy()->subMinutes(30)
+                                        ->max($now->copy()->startOfDay()),
+                    'updated_at' => $now->copy()->addMinutes(30)
+                                        ->min($now->copy()->endOfDay())
+                ],
+                'is_not_updated' => [
+                    'id_author' => $partisipan->id,
+                    'id_agenda' => $running_agenda->id_agenda,
+                    'created_at' => $now->copy(),
+                    'updated_at' => $now->copy()
+                ]
+            ];
+
+            $selected_data = ($key + 1) % 2 == 0 ? $catatan_data['is_not_updated'] : $catatan_data['is_updated'];
+
+            $new_catatan = Catatan::factory()->create($selected_data);
 
             $new_catatan->is_author = $partisipan->id == $auth_user->id;
 
@@ -103,11 +119,24 @@ class ListCatatanWireTest extends TestCase {
                             $fetched->id_catatan == $catatan->id_catatan &&
                             $fetched->viewed_count == 1 &&
                             $fetched->author_name == $catatan->author->username &&
-                            $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
-                            $fetched->is_author == $catatan->is_author
+                            $fetched->tanggal_diubah == $catatan->updated_at->format('d/m/Y H:i') &&
+                            $fetched->is_author == $catatan->is_author &&
+                            $fetched->is_updated == $catatan->updated_at->greaterThan($catatan->created_at)
                     )
             )
         );
+
+        expect(
+            $data['list_catatan']->values()->every(function ($catatan, $index) use ($data) {
+
+                if ($index === 0) {
+                    return true;
+                }
+
+                return $data['list_catatan'][$index - 1]->updated_at
+                    ->greaterThanOrEqualTo($catatan->updated_at);
+            })
+        )->toBeTrue();
 
         $new_catatan = Catatan::factory()->create([
             'id_agenda' => $running_agenda->id_agenda,
@@ -142,11 +171,24 @@ class ListCatatanWireTest extends TestCase {
                             $fetched->id_catatan == $catatan->id_catatan &&
                             $fetched->viewed_count == 1 &&
                             $fetched->author_name == $catatan->author->username &&
-                            $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
-                            $fetched->is_author == $catatan->is_author
+                            $fetched->tanggal_diubah == $catatan->updated_at->format('d/m/Y H:i') &&
+                            $fetched->is_author == $catatan->is_author &&
+                            $fetched->is_updated == $catatan->updated_at->greaterThan($catatan->created_at)
                     )
             )
         );
+
+        expect(
+            $data['list_catatan']->values()->every(function ($catatan, $index) use ($data) {
+
+                if ($index === 0) {
+                    return true;
+                }
+
+                return $data['list_catatan'][$index - 1]->updated_at
+                    ->greaterThanOrEqualTo($catatan->updated_at);
+            })
+        )->toBeTrue();
     }
 
     public function testViewListCatatanFailed() {
