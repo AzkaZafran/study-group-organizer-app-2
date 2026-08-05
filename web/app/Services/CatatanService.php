@@ -118,4 +118,31 @@ class CatatanService {
 
         return true;
     }
+
+    public function editCatatan($id_catatan, $judul_catatan, $isi_catatan) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $catatan = Catatan::find($id_catatan);
+
+        if (empty($catatan)) {
+            throw new Exception('CATATAN_NOT_FOUND');
+        } elseif ($catatan->id_author != $auth_user->id) {
+            throw new Exception('USER_NOT_PERMITTED');
+        }
+
+        $catatan->judul_catatan = $judul_catatan;
+        $catatan->catatan = $isi_catatan;
+
+        $edit_success = $catatan->save();
+
+        if ($edit_success) {
+            return $catatan;
+        }
+
+        return false;
+    }
 }
