@@ -47,6 +47,10 @@ class ListCatatanWireTest extends TestCase {
 
         $auth_user_attended_agenda->prepend($owner_participant);
 
+        $auth_user_attended_agenda = $auth_user_attended_agenda->map(function (Partisipan $partisipan) {
+                                        return $partisipan->agenda;
+                                    });
+
         $list_partisipan = Partisipan::factory()->count(2)->create([
             'id_agenda' => $running_agenda->id_agenda,
             'status' => 'ikut'
@@ -54,34 +58,29 @@ class ListCatatanWireTest extends TestCase {
 
         $list_partisipan->prepend($owner_participant);
 
+        $list_partisipan = $list_partisipan->map(function (Partisipan $partisipan) {
+                                return $partisipan->belongsTo(User::class,
+                                                                'id_user',
+                                                                'id')->first();
+                            });
+
         $list_catatan = collect();
 
-        $list_jumlah_catatan_terbaca = [3, 2, 0];
+        foreach ($list_partisipan as $partisipan) {
+            $new_catatan = Catatan::factory()->create([
+                                    'id_author' => $partisipan->id,
+                                    'id_agenda' => $running_agenda->id_agenda
+                                ]);
 
-        for ($i=0; $i < $list_partisipan->count(); $i++) {
-            $list_catatan->push(
-                Catatan::factory()->create([
-                    'id_author' => $list_partisipan[$i]->id_user,
-                    'id_agenda' => $running_agenda->id_agenda
-                ])
-            );
+            $new_catatan->is_author = $partisipan->id == $auth_user->id;
 
-            $list_catatan->last()->jmlh_terbaca = $list_jumlah_catatan_terbaca[$i];
-            $list_catatan->last()->is_author = $list_partisipan[$i]->id_user == $auth_user->id;
-        }
+            $list_catatan->push($new_catatan);
 
-        foreach ($list_catatan as $catatan) { 
-            for ($i=0; $i < $list_partisipan->count(); $i++) {
-                $status = 'belum dibaca';
-
-                if ($i < $catatan->jmlh_terbaca) {
-                    $status = 'sudah dibaca';
-                }
-
+            foreach ($list_partisipan as $partisipan_j) {
                 CatatanTerbaca::create([
-                    'id_user' => $list_partisipan[$i]->id_user,
-                    'id_catatan' => $catatan->id_catatan,
-                    'status' => $status
+                    'id_user' => $partisipan_j->id,
+                    'id_catatan' => $new_catatan->id_catatan,
+                    'status' => 'belum dibaca'
                 ]);
             }
         }
@@ -102,7 +101,7 @@ class ListCatatanWireTest extends TestCase {
                     $data['list_catatan']->contains(
                         fn (Catatan $fetched) =>
                             $fetched->id_catatan == $catatan->id_catatan &&
-                            $fetched->viewed_count == $catatan->jmlh_terbaca &&
+                            $fetched->viewed_count == 1 &&
                             $fetched->author_name == $catatan->author->username &&
                             $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
                             $fetched->is_author == $catatan->is_author
@@ -115,14 +114,13 @@ class ListCatatanWireTest extends TestCase {
             'id_author' => $auth_user->id
         ]);
 
-        $list_catatan->push($new_catatan);
-
-        $new_catatan->jmlh_terbaca = 0;
         $new_catatan->is_author = true;
 
-        for ($i=0; $i < $list_partisipan->count(); $i++) {
+        $list_catatan->push($new_catatan);
+
+        foreach ($list_partisipan as $partisipan) {
             CatatanTerbaca::create([
-                'id_user' => $list_partisipan[$i]->id_user,
+                'id_user' => $partisipan->id,
                 'id_catatan' => $new_catatan->id_catatan,
                 'status' => 'belum dibaca'
             ]);
@@ -130,9 +128,7 @@ class ListCatatanWireTest extends TestCase {
 
         $this->actingAs($auth_user);
 
-        $component_response = Livewire::test(ListCatatan::class, [
-                                            'id_agenda' => $running_agenda->id_agenda
-                                        ])->dispatch('catatan-created');
+        $component_response = $component_response->dispatch('catatan-created');
 
         $component_response->assertViewIs('livewire.list-catatan');
 
@@ -144,7 +140,7 @@ class ListCatatanWireTest extends TestCase {
                     $new_data['list_catatan']->contains(
                         fn (Catatan $fetched) =>
                             $fetched->id_catatan == $catatan->id_catatan &&
-                            $fetched->viewed_count == $catatan->jmlh_terbaca &&
+                            $fetched->viewed_count == 1 &&
                             $fetched->author_name == $catatan->author->username &&
                             $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
                             $fetched->is_author == $catatan->is_author
