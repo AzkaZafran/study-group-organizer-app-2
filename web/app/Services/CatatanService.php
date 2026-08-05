@@ -85,4 +85,37 @@ class CatatanService {
 
         return $catatan;
     }
+
+    public function markCatatanAsRead(array $id_catatans) {
+        if (empty($id_catatans)) {
+            return false;
+        }
+    
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $id_catatans = array_unique($id_catatans);
+
+        $allCatatanExist = Catatan::whereIn('id_catatan', $id_catatans)
+                                    ->count() === count($id_catatans);
+
+        if (!$allCatatanExist) {
+            throw new Exception('ONE_OR_MORE_CATATAN_NOT_FOUND');
+        }
+
+        $pivotData = [];
+
+        foreach ($id_catatans as $id_catatan) {
+            $pivotData[$id_catatan] = [
+                'status' => 'sudah dibaca',
+            ];
+        }
+
+        $auth_user->catatans()->syncWithoutDetachingOrFail($pivotData);
+
+        return true;
+    }
 }

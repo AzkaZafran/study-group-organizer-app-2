@@ -22,18 +22,14 @@ class ListCatatan extends Component
     public function mount($id_agenda) {
         $this->id_agenda = $id_agenda;
 
-        $this->list_catatan = $this->getAgendaCatatanWithViews();
-    }
-
-    public function boot(CatatanService $catatanService) {
-        $this->catatanService = $catatanService;
-    }
-
-    public function getAgendaCatatanWithViews() {
         try {
-            $fetched_list_catatan = $this->catatanService->getAgendaCatatanWithViews($this->id_agenda);
+            $this->list_catatan = $this->getAgendaCatatanWithViews();
 
-            return $this->formatted_list_catatan($fetched_list_catatan);
+            $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
+
+            $this->catatanService->markCatatanAsRead($list_id_catatans);
+
+            $this->list_catatan->loadCount('viewed');
         } catch (Exception $e) {
             match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED'    => $this->addError(
@@ -53,14 +49,49 @@ class ListCatatan extends Component
                                                 'Something went wrong.'
                                                 )
             };
-
-            return null;
         }
+    }
+
+    public function boot(CatatanService $catatanService) {
+        $this->catatanService = $catatanService;
+    }
+
+    public function getAgendaCatatanWithViews() {
+        $fetched_list_catatan = $this->catatanService->getAgendaCatatanWithViews($this->id_agenda);
+
+        return $this->formatted_list_catatan($fetched_list_catatan);
     }
 
     #[On('catatan-created')]
     public function refresh_list_catatan() {
-        $this->list_catatan = $this->getAgendaCatatanWithViews();
+        try {
+            $this->list_catatan = $this->getAgendaCatatanWithViews();
+
+            $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
+
+            $this->catatanService->markCatatanAsRead($list_id_catatans);
+
+            $this->list_catatan->loadCount('viewed');
+        } catch (Exception $e) {
+            match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED'    => $this->addError(
+                                                'list_catatan_error', 
+                                                'Pengguna tidak terautentikasi.'
+                                                ),
+                'AGENDA_NOT_FOUND'          => $this->addError(
+                                                'list_catatan_error', 
+                                                "Agenda tidak dapat ditemukan."
+                                                ),
+                'USER_NOT_PERMITTED'        => $this->addError(
+                                                'list_catatan_error', 
+                                                'Pengguna bukan partisipan agenda ini.'
+                                                ),
+                default                     => $this->addError(
+                                                'list_catatan_error', 
+                                                'Something went wrong.'
+                                                )
+            };
+        }
     }
 
     private function formatted_list_catatan($list_catatan) {
