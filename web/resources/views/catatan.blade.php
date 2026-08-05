@@ -33,45 +33,7 @@
                 </div>
             </div>
 
-            <div class="list-catatan-container col-md-6 p-0 border-start border-end border-secondary-subtle scroll-y-inv">
-                
-                @if ($data['list_catatan']->isEmpty())
-                    <div class="list-catatan-container d-flex justify-content-center align-items-center">
-                        <p class="fs-5 fw-semibold text-secondary">Agenda ini belum memiliki catatan apapun.</p>
-                    </div>
-                @else
-                    @foreach ($data['list_catatan'] as $catatan)
-                    
-                        <div class="catatan-container border-bottom border-secondary-subtle p-3">
-                            <div class="d-flex flex-row mb-2" style="min-height: 26px;">
-
-                                <p class="m-0" style="font-size: 14px;">
-                                    <span class="fw-medium">{{ $catatan->author_name }}</span>
-                                    <span style="color: hsl(0, 0%, 65%);">• {{ $catatan->tanggal_dibuat }} · {{ $catatan->viewed_count }} views</span>
-                                </p>
-
-                                <div class="flex-grow-1"></div>
-
-                                @if ($catatan->is_author)
-                                    <div class="d-flex flex-row gap-2 px-2 rounded" style="background-color: #F8FAFC;">
-                                        <a role="button" class="btn p-0">
-                                            <i class="fa-solid fa-pen-to-square" style="font-size: 14px;"></i>
-                                        </a>
-                                        <a role="button" class="btn p-0">
-                                            <i class="fa-solid fa-trash-can" style="font-size: 14px; color: #ff0000;"></i>
-                                        </a>
-                                    </div>
-                                @endif
-                                
-                            </div>
-
-                            <h5 class="fw-semibold">{{ $catatan->judul_catatan }}</h5>
-                            <p class="fs-6">{{ $catatan->catatan }}</p>
-                        </div>
-                    @endforeach
-                @endif
-
-            </div>
+            <livewire:list-catatan :id_agenda="request()->route('id_agenda')" />
 
             <div class="col-md-3 p-4">
                 <div class="mb-3">
