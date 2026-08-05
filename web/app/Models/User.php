@@ -40,6 +40,15 @@ class User extends Model implements Authenticatable
                                     'id_agenda');
     }
 
+    public function catatans() {
+        return $this->belongsToMany(Catatan::class, 
+                                    CatatanTerbaca::class,
+                                    'id_user',
+                                    'id_catatan',
+                                    'id',
+                                    'id_catatan');
+    }
+
     public function getAuthIdentifier() {
         return $this->id;
     }
