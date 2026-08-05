@@ -30,14 +30,6 @@ class CatatanController extends Controller
 
             $selected_agenda = $this->agendaService->findUserAgenda($id_agenda);
 
-            $list_catatan_agenda = $this->catatanService->getAgendaCatatanWithViews($id_agenda);
-
-            $list_catatan_agenda->each(function (Catatan $catatan) use ($auth_user) {
-                $catatan->author_name = $catatan->author->username;
-                $catatan->tanggal_dibuat = $catatan->created_at->format('d/m/Y H:i');
-                $catatan->is_author = $catatan->id_author == $auth_user->id;
-            });
-
             $formatted_list_agenda = $list_agenda->map(function (Agenda $agenda) {
                                             return [
                                                 'id_agenda' => $agenda->id_agenda,
@@ -59,7 +51,6 @@ class CatatanController extends Controller
             
             $data = [
                 'list_agenda' => $formatted_list_agenda,
-                'list_catatan' => $list_catatan_agenda,
                 'nama_penyelenggara' => $nama_penyelenggara,
                 'list_partisipan' => $formatted_participants,
                 'agenda_status' => $agenda_status

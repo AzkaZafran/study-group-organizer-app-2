@@ -101,10 +101,14 @@ class UserUpdateAgendaTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $now = now();
+
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->subHour(),
-            'waktu_berakhir' => now()->addHour(),
+            'waktu_mulai' => $now->copy()->subHour()
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->addHour()
+                                    ->min($now->copy()->endOfDay()),
             'status' => 'sedang berjalan'
         ]);
 
@@ -126,8 +130,10 @@ class UserUpdateAgendaTest extends TestCase {
 
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->subHours(3),
-            'waktu_berakhir' => now()->subHour(),
+            'waktu_mulai' => $now->copy()->subHours(3)
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->subHour()
+                                    ->max($now->copy()->startOfDay()->subSecond()),
             'status' => 'selesai'
         ]);
 
@@ -158,10 +164,13 @@ class UserUpdateAgendaTest extends TestCase {
 
         $auth_user = User::create($data);
 
+        $now = now();
+
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->addDay(),
-            'waktu_berakhir' => now()->addDay()->addHours(3),
+            'waktu_mulai' => $now->copy()->addDay(),
+            'waktu_berakhir' => $now->copy()->addDay()->addHours(3)
+                                    ->min($now->copy()->endOfDay()),
             'status' => 'belum dimulai'
         ]);
 
@@ -172,8 +181,12 @@ class UserUpdateAgendaTest extends TestCase {
                             'nama_agenda' => 'agenda diubah',
                             'lokasi_agenda' => $agenda->lokasi,
                             'waktu_agenda' => now()->format('Y-m-d'),
-                            'jam_awal' => now()->subHour()->format('H:i'),
-                            'jam_akhir' => now()->addHour()->format('H:i')
+                            'jam_awal' => $now->copy()->subHour()
+                                            ->max($now->copy()->startOfDay())
+                                            ->format('H:i'),
+                            'jam_akhir' => $now->copy()->addHour()
+                                                ->min($now->copy()->endOfDay())
+                                                ->format('H:i')
                         ]);
 
         $response->assertRedirect("/agenda/{$agenda->id}/update")
@@ -183,8 +196,9 @@ class UserUpdateAgendaTest extends TestCase {
 
         $agenda = Agenda::factory()->create([
             'id_penyelenggara' => $auth_user->id,
-            'waktu_mulai' => now()->addDay(),
-            'waktu_berakhir' => now()->addDay()->addHours(3),
+            'waktu_mulai' => $now->copy()->addDay(),
+            'waktu_berakhir' => $now->copy()->addDay()->addHours(3)
+                                    ->min($now->copy()->startOfDay()),
             'status' => 'belum dimulai'
         ]);
 

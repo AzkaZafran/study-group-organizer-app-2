@@ -48,39 +48,6 @@ class CatatanIndexTest extends TestCase {
 
         $list_partisipan->prepend($owner_participant);
 
-        $list_catatan = collect();
-
-        $list_jumlah_catatan_terbaca = [3, 2, 0];
-
-        for ($i=0; $i < $list_partisipan->count(); $i++) {
-            $list_catatan->push(
-                Catatan::factory()->create([
-                    'id_author' => $list_partisipan[$i]->id_user,
-                    'id_agenda' => $agenda->id_agenda
-                ])
-            );
-
-            $list_catatan->last()->jmlh_catatan = $list_jumlah_catatan_terbaca[$i];
-            $list_catatan->last()->is_author = $list_partisipan[$i]->id_user == $auth_user->id;
-        }
-
-        foreach ($list_catatan as $catatan) { 
-            for ($i=0; $i < $list_partisipan->count(); $i++) {
-                $status = 'belum dibaca';
-
-                if ($i < $catatan->jmlh_catatan) {
-                    $status = 'sudah dibaca';
-                }
-
-                CatatanTerbaca::create([
-                    'id_user' => $list_partisipan[$i]->id_user,
-                    'id_catatan' => $catatan->id_catatan,
-                    'status' => $status
-                ]);
-            }
-        }
-        
-
         $response = $this->actingAs($auth_user)->get("/agenda/{$agenda->id_agenda}/catatan");
 
         $response->assertViewIs('catatan');
@@ -94,20 +61,6 @@ class CatatanIndexTest extends TestCase {
             $auth_user_attended_agenda->every(
                 fn (Partisipan $partisipan) =>
                     $data['list_agenda']->contains('id_agenda', $partisipan->id_agenda)
-            )
-        );
-
-        $this->assertTrue(
-            $list_catatan->every(
-                fn (Catatan $catatan) =>
-                    $data['list_catatan']->contains(
-                        fn (Catatan $fetched) =>
-                            $fetched->id_catatan == $catatan->id_catatan &&
-                            $fetched->viewed_count == $catatan->jmlh_catatan &&
-                            $fetched->author_name == $catatan->author->username &&
-                            $fetched->tanggal_dibuat == $catatan->created_at->format('d/m/Y H:i') &&
-                            $fetched->is_author == $catatan->is_author
-                    )
             )
         );
 
