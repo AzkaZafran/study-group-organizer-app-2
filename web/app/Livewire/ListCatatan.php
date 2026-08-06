@@ -23,13 +23,7 @@ class ListCatatan extends Component
         $this->id_agenda = $id_agenda;
 
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortByDesc('updated_at');
-
-            $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
-
-            $this->catatanService->markCatatanAsRead($list_id_catatans);
-
-            $this->list_catatan->loadCount('viewed');
+            $this->load_list_catatan_with_views_and_mark_as_read();
         } catch (Exception $e) {
             match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED'    => $this->addError(
@@ -56,22 +50,25 @@ class ListCatatan extends Component
         $this->catatanService = $catatanService;
     }
 
-    public function getAgendaCatatanWithViews() {
-        $fetched_list_catatan = $this->catatanService->getAgendaCatatanWithViews($this->id_agenda);
+    private function load_list_catatan_with_views_and_mark_as_read() {
+        $fetched_list_catatan = $this->catatanService
+                                    ->getAgendaCatatanWithViews($this->id_agenda)
+                                    ->sortByDesc('updated_at');
 
-        return $this->formatted_list_catatan($fetched_list_catatan);
+        $this->list_catatan = $this->formatted_list_catatan($fetched_list_catatan);
+
+        $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
+
+        $this->catatanService->markCatatanAsRead($list_id_catatans);
+
+        $this->list_catatan->loadCount('viewed');
     }
 
+    #[On('catatan-edited')]
     #[On('catatan-created')]
     public function refresh_list_catatan() {
         try {
-            $this->list_catatan = $this->getAgendaCatatanWithViews()->sortByDesc('updated_at');
-
-            $list_id_catatans = $this->list_catatan->pluck('id_catatan')->toArray();
-
-            $this->catatanService->markCatatanAsRead($list_id_catatans);
-
-            $this->list_catatan->loadCount('viewed');
+            $this->load_list_catatan_with_views_and_mark_as_read();
         } catch (Exception $e) {
             match ($e->getMessage()) {
                 'USER_NOT_AUTHENTICATED'    => $this->addError(
@@ -88,6 +85,49 @@ class ListCatatan extends Component
                                                 ),
                 default                     => $this->addError(
                                                 'list_catatan_error', 
+                                                'Something went wrong.'
+                                                )
+            };
+        }
+    }
+
+    public function showEditModal($id_catatan) {
+        try {
+            $this->load_list_catatan_with_views_and_mark_as_read();
+
+            $auth_user = Auth::user();
+
+            if(!$auth_user) {
+                throw new Exception('USER_NOT_AUTHENTICATED');
+            }
+
+            $catatan = $this->list_catatan->firstWhere('id_catatan', $id_catatan);
+
+            if (empty($catatan)) {
+                throw new Exception('CATATAN_NOT_FOUND');
+            } elseif ($catatan->id_author != $auth_user->id) {
+                throw new Exception('USER_NOT_PERMITTED');
+            }
+
+            $this->dispatch('load-edit-catatan', id_catatan: $id_catatan, 
+                                                judul_catatan: $catatan->judul_catatan,
+                                                isi_catatan: $catatan->catatan);
+        } catch (Exception $e) {
+            match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED'    => $this->addError(
+                                                'edit_catatan_error', 
+                                                'Pengguna tidak terautentikasi.'
+                                                ),
+                'CATATAN_NOT_FOUND'          => $this->addError(
+                                                'edit_catatan_error', 
+                                                "Catatan tidak dapat ditemukan."
+                                                ),
+                'USER_NOT_PERMITTED'        => $this->addError(
+                                                'edit_catatan_error', 
+                                                'Pengguna bukan partisipan agenda atau bukan author dari catatan ini.'
+                                                ),
+                default                     => $this->addError(
+                                                'edit_catatan_error', 
                                                 'Something went wrong.'
                                                 )
             };
