@@ -31,6 +31,13 @@
                         <livewire:create-catatan-form :id_agenda="request()->route('id_agenda')" />
                     </div>
                 </div>
+
+                <div class="modal fade" id="modaleditcatatan" tabindex="-1" 
+                aria-labelledby="modalEditCatatan" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <livewire:edit-catatan-form />
+                    </div>
+                </div>
             </div>
 
             <livewire:list-catatan :id_agenda="request()->route('id_agenda')" />
@@ -85,6 +92,20 @@
             Livewire.on('catatan-created', () => {
                 bootstrap.Modal.getInstance(
                     document.getElementById('modalcreatecatatan')
+                ).hide();
+            });
+
+            Livewire.on('show-edit-catatan-modal', () => {
+                const modal = bootstrap.Modal.getOrCreateInstance(
+                    document.getElementById('modaleditcatatan')
+                );
+
+                modal.show();
+            });
+
+            Livewire.on('catatan-edited', () => {
+                bootstrap.Modal.getInstance(
+                    document.getElementById('modaleditcatatan')
                 ).hide();
             });
         });
