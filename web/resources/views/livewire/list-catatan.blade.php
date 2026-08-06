@@ -1,6 +1,6 @@
 <div class="list-catatan-container col-md-6 p-0 border-start border-end border-secondary-subtle scroll-y-inv">
     
-    @if ($errors->has('list_catatan_error'))
+    @if ($errors->has('list_catatan_error') || $errors->has('edit_catatan_error'))
         <div class="modal fade" id="modallistcatatanerror" tabindex="-1" 
             aria-labelledby="modalListCatatanError" aria-hidden="true">
             <div class="modal-dialog">
@@ -10,6 +10,11 @@
 
                         <ul class="mb-3 ps-4">
                             @foreach ($errors->get('list_catatan_error') as $message)
+                                <li class="fs-medium">
+                                    {{ $message }}
+                                </li>
+                            @endforeach
+                            @foreach ($errors->get('edit_catatan_error') as $message)
                                 <li class="fs-medium">
                                     {{ $message }}
                                 </li>
@@ -49,14 +54,14 @@
 
                     <p class="m-0" style="font-size: 14px;">
                         <span class="fw-medium">{{ $catatan->author_name }}</span>
-                        <span style="color: hsl(0, 0%, 65%);">• {{ $catatan->tanggal_dibuat }} · {{ $catatan->viewed_count }} views</span>
+                        <span style="color: hsl(0, 0%, 65%);">• {{ $catatan->tanggal_diubah }} · {{ $catatan->viewed_count }} views</span>
                     </p>
 
                     <div class="flex-grow-1"></div>
 
                     @if ($catatan->is_author)
                         <div class="d-flex flex-row gap-2 px-2 rounded" style="background-color: #F8FAFC;">
-                            <a role="button" class="btn p-0">
+                            <a role="button" wire:click="showEditModal({{ $catatan->id_catatan }})" class="btn p-0">
                                 <i class="fa-solid fa-pen-to-square" style="font-size: 14px;"></i>
                             </a>
                             <a role="button" class="btn p-0">
