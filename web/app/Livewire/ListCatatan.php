@@ -43,6 +43,8 @@ class ListCatatan extends Component
                                                 'Something went wrong.'
                                                 )
             };
+
+            $this->dispatch('wire-list-catatan-mount-error');
         }
     }
 
@@ -88,6 +90,8 @@ class ListCatatan extends Component
                                                 'Something went wrong.'
                                                 )
             };
+
+            $this->dispatch('refresh-list-catatan-error');
         }
     }
 
@@ -131,6 +135,8 @@ class ListCatatan extends Component
                                                 'Something went wrong.'
                                                 )
             };
+
+            $this->dispatch('load-edit-catatan-error');
         }
     }
 

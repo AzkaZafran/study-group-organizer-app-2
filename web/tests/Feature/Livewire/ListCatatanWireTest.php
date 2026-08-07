@@ -325,6 +325,9 @@ class ListCatatanWireTest extends TestCase {
                                                 isi_catatan: $catatan->catatan);
 
         $component_response->assertHasNoErrors();
+
+        $component_response->assertDontSee('Fatal Error!');
+        $component_response->assertDontSee('Pengguna bukan partisipan agenda atau bukan author dari catatan ini.');
     }
 
     public function testShowEditModalFailed() {
@@ -376,6 +379,9 @@ class ListCatatanWireTest extends TestCase {
         $component_response->assertHasErrors([
             'edit_catatan_error' => 'Pengguna tidak terautentikasi.'
         ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Pengguna tidak terautentikasi.');
     }
 
     public function testShowEditModalWithUnknownCatatan() {
@@ -414,6 +420,9 @@ class ListCatatanWireTest extends TestCase {
         $component_response->assertHasErrors([
             'edit_catatan_error' => 'Catatan tidak dapat ditemukan.'
         ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Catatan tidak dapat ditemukan.');
     }
 
     public function testShowEditModalWithUserNotAuthor() {
@@ -469,5 +478,8 @@ class ListCatatanWireTest extends TestCase {
         $component_response->assertHasErrors([
             'edit_catatan_error' => 'Pengguna bukan partisipan agenda atau bukan author dari catatan ini.'
         ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Pengguna bukan partisipan agenda atau bukan author dari catatan ini.');
     }
 }
