@@ -276,4 +276,210 @@ class ListCatatanWireTest extends TestCase {
 
         $this->assertEmpty($fetched_list_catatan);
     }
+
+    public function testShowEditModalSuccess() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('password123456789'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $now = now();
+
+        $running_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id,
+            'waktu_mulai' => $now->copy()->subHour()
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->addHour()
+                                    ->min($now->copy()->endOfDay()),
+            'status' => 'sedang berjalan'
+        ]);
+
+        $owner_participant = Partisipan::create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $catatan_data = [
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_author' => $auth_user->id,
+            'judul_catatan' => 'Laravel Test',
+            'catatan' => 'This is a test'
+        ];
+
+        $catatan = Catatan::create($catatan_data);
+
+        $this->actingAs($auth_user);
+
+        $component_response = Livewire::test(ListCatatan::class, [
+                                            'id_agenda' => $running_agenda->id_agenda
+                                        ])->call('showEditModal', id_catatan: $catatan->id_catatan);
+
+        $component_response->assertDispatched('load-edit-catatan', 
+                                                id_catatan: $catatan->id_catatan, 
+                                                judul_catatan: $catatan->judul_catatan,
+                                                isi_catatan: $catatan->catatan);
+
+        $component_response->assertHasNoErrors();
+
+        $component_response->assertDontSee('Fatal Error!');
+        $component_response->assertDontSee('Pengguna bukan partisipan agenda atau bukan author dari catatan ini.');
+    }
+
+    public function testShowEditModalFailed() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('password123456789'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $now = now();
+
+        $running_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id,
+            'waktu_mulai' => $now->copy()->subHour()
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->addHour()
+                                    ->min($now->copy()->endOfDay()),
+            'status' => 'sedang berjalan'
+        ]);
+
+        $owner_participant = Partisipan::create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $catatan_data = [
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_author' => $auth_user->id,
+            'judul_catatan' => 'Laravel Test',
+            'catatan' => 'This is a test'
+        ];
+
+        $catatan = Catatan::create($catatan_data);
+
+        $this->actingAs($auth_user);
+
+        $component_response = Livewire::test(ListCatatan::class, [
+                                            'id_agenda' => $running_agenda->id_agenda
+                                        ]);
+
+        $this->actingAsGuest();
+
+        $component_response = $component_response->call('showEditModal', id_catatan: $catatan->id_catatan);
+
+        $component_response->assertHasErrors([
+            'edit_catatan_error' => 'Pengguna tidak terautentikasi.'
+        ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Pengguna tidak terautentikasi.');
+    }
+
+    public function testShowEditModalWithUnknownCatatan() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('password123456789'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $now = now();
+
+        $running_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id,
+            'waktu_mulai' => $now->copy()->subHour()
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->addHour()
+                                    ->min($now->copy()->endOfDay()),
+            'status' => 'sedang berjalan'
+        ]);
+
+        $owner_participant = Partisipan::create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $this->actingAs($auth_user);
+
+        $component_response = Livewire::test(ListCatatan::class, [
+                                            'id_agenda' => $running_agenda->id_agenda
+                                        ])->call('showEditModal', id_catatan: 999);
+
+        $component_response->assertHasErrors([
+            'edit_catatan_error' => 'Catatan tidak dapat ditemukan.'
+        ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Catatan tidak dapat ditemukan.');
+    }
+
+    public function testShowEditModalWithUserNotAuthor() {
+        $data = [
+            'username' => 'azkazafran78',
+            'email' => 'azkazafran78@gmail.com',
+            'password' => Hash::make('password123456789'),
+            'is_verified' => true
+        ];
+
+        $auth_user = User::create($data);
+
+        $other_user = User::factory()->create();
+
+        $now = now();
+
+        $running_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id,
+            'waktu_mulai' => $now->copy()->subHour()
+                                ->max($now->copy()->startOfDay()),
+            'waktu_berakhir' => $now->copy()->addHour()
+                                    ->min($now->copy()->endOfDay()),
+            'status' => 'sedang berjalan'
+        ]);
+
+        $owner_participant = Partisipan::create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $other_user_participant = Partisipan::create([
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_user' => $other_user->id,
+            'status' => 'ikut'
+        ]);
+
+        $catatan_data = [
+            'id_agenda' => $running_agenda->id_agenda,
+            'id_author' => $other_user->id,
+            'judul_catatan' => 'Laravel Test',
+            'catatan' => 'This is a test'
+        ];
+
+        $catatan = Catatan::create($catatan_data);
+
+        $this->actingAs($auth_user);
+
+        $component_response = Livewire::test(ListCatatan::class, [
+                                            'id_agenda' => $running_agenda->id_agenda
+                                        ])->call('showEditModal', id_catatan: $catatan->id_catatan);
+
+        $component_response->assertHasErrors([
+            'edit_catatan_error' => 'Pengguna bukan partisipan agenda atau bukan author dari catatan ini.'
+        ]);
+
+        $component_response->assertSee('Fatal Error!');
+        $component_response->assertSee('Pengguna bukan partisipan agenda atau bukan author dari catatan ini.');
+    }
 }
