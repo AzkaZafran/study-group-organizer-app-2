@@ -108,6 +108,16 @@
                     document.getElementById('modaleditcatatan')
                 ).hide();
             });
+
+            const showListCatatanErrorModal = () => {
+                bootstrap.Modal.getOrCreateInstance(
+                    document.getElementById('modallistcatatanerror')
+                ).show();
+            };
+
+            Livewire.on('load-edit-catatan-error', showListCatatanErrorModal);
+            Livewire.on('wire-list-catatan-mount-error', showListCatatanErrorModal);
+            Livewire.on('refresh-list-catatan-error', showListCatatanErrorModal);
         });
         </script>
 

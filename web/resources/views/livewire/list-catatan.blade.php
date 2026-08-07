@@ -23,25 +23,15 @@
 
                         <div class="d-flex justify-content-center">
                             @if (!Auth::user())
-                                <a role="button" href="{{ route('login') }}" class="btn w-25" style="background-color: #1E3A8A; color: white;">Kembali Ke Login Page</a>
+                                <a role="button" href="{{ route('login') }}" class="btn w-50" style="background-color: #1E3A8A; color: white;">Kembali Ke Login Page</a>
                             @else
-                                <a role="button" href="{{ route('dashboard') }}" class="btn w-25" style="background-color: #1E3A8A; color: white;">Kembali Ke Dashboard Page</a>
+                                <a role="button" href="{{ route('dashboard') }}" class="btn w-50" style="background-color: #1E3A8A; color: white;">Kembali Ke Dashboard Page</a>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const modal = new bootstrap.Modal(
-                    document.getElementById('modallistcatatanerror')
-                );
-
-                modal.show();
-            });
-        </script>
     @elseif ($wire_data['list_catatan']->isEmpty())
         <div class="list-catatan-container d-flex justify-content-center align-items-center">
             <p class="fs-5 fw-semibold text-secondary">Agenda ini belum memiliki catatan apapun.</p>
@@ -55,6 +45,9 @@
                     <p class="m-0" style="font-size: 14px;">
                         <span class="fw-medium">{{ $catatan->author_name }}</span>
                         <span style="color: hsl(0, 0%, 65%);">• {{ $catatan->tanggal_diubah }} · {{ $catatan->viewed_count }} views</span>
+                        @if ($catatan->is_updated)
+                            <span class="fw-medium"> • Edited</span>
+                        @endif
                     </p>
 
                     <div class="flex-grow-1"></div>
