@@ -74,4 +74,27 @@ class CatatanController extends Controller
             };
         }
     }
+
+    public function deleteCatatan($id_catatan) {
+        try {
+            $this->catatanService->deleteCatatan($id_catatan);
+
+            return back();
+        } catch (\Exception $e) {
+            return match ($e->getMessage()) {
+                'USER_NOT_AUTHENTICATED' => redirect('/login'),
+                'CATATAN_NOT_FOUND' => view('errors.error', [
+                    'title' => '404 Not Found',
+                    'description' => 'Catatan Tidak Dapat Ditemukan.'
+                ]),
+                'USER_NOT_PERMITTED' => redirect()->route('dashboard')->withErrors([
+                    'message' => 'Pengguna bukan author dari catatan ini.'
+                ]),
+                default => view('errors.error', [
+                    'title' => '500 Internal Server Error',
+                    'description' => 'Something went wrong.'
+                ])
+            };
+        }
+    }
 }
