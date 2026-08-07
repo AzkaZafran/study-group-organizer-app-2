@@ -57,9 +57,46 @@
                             <a role="button" wire:click="showEditModal({{ $catatan->id_catatan }})" class="btn p-0">
                                 <i class="fa-solid fa-pen-to-square" style="font-size: 14px;"></i>
                             </a>
-                            <a role="button" class="btn p-0">
+                            <a role="button" class="btn p-0"
+                                data-bs-dismiss="modal"
+                                data-bs-toggle="modal"
+                                data-bs-target={{ "#deleteCatatanModal" . $loop->index }}>
                                 <i class="fa-solid fa-trash-can" style="font-size: 14px; color: #ff0000;"></i>
                             </a>
+                        </div>
+
+                        <div class="modal fade" id={{ "deleteCatatanModal" . $loop->index }} tabindex="-1" 
+                            aria-labelledby="modalDetailCatatanLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalDeleteCatatanLabel"
+                                            style="color: #1E3A8A;">
+                                            Hapus Catatan
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h5 class="text text-center">Apakah Anda Yakin Ingin Menghapus Catatan "{{ $catatan->judul_catatan }}"?</h5>
+                                            <h6 class="text fw-bolder" style="color: #ff0000;">*Tindakan ini akan menghapus catatan secara permanen</h6>
+                                            <div class="d-flex flex-row justify-content-center gap-2 mt-3">
+                                                <button type="button" class="btn btn-back" 
+                                                        data-bs-dismiss="modal" style="width: 175px;">
+                                                    Tidak
+                                                </button>
+
+                                                <form action="{{ route('delete catatan', ['id_catatan' => $catatan->id_catatan]) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger" style="width: 175px;">Yakin</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endif
                     
@@ -71,4 +108,17 @@
         @endforeach
     @endif
 
+    @push('styles')
+        <style>
+            .btn-back {
+                background-color: #bdbdbd;
+                color: #424242;
+            }
+
+            .btn-back:hover {
+                background-color: hsl(0, 0%, 64%);
+                color: #424242;
+            }
+        </style>
+    @endpush
 </div>

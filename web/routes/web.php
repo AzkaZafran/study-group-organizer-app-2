@@ -93,6 +93,9 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/agenda/{id_agenda}/catatan', [CatatanController::class, 'index'])
             ->name('agenda catatan');
 
+    Route::delete('/catatan/{id_catatan}', [CatatanController::class, 'deleteCatatan'])
+            ->name('delete catatan');
+
     Route::get('/test', function () {
         $mutual_friend_request = FriendRequests::where('id_pengirim', auth()->id())->where('status', 'mutual')->first();
         $data = [
