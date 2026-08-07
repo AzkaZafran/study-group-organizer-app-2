@@ -79,7 +79,7 @@
 
                                     <div class="modal-body">
                                         <div class="d-flex flex-column align-items-center">
-                                            <h5 class="text text-center">Apakah Anda Yakin Ingin Menghapus Catatan "{{ $catatan->catatan }}"?</h5>
+                                            <h5 class="text text-center">Apakah Anda Yakin Ingin Menghapus Catatan "{{ $catatan->judul_catatan }}"?</h5>
                                             <h6 class="text fw-bolder" style="color: #ff0000;">*Tindakan ini akan menghapus catatan secara permanen</h6>
                                             <div class="d-flex flex-row justify-content-center gap-2 mt-3">
                                                 <button type="button" class="btn btn-back" 
