@@ -7,6 +7,7 @@ use App\Models\Catatan;
 use App\Models\CatatanTerbaca;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CatatanService {
     public function getAgendaCatatanWithViews($id_agenda) {
@@ -144,5 +145,30 @@ class CatatanService {
         }
 
         return false;
+    }
+
+    public function deleteCatatan($id_catatan) {
+        $auth_user = Auth::user();
+
+        if(!$auth_user) {
+            throw new Exception('USER_NOT_AUTHENTICATED');
+        }
+
+        $catatan = Catatan::find($id_catatan);
+
+        if (empty($catatan)) {
+            throw new Exception('CATATAN_NOT_FOUND');
+        } elseif ($catatan->id_author != $auth_user->id) {
+            throw new Exception('USER_NOT_PERMITTED');
+        }
+
+        $success = DB::transaction(function () use ($catatan) {
+
+            $catatan->view()->detach();
+
+            return $catatan->delete();
+        });
+
+        return $success;
     }
 }
