@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\UserResendOtpRequest;
@@ -23,18 +24,10 @@ class RegisterController extends Controller
             $this->userService->requestOtp($data['email']);
             
             return redirect()->route('input otp')->with('email', $user->email);
-        } catch (\Exception $e) {
-            return match ($e->getMessage()) {
-                'USERNAME_ALREADY_EXIST' => back()->withErrors([
-                    'message' => 'username sudah dipakai'
-                ]),
-                'EMAIL_ALREADY_EXIST' => back()->withErrors([
-                    'message' => 'email sudah dipakai'
-                ]),
-                default => back()->withErrors([
-                    'message' => 'something went wrong'
-                ])
-            };
+        } catch (InvalidCredentialsException $e) {
+            return back()->withErrors([
+                'message' => $e->getMessage()
+            ]);
         }
     }
 

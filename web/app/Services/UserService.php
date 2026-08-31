@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Mail\OtpCodeMail;
 use App\Models\OtpCodes;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -23,9 +23,9 @@ class UserService
      */
     public function register($username, $email, $password): User {
         if(User::where('username', $username)->count() == 1){
-            throw new Exception('USERNAME_ALREADY_EXIST');
+            throw new InvalidCredentialsException('Username ini sudah terdaftar.');
         } elseif (User::where('email', $email)->where('is_verified', 1)->count() == 1) {
-            throw new Exception("EMAIL_ALREADY_EXIST", 400);
+            throw new InvalidCredentialsException('Email ini sudah terdaftar.');
         }
 
         $data = [
