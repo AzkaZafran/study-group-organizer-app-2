@@ -57,7 +57,7 @@ class UserRegisterTest extends TestCase {
         
         $response->assertRedirect('/register')
                 ->assertSessionHasErrors([
-                    'message' => 'username sudah dipakai'
+                    'message' => 'Username ini sudah terdaftar.'
                 ]);
     }
 
@@ -81,7 +81,7 @@ class UserRegisterTest extends TestCase {
 
         $response->assertRedirect('/register')
                 ->assertSessionHasErrors([
-                    'message' => 'email sudah dipakai'
+                    'message' => 'Email ini sudah terdaftar.'
                 ]);
     }
 
