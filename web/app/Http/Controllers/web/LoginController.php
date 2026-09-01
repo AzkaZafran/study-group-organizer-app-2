@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserLoginRequest;
 use App\Services\UserService;
@@ -19,15 +20,10 @@ class LoginController extends Controller
         try {
             $this->userService->login($data['username'], $data['password']);
             return redirect('/dashboard');
-        } catch (\Exception $e) {
-            return match ($e->getMessage()) {
-                'USERNAME_OR_PASSWORD_WRONG' => back()->withErrors([
-                    'message' => 'Username atau password salah.'
-                ]),
-                default => back()->withErrors([
-                    'message' => 'Something went wrong.'
-                ]),
-            };
+        } catch (InvalidCredentialsException $e) {
+            return back()->withErrors([
+                    'message' => $e->getMessage()
+                ]);
         }
     }
 }

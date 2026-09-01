@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Models\User;
 use App\Services\UserService;
 use Exception;
@@ -37,10 +38,13 @@ class UserLoginTest extends TestCase {
 
         $userService = new UserService();
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('USERNAME_OR_PASSWORD_WRONG');
+        $this->expectException(InvalidCredentialsException::class);
+        $this->expectExceptionMessage('Username atau password salah.');
 
-        $userService->login('azkazafran78', 'test');
+        $userService->login(
+            username: 'azkazafran78', 
+            password: 'test'
+        );
     }
 
     public function testLoginWithIncorrectUsernameOrPassword() {
@@ -55,8 +59,8 @@ class UserLoginTest extends TestCase {
 
         $userService = new UserService();
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('USERNAME_OR_PASSWORD_WRONG');
+        $this->expectException(InvalidCredentialsException::class);
+        $this->expectExceptionMessage('Username atau password salah.');
 
         $userService->login('salah1', 'salah2');
     }
