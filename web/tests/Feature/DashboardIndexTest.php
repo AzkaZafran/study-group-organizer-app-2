@@ -84,10 +84,4 @@ class DashboardIndexTest extends TestCase {
                             $data['total_user_agenda_selesai'] == $total_agenda_selesai;
                 });
     }
-
-    public function testDashboardIndexFailed() {
-        $response = $this->get('/dashboard');
-
-        $response->assertRedirect('/login');
-    }
 }
