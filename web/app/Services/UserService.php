@@ -92,7 +92,7 @@ class UserService
         $user = User::where('username', $username)->first();
         
         if (!$user || !Hash::check($password, $user->password) || !$user->is_verified) {
-            throw new Exception('USERNAME_OR_PASSWORD_WRONG');
+            throw new InvalidCredentialsException('Username atau password salah.');
         }
 
         Auth::login($user);
