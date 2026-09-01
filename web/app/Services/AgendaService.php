@@ -127,13 +127,7 @@ class AgendaService {
                         ->get();
     }
 
-    public function autoUpdateUserAgendaAndParticipantStatus() {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
+    public function autoUpdateUserAgendaAndParticipantStatus(User $auth_user) {
         $user_agenda = $auth_user->agendas()
                                 ->withPivot('status')
                                 ->wherePivot('status', 'ikut')
