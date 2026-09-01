@@ -59,7 +59,7 @@ class UserVerifyEmailTest extends TestCase {
 
         $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
-                    'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
+                    'message' => 'Kode OTP tidak valid.'
                 ])
                 ->assertSessionHasInput([
                     'email' => 'azkazafran80@gmail.com'
@@ -103,7 +103,7 @@ class UserVerifyEmailTest extends TestCase {
 
         $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
-                    'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
+                    'message' => 'Kode OTP tidak valid.'
                 ])
                 ->assertSessionHasInput([
                     'email' => 'azkazafran79@gmail.com'
@@ -129,7 +129,7 @@ class UserVerifyEmailTest extends TestCase {
 
         $response->assertRedirect('/register/input-otp')
                 ->assertSessionHasErrors([
-                    'message' => 'Kode OTP sudah tidak berlaku. Silakan kirim ulang kode untuk mendapatkan OTP baru.'
+                    'message' => 'Kode OTP sudah kadaluarsa'
                 ])->assertSessionHasInput([
                     'email' => 'azkazafran82@gmail.com'
                 ]);
