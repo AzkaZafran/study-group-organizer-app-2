@@ -172,13 +172,7 @@ class AgendaService {
      *     total_user_agenda_belum_dimulai: int
      * }
      */
-    public function getUserAgendaStatistik() {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
+    public function getUserAgendaStatistik(User $auth_user) {
         $total_user_agenda = $auth_user->agendas()
                                     ->withPivot('status')
                                     ->wherePivot('status','ikut')
