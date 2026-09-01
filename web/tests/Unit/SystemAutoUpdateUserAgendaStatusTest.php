@@ -10,7 +10,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class AutoUpdateUserAgendaStatusTest extends TestCase {
+class SystemAutoUpdateUserAgendaStatusTest extends TestCase {
     public function testAutoUpdateUserAgendaAndParticipantStatusSuccess() {
         $data = [
             'username' => 'azkazafran78',
@@ -104,7 +104,7 @@ class AutoUpdateUserAgendaStatusTest extends TestCase {
 
         $agendaService = new AgendaService();
 
-        $agendaService->autoUpdateUserAgendaAndParticipantStatus();
+        $agendaService->autoUpdateUserAgendaAndParticipantStatus($auth_user);
 
         $this->assertDatabaseHas(Agenda::class, [
             'id_agenda' => $agenda_belum_dimulai1->id_agenda,
@@ -144,14 +144,5 @@ class AutoUpdateUserAgendaStatusTest extends TestCase {
         $this->assertDatabaseMissing(Partisipan::class, [
             'id_partisipan' => $participant_pending2->id_partisipan
         ]);
-    }
-
-    public function testAutoUpdateUserAgendaStatusFailed() {
-        $agendaService = new AgendaService();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('USER_NOT_AUTHENTICATED');
-
-        $agendaService->autoUpdateUserAgendaAndParticipantStatus();
     }
 }

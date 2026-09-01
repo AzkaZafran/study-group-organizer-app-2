@@ -68,7 +68,7 @@ class GetUserAgendaStatistikTest extends TestCase {
 
         $agendaService = new AgendaService();
 
-        $result = $agendaService->getUserAgendaStatistik();
+        $result = $agendaService->getUserAgendaStatistik($auth_user);
 
         $this->assertTrue(
             $result['total_user_agenda'] == $total_agenda_belum_dimulai + $total_agenda_sedang_berjalan + $total_agenda_selesai &&
@@ -76,14 +76,5 @@ class GetUserAgendaStatistikTest extends TestCase {
             $result['total_user_agenda_sedang_berjalan'] == $total_agenda_sedang_berjalan &&
             $result['total_user_agenda_selesai'] == $total_agenda_selesai
         );
-    }
-
-    public function testGetUserAgendaStatistikFailed() {
-        $agendaService = new AgendaService();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('USER_NOT_AUTHENTICATED');
-
-        $result = $agendaService->getUserAgendaStatistik();
     }
 }
