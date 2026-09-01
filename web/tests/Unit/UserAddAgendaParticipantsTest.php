@@ -47,16 +47,14 @@ class UserAddAgendaParticipantsTest extends TestCase {
         }
 
         $partisipanService = new PartisipanService();
-        $agendaService = new AgendaService();
-
-        $this->actingAs($auth_user);
         
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        $new_agenda = Agenda::factory()->create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
         $results = $partisipanService->addParticipants(
             auth_user: $auth_user,
