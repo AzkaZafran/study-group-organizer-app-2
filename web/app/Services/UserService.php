@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\InvalidCredentialsException;
+use App\Exceptions\InvalidOTPCodeException;
 use App\Mail\OtpCodeMail;
 use App\Models\OtpCodes;
 use App\Models\User;
@@ -68,13 +69,13 @@ class UserService
                                 ->get();
         
         if ($valid_otp->isEmpty()) {
-            throw new Exception('INVALID_OTP');
+            throw new InvalidOTPCodeException('Kode OTP tidak valid.');
         }
 
         $otp_not_expired = $valid_otp->firstWhere('expired_at', '>', now());
 
         if ($otp_not_expired === null) {
-            throw new Exception('EXPIRED_OTP');
+            throw new InvalidOTPCodeException('Kode OTP sudah kadaluarsa');
         }
 
         $otp_not_expired->is_used = true;

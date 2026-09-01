@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Exceptions\InvalidCredentialsException;
+use App\Exceptions\InvalidOTPCodeException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\UserResendOtpRequest;
@@ -37,22 +38,12 @@ class RegisterController extends Controller
         try {
             $this->userService->verifyEmail($data['email'], $data['otp_code']);
             return redirect('/login');
-        } catch (\Exception $e) {
-            return match ($e->getMessage()) {
-                'INVALID_OTP' => back()->withErrors([
-                    'message' => 'Kode OTP tidak valid. Coba lagi atau kirim ulang kode.'
+        } catch (InvalidOTPCodeException $e) {
+            return back()->withErrors([
+                    'message' => $e->getMessage()
                 ])->withInput(
                     $request->only('email')
-                ),
-                'EXPIRED_OTP' => back()->withErrors([
-                    'message' => 'Kode OTP sudah tidak berlaku. Silakan kirim ulang kode untuk mendapatkan OTP baru.'
-                ])->withInput(
-                    $request->only('email')
-                ),
-                default => back()->withErrors([
-                    'message' => 'something went wrong'
-                ])
-            };
+                );
         }
     }
 
