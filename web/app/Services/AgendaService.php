@@ -10,13 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AgendaService {
-    public function createAgenda($nama_agenda, $lokasi, $waktu_mulai, $waktu_berakhir) {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
+    public function createAgenda(User $auth_user, $nama_agenda, $lokasi, $waktu_mulai, $waktu_berakhir) {
         $agenda_data = [
             'id_penyelenggara' => $auth_user->id,
             'nama_agenda' => $nama_agenda,

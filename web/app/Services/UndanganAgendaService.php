@@ -11,19 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Str;
 
 class UndanganAgendaService {
-    public function createAgendaInviteCode($id_agenda) {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
-        $agenda_data = Agenda::find($id_agenda);
-
-        if (!$agenda_data) {
-            throw new Exception('AGENDA_NOT_FOUND');
-        }
-
+    public function createAgendaInviteCode(User $auth_user, Agenda $agenda) {
         $new_invite_code = '';
 
         do {
@@ -33,9 +21,9 @@ class UndanganAgendaService {
         );
 
         $invite_code_data = [
-            'id_agenda' => $id_agenda,
+            'id_agenda' => $agenda->id_agenda,
             'invite_code' => $new_invite_code,
-            'expired_at' => $agenda_data->waktu_mulai
+            'expired_at' => $agenda->waktu_mulai
         ];
 
         $new_invite = UndanganAgenda::create($invite_code_data);
