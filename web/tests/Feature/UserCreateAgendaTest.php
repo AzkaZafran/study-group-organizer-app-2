@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class CreateAgendaTest extends TestCase {
+class UserCreateAgendaTest extends TestCase {
     public function testCreateAgendaSuccess() {
         $data = [
             'username' => 'azkazafran78',
@@ -86,7 +86,7 @@ class CreateAgendaTest extends TestCase {
 
         $response->assertRedirect('/dashboard')
                     ->assertSessionHasErrors([
-                        'message' => 'Id user berikut tidak dapat ditemukan: 998, 999'
+                        'message' => 'Ada partisipan yang tidak terdaftar.'
                     ]);
     }
 }

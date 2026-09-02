@@ -37,6 +37,8 @@ class DashboardController extends Controller
     }
 
     public function createAgenda(UserCreateAgendaRequest $request) {
+        $auth_user = auth()->user();
+
         $data = $request->validated();
 
         $waktu_mulai = Carbon::parse(
@@ -54,40 +56,32 @@ class DashboardController extends Controller
 
         try {
             $new_agenda = $this->agendaService->createAgenda(
+                $auth_user,
                 $data['nama_agenda'],
                 $data['lokasi_agenda'],
                 $waktu_mulai,
                 $waktu_selesai
             );
 
-            $agenda_participant = $this->partisipanService->addParticipants($new_agenda->id_agenda, $data['participant_id']);
+            $agenda_participant = $this->partisipanService
+                                        ->addParticipants(
+                                            auth_user:  $auth_user,
+                                            agenda:     $new_agenda, 
+                                            id_users:   $data['participant_id']
+                                        );
 
-            $new_invite_code = $this->undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+            $new_invite_code = $this->undanganAgendaService
+                                    ->createAgendaInviteCode(
+                                        auth_user:  $auth_user,
+                                        agenda:     $new_agenda
+                                    );
 
             return back()->with('invite_code', $new_invite_code->invite_code);
         } catch (ParticipantsNotFoundException $e) {
-            return match ($e->getMessage()) {
-                'SOME_PARTICIPANTS_NOT_FOUND' => back()->withErrors([
-                    'message' => 'Id user berikut tidak dapat ditemukan: ' . implode(", ", $e->getMissingIds())
-                ]),
-                default => view('errors.error', [
-                    'title' => '500 Internal Server Error',
-                    'description' => 'Something went wrong.'
-                ])
-            };
-        } catch (\Exception $e) {
-            return match ($e->getMessage()) {
-                'USER_NOT_AUTHENTICATED' => redirect('/login'),
-                'AGENDA_NOT_FOUND' => view('errors.error', [
-                    'title' => '404 Not Found',
-                    'description' => 'Agenda Tidak Dapat Ditemukan.'
-                ]),
-                default => view('errors.error', [
-                    'title' => '500 Internal Server Error',
-                    'description' => 'Something went wrong.'
-                ])
-            };
-        } 
+            return back()->withErrors([
+                    'message' => $e->getMessage()
+                ]);
+        }
     }
 
     public function updateAgendaDialog($id_agenda) {
