@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Agenda;
+use App\Models\Partisipan;
+use App\Models\UndanganAgenda;
 use App\Models\User;
 use App\Services\AgendaService;
 use App\Services\UndanganAgendaService;
@@ -20,19 +23,29 @@ class SearchAgendaByInviteCodeTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $undanganAgendaService = new UndanganAgendaService();
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
+
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
+
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
 
         $this->actingAs($auth_user);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
-
-        $new_invite_code = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        $undanganAgendaService = new UndanganAgendaService();
 
         $result = $undanganAgendaService->searchAgendaByInviteCode($new_invite_code->invite_code);
 
@@ -63,14 +76,25 @@ class SearchAgendaByInviteCodeTest extends TestCase {
 
         $this->actingAs($auth_user);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $new_invite_code = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
+
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('INVALID_INVITE_CODE');

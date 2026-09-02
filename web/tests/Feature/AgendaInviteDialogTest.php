@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Agenda;
 use App\Models\FriendRequests;
 use App\Models\Partisipan;
+use App\Models\UndanganAgenda;
 use App\Models\User;
 use App\Services\AgendaService;
 use App\Services\PartisipanService;
@@ -31,12 +33,6 @@ class AgendaInviteDialogTest extends TestCase {
 
         $target_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $partisipanService = new PartisipanService();
-        $undanganAgendaService = new UndanganAgendaService();
-
-        $this->actingAs($auth_user);
-
         $friend_request_data = [
             'id_pengirim' => $auth_user->id,
             'id_penerima' => $target_user->id,
@@ -45,18 +41,33 @@ class AgendaInviteDialogTest extends TestCase {
 
         FriendRequests::create($friend_request_data);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+                $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $partisipanService->addParticipants($new_agenda->id_agenda, [$target_user->id]);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
 
-        $new_invite_data = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $target_user->id,
+            'status' =>'pending'
+        ]);
 
-        $invite_code = $new_invite_data->invite_code;
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
+
+        $invite_code = $new_invite_code->invite_code;
 
         $response = $this->actingAs($target_user)->get("/agenda/{$invite_code}/join");
 
@@ -111,12 +122,6 @@ class AgendaInviteDialogTest extends TestCase {
 
         $target_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $partisipanService = new PartisipanService();
-        $undanganAgendaService = new UndanganAgendaService();
-
-        $this->actingAs($auth_user);
-
         $friend_request_data = [
             'id_pengirim' => $auth_user->id,
             'id_penerima' => $target_user->id,
@@ -125,22 +130,33 @@ class AgendaInviteDialogTest extends TestCase {
 
         FriendRequests::create($friend_request_data);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $partisipanService->addParticipants($new_agenda->id_agenda, [$target_user->id]);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
 
-        $new_invite_data = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $target_user->id,
+            'status' =>'pending'
+        ]);
 
-        $new_invite_data->expired_at = now()->subDays(2);
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->subMinutes(2)
+        ]);
 
-        $new_invite_data->save();
-
-        $invite_code = $new_invite_data->invite_code;
+        $invite_code = $new_invite_code->invite_code;
 
         $response = $this->actingAs($target_user)->get("/agenda/{$invite_code}/join");
 
@@ -169,21 +185,27 @@ class AgendaInviteDialogTest extends TestCase {
 
         $target_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $undanganAgendaService = new UndanganAgendaService();
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $this->actingAs($auth_user);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
 
-        $new_invite_data = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
-        
-        $invite_code = $new_invite_data->invite_code;
+        $invite_code = $new_invite_code->invite_code;
 
         $response = $this->actingAs($target_user)->get("/agenda/{$invite_code}/join");
 
@@ -203,24 +225,30 @@ class AgendaInviteDialogTest extends TestCase {
 
         $auth_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $partisipanService = new PartisipanService();
-        $undanganAgendaService = new UndanganAgendaService();
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $this->actingAs($auth_user);
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
 
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
 
-        $new_invite_data = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        $invite_code = $new_invite_code->invite_code;
 
-        $invite_code = $new_invite_data->invite_code;
-
-        $response = $this->get("/agenda/{$invite_code}/join");
+        $response = $this->actingAs($auth_user)
+                        ->get("/agenda/{$invite_code}/join");
 
         $response->assertRedirect('/dashboard')
                 ->assertSessionHasErrors([
@@ -247,36 +275,33 @@ class AgendaInviteDialogTest extends TestCase {
 
         $target_user = User::create($data);
 
-        $agendaService = new AgendaService();
-        $partisipanService = new PartisipanService();
-        $undanganAgendaService = new UndanganAgendaService();
+        $new_agenda = Agenda::create([
+            'id_penyelenggara' => $auth_user->id,
+            'nama_agenda' => 'test agenda',
+            'lokasi' => 'Jl. Jaya Sukses No. 2',
+            'waktu_mulai' => '2026-12-20 09:00:00',
+            'waktu_berakhir' => '2026-12-20 12:00:00'
+        ]);
 
-        $this->actingAs($auth_user);
-
-        $friend_request_data = [
-            'id_pengirim' => $auth_user->id,
-            'id_penerima' => $target_user->id,
-            'status' => 'mutual'
-        ];
-
-        FriendRequests::create($friend_request_data);
-
-        $new_agenda = $agendaService->createAgenda(
-                            'test agenda',
-                            'Jl. Jaya Sukses No. 2',
-                            '2026-12-20 09:00:00',
-                            '2026-12-20 12:00:00'
-                        );
+        Partisipan::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'id_user' => $auth_user->id,
+            'status' =>'ikut'
+        ]);
 
         Partisipan::create([
             'id_agenda' => $new_agenda->id_agenda,
             'id_user' => $target_user->id,
-            'status' => 'tidak ikut'
+            'status' =>'tidak ikut'
         ]);
 
-        $new_invite_data = $undanganAgendaService->createAgendaInviteCode($new_agenda->id_agenda);
+        $new_invite_code = UndanganAgenda::create([
+            'id_agenda' => $new_agenda->id_agenda,
+            'invite_code' => 600681,
+            'expired_at' => now()->addMinutes(5)
+        ]);
 
-        $invite_code = $new_invite_data->invite_code;
+        $invite_code = $new_invite_code->invite_code;
 
         $response = $this->actingAs($target_user)->get("/agenda/{$invite_code}/join");
 
