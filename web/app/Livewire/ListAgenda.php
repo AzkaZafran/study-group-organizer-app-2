@@ -40,12 +40,18 @@ class ListAgenda extends Component
     }
 
     private function getUserAgendaFilterByStatus($status) {
+        $auth_user = auth()->user();
+
         $result = collect();
 
         if ($status == 'semua') {
-            $result = $this->agendaService->getUserAgendaWithParticipant();
+            $result = $this->agendaService->getUserAgendaWithParticipants($auth_user);
         } else {
-            $result = $this->agendaService->getUserAgendaFilterByStatus($status);
+            $result = $this->agendaService
+                            ->getUserAgendaWithParticipants(
+                                auth_user:      $auth_user,
+                                agenda_status:  $status
+                            );
         }
 
         $result = $this->formatted_list_agenda($result);
@@ -54,7 +60,13 @@ class ListAgenda extends Component
     }
 
     public function getUserAgendaFilterByOwned() {
-        $result = $this->agendaService->getUserAgendaFilterByOwned();
+        $auth_user = auth()->user();
+
+        $result = $this->agendaService
+                        ->getUserAgendaWithParticipants(
+                            auth_user:          $auth_user,
+                            agenda_is_owned:    true
+                        );
 
         $result = $this->formatted_list_agenda($result);
 
