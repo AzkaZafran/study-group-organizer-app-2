@@ -40,10 +40,12 @@ class ListAgenda extends Component
     }
 
     private function getUserAgendaFilterByStatus($status) {
+        $auth_user = auth()->user();
+
         $result = collect();
 
         if ($status == 'semua') {
-            $result = $this->agendaService->getUserAgendaWithParticipant();
+            $result = $this->agendaService->getUserAgendaWithParticipants($auth_user);
         } else {
             $result = $this->agendaService->getUserAgendaFilterByStatus($status);
         }
