@@ -92,41 +92,6 @@ class AgendaService {
         return $agenda;
     }
 
-    public function getUserAgendaFilterByStatus($status) {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
-        if ($status == 'belum dimulai' || $status == 'sedang berjalan' || $status == 'selesai') {
-            return $auth_user->agendas()
-                            ->with(['participants' => function ($query) {
-                                $query->withPivot('status');
-                            }])->withPivot('status')
-                            ->wherePivot('status', 'ikut')
-                            ->where('agenda.status', $status)
-                            ->get();
-        }
-
-        return -1;
-    }
-
-    public function getUserAgendaFilterByOwned() {
-        $auth_user = Auth::user();
-
-        if(!$auth_user) {
-            throw new Exception('USER_NOT_AUTHENTICATED');
-        }
-
-        return $auth_user->agendas()
-                        ->with(['participants' => function ($query) {
-                            $query->withPivot('status');
-                        }])->withPivot('status')
-                        ->where('id_penyelenggara', $auth_user->id)
-                        ->get();
-    }
-
     public function autoUpdateUserAgendaAndParticipantStatus(User $auth_user) {
         $user_agenda = $auth_user->agendas()
                                 ->withPivot('status')
